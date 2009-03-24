@@ -1,11 +1,21 @@
 #ifndef TX_INTERFACE_HPP
 #define TX_INTERFACE_HPP
 
+#include <string>
+using namespace std;
+
 class Interface {
 	private:
-		int test;
+		bool finished_;
+		int width_;
+		int height_;
+
 	public:
-		void Start();
+		Interface(int width, int height);
+		~Interface();
+		void SetTitle(string title);
+		void MainLoop();
+		void CheckEvents();
 };
 
 #endif
