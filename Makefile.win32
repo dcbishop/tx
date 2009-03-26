@@ -16,7 +16,7 @@ OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o
 all: tx.exe
 LIBS = -lmxml -lrcbc ${SDL_LIBS} -lopengl32 -lglu32 ${MINGW_LIBDIR}/libSOIL.a -L${MINGW_LIBDIR} 
 CFLAGS = $(SDL_CFLAGS) $(shell pkg-config --cflags mxml)
-DIRECTLIBS = ${MINGW_LIBDIR}/librcbc.a ${MINGW_LIBDIR}/libSOIL.a ${MINGW_LIBDIR}/libopengl32.a ${MINGW_LIBDIR}/libmxml.a
+DIRECTLIBS = ${MINGW_LIBDIR}/librcbc.a ${MINGW_LIBDIR}/DevIL.lib ${MINGW_LIBDIR}/libopengl32.a ${MINGW_LIBDIR}/libmxml.a
 
 tx.exe: tx.cpp ${OBJS}
 	${CXX}  ${MINGW_LIBDIR}/librcbc.a ${OBJS} $< -o $@ ${LIBS} ${CFLAGS} -Wall ${DIRECTLIBS}

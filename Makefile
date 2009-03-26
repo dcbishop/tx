@@ -6,7 +6,7 @@ SDL_CONFIG=sdl-config
 SDL_LIBS:= $(shell ${SDL_CONFIG} --libs)
 SDL_CFLAGS:= $(shell ${SDL_CONFIG} --cflags)
 
-LIBS = ${SDL_LIBS} -lmxml -lrcbc  -lGL -lGLU /usr/lib/libSOIL.so
+LIBS = ${SDL_LIBS} -lmxml -lrcbc  -lGL -lGLU -lIL
 CFLAGS = ${SDL_CFLAGS} $(shell pkg-config --cflags mxml)
 
 tx: tx.cpp ${OBJS}
