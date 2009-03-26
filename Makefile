@@ -1,14 +1,19 @@
-CXX=g++
-OBJS = console.o Area.o Interface.o ImageManager.o
+CXX = $(shell which cpp g++ colorgcc | tail -n 1)
+OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o
 all: tx
-LIBS = /usr/local/lib/librcbc.a -lrcbc -L. ${shell sdl-config --libs}
-CFLAGS = ${shell sdl-config --cflags}
+
+SDL_CONFIG=sdl-config
+SDL_LIBS:= $(shell ${SDL_CONFIG} --libs)
+SDL_CFLAGS:= $(shell ${SDL_CONFIG} --cflags)
+
+LIBS = ${SDL_LIBS} -lmxml -lrcbc  -lGL -lGLU /usr/lib/libSOIL.so
+CFLAGS = ${SDL_CFLAGS} $(shell pkg-config --cflags mxml)
 
 tx: tx.cpp ${OBJS}
-	${CXX} ${OBJS} $< -o tx ${LIBS}
+	${CXX} ${OBJS} $< -o tx ${LIBS} ${CFLAGS} -Wall
 
 .cpp.o:
-	${CXX} ${LIBS} ${CFLAGS} -c $<
+	${CXX} ${LIBS} ${CFLAGS} -c $< -Wall
 
 clean:
 	rm -f *.o tx tx.exe *.a *~ core

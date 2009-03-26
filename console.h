@@ -75,6 +75,9 @@
 #define DEBUG(level, fmt, ...)
 #endif
 
+#define BREAK() char buffer[255]; ERROR("Break point..."); fgets(buffer, 254, stdin)
+
+
 void logit(const char* format, ...);
 void errorit(const char* format, ...);
 void debugit(int level, const char* format, ...);

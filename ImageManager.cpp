@@ -1,9 +1,14 @@
+#warning TODO: This file isnt needed...
 #include "ImageManager.hpp"
+#include "console.h"
 
 ImageManager::ImageManager() {
-	//images = NEW(List);
+	DEBUG_M("Entering function...");
+	images_ = NEW(List);
 }
 
 ImageManager::~ImageManager() {
-	//DELETE(images);
+	DEBUG_M("Entering function...");
+	#warning TODO: Free correctly
+	DELETE(images_);
 }
