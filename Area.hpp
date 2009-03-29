@@ -18,14 +18,14 @@ class Area {
 		int getHeight();
 		int getWidth();
 		void LoadFile(string filename);
-		Model* getTile(int x, int y);
-		void setTile(int x, int y, Model* tile);
+		Model* getTile(const int x, const int y);
+		void setTile(const int x, const int y, Model* tile);
 		void setResourceManager(ResourceManager* rm);
 		void Draw();
 
 	private:
-		int setHeight(int height);
-		int setWidth(int width);
+		int setHeight(const int height);
+		int setWidth(const int width);
 
 		int height_;
 		int width_;

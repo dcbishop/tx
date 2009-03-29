@@ -7,7 +7,7 @@
 #include "Interface.hpp"
 #include "console.h"
 
-Interface::Interface(int width = 640, int height = 480) {
+Interface::Interface(const int width = 640, const int height = 480) {
 	DEBUG_M("Entering function...");
 	width_ = width;
 	height_ = height;
@@ -24,17 +24,11 @@ Interface::Interface(int width = 640, int height = 480) {
 		throw "SDL setvideo";
 	}
 
-	cam_zoom_ = 2.5f;
-	cam_rot_x_ = -90.0f;
-	cam_rot_y_ = 45.0f;
-	cam_rot_x_temp_ = 0.0f;
-	cam_rot_y_temp_ = 0.0f;
-	cam_move_ = false;
-	cam_fov_ = 90.0f;
 	fps_ = 0;
 	mpf_ = 0;
 	limit_fps_ = true;
-
+	cam_move_ = false;
+	
 	SetTitle("Tilxor...");
 }
 
@@ -43,7 +37,7 @@ Interface::~Interface() {
 	SDL_Quit();
 }
 
-void Interface::SetTitle(string title) {
+void Interface::SetTitle(const string title) {
 	DEBUG_M("Entering function...");
 	SDL_WM_SetCaption(title.c_str(), NULL);
 }
@@ -51,29 +45,17 @@ void Interface::SetTitle(string title) {
 void Interface::MainLoop() {
 	DEBUG_M("Entering function...");
 	while(!finished_) {
+		camera_.Update(0);
 		DrawScene();
 		CheckEvents();
 	}
-}
-
-/* Position camera around box using some voodoo math */
-void Interface::PositionCamera() {
-	/* http://en.wikipedia.org/wiki/Spherical_coordinates */
-	GLfloat theta = cam_rot_x_+cam_rot_x_temp_;
-	GLfloat phi = cam_rot_y_+cam_rot_y_temp_;
-
-	cam_x_ = cam_zoom_ * (cos(theta*(PI/180))) * (sin(phi*(PI/180)));
-	cam_y_ = cam_zoom_ * (cos(phi*(PI/180)));
-	cam_z_ = cam_zoom_ * (sin(theta*(PI/180))) * (sin(phi*(PI/180)));
-
-	gluLookAt( cam_x_, cam_y_, cam_z_, 0.0f, 0.0f, 0.0f, 0.0f, 10.0f, 0.0f );
 }
 
 /* Set 3D perspective mode */
 void Interface::PerspectiveSet() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(cam_fov_, width_ / height_, 0.1f, 10000.0f);
+	gluPerspective(camera_.getFov(), width_ / height_, 0.1f, 10000.0f);
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -101,12 +83,12 @@ void Interface::DrawScene() {
 	
 	PerspectiveSet();
 	glLoadIdentity();
-	PositionCamera();
+	camera_.Position();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable ( GL_LIGHTING ) ;
+	glEnable(GL_LIGHTING) ;
 	glEnable(GL_LIGHT0);
-	glColor3f(1,1,1);
+	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_COLOR_MATERIAL);
 	
 	if(area_) {
@@ -123,7 +105,7 @@ void Interface::setArea(Area* area) {
 	area_ = area;
 }
 
-void Interface::HandleKeys(SDL_Event& event) {
+void Interface::HandleKeys(const SDL_Event& event) {
 	switch(event.key.keysym.sym) {
 		case SDLK_ESCAPE:
 			finished_ = true;
@@ -132,7 +114,7 @@ void Interface::HandleKeys(SDL_Event& event) {
 	}
 }
 
-void Interface::ResizeEvent(SDL_Event& event) {
+void Interface::ResizeEvent(const SDL_Event& event) {
 	DEBUG_M("Screen resize %dx%d...", event.resize.w, event.resize.h);
 	width_ = event.resize.w;
 	height_ = event.resize.h;
@@ -147,17 +129,6 @@ void Interface::ResizeEvent(SDL_Event& event) {
 	PerspectiveSet();
 }
 
-void Interface::RotateCamera(GLfloat x, GLfloat y) {
-	cam_rot_x_ += x;
-	cam_rot_y_ -= y;
-	/* Stop flipping over the top of the cube */
-	if(cam_rot_y_ < Y_MIN) {
-		cam_rot_y_ = Y_MIN;
-	} else if(cam_rot_y_ > Y_MAX) {
-		cam_rot_y_ = Y_MAX;
-	}
-}
-
 void Interface::CheckEvents() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
@@ -170,7 +141,8 @@ void Interface::CheckEvents() {
 				break;
 			case SDL_MOUSEMOTION:
 				if(cam_move_) {
-					RotateCamera(((GLfloat)event.motion.xrel / width_ * 100), ((GLfloat)event.motion.yrel / height_ * 100));
+					camera_.setRotX(camera_.getRotX() + (GLfloat)event.motion.xrel / width_ * 100);
+					camera_.setRotY(camera_.getRotY() - (GLfloat)event.motion.yrel / height_ * 100);
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
@@ -187,15 +159,9 @@ void Interface::CheckEvents() {
 					case 3:
 						cam_move_ = false; break;
 					case 5:
-						cam_zoom_ += ZOOM_STEP; break;
+						camera_.setZoom(camera_.getZoom() + ZOOM_STEP); break;
 					case 4:
-						cam_zoom_ -= ZOOM_STEP; break;
-				}
-				/* Ensure the camera zoom is sane */
-				if(cam_zoom_ < ZOOM_MIN) {
-					cam_zoom_ = ZOOM_MIN;
-				} else if(cam_zoom_ > ZOOM_MAX) {
-					cam_zoom_ = ZOOM_MAX;
+						camera_.setZoom(camera_.getZoom() - ZOOM_STEP); break;
 				}
 				break;
 			case SDL_VIDEORESIZE:

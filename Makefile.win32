@@ -12,7 +12,7 @@ SDL_CONFIG=/usr/${MINGW_PREFIX}/bin/sdl-config
 SDL_LIBS:= $(shell ${SDL_CONFIG} --libs)
 SDL_CFLAGS:= $(shell ${SDL_CONFIG} --cflags)
 
-OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o
+OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o  Object.o Camera.o
 all: tx.exe
 LIBS = -lmxml -lrcbc ${SDL_LIBS} -lopengl32 -lglu32 ${MINGW_LIBDIR}/libSOIL.a -L${MINGW_LIBDIR} 
 CFLAGS = $(SDL_CFLAGS) $(shell pkg-config --cflags mxml)

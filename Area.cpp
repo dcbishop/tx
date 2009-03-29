@@ -17,7 +17,7 @@ int Area::getWidth() {
 	return width_;
 }
 
-void Area::LoadFile(string filename) {
+void Area::LoadFile(const string filename) {
 	DEBUG_M("Entering function...");
 	height_ = 10;
 	width_ = 10;
@@ -40,7 +40,7 @@ void Area::LoadFile(string filename) {
 	setTile(2, 7, monkey);
 }
 
-Model* Area::getTile(int x, int y) {
+Model* Area::getTile(const int x, const int y) {
 	//return (*(tiles_ + x) + y);
 	//DEBUG_A("%s", typeid((tiles_+(y*width_)+x)));
 	if(x > getWidth() || y > getHeight() || x < 0 || y < 0) {
@@ -49,7 +49,7 @@ Model* Area::getTile(int x, int y) {
 	return *(tiles_+(y*width_)+x);
 }
 
-void Area::setTile(int x, int y, Model* tile) {
+void Area::setTile(const int x, const int y, Model* tile) {
 	//Model** tmp = ((tiles_+(((y*width_)+x))));
 	//*tmp = tile;
 	//tiles_+(((y*width_)+x)) = tile;
