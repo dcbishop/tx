@@ -19,8 +19,8 @@ int Area::getWidth() {
 
 void Area::LoadFile(const string filename) {
 	DEBUG_M("Entering function...");
-	height_ = 10;
-	width_ = 10;
+	height_ = 100;
+	width_ = 100;
 	
 	tiles_ = (Model**)malloc(width_ * height_ * sizeof(Model*));
 	if(!tiles_) {

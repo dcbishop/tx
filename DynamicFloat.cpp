@@ -38,7 +38,6 @@ void DynamicFloat::setRate(const float rate) {
 void DynamicFloat::Update(const int time) {
 	/* Process a smooth zoom */
 	if(value_target_ != value_current_) {
-		DEBUG_A("Updating to: %f->%f", value_current_, value_target_);
 		float value_diff = value_target_ - value_current_;
 		float value_change = value_diff * value_rate_ * (time - last_updated_) / 1000;
 
@@ -51,10 +50,6 @@ void DynamicFloat::Update(const int time) {
 		if(value_diff <= value_threshold_) {
 			value_current_ = value_target_;
 		}
-
-		DEBUG_A("Updated: %f", getValueCurrent());
-		DEBUG_A("value_diff: %f", value_diff);
-		DEBUG_A("value_threshold_: %f", value_threshold_);
 	}
 	last_updated_ = time;
 }

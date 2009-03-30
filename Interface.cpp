@@ -45,7 +45,9 @@ void Interface::SetTitle(const string title) {
 void Interface::MainLoop() {
 	DEBUG_M("Entering function...");
 	while(!finished_) {
-		camera_.Update(SDL_GetTicks());
+		int now = SDL_GetTicks();
+		camera_.Update(now);
+		creature_->Update(now);
 		DrawScene();
 		CheckEvents();
 	}
@@ -113,16 +115,18 @@ void Interface::HandleKeyDown(const SDL_Event& event) {
 			finished_ = true;
 			break;
 		case SDLK_UP:
-			creature_->setZ(creature_->getZ() - 1.0f);
+			creature_->Foward();
 			break;
 		case SDLK_DOWN:
-			creature_->setZ(creature_->getZ() + 1.0f);
+			creature_->Reverse();
 			break;
 		case SDLK_LEFT:
-			creature_->setRotAngle(creature_->getRotAngle() + 10.0f);
+			//creature_->setRotAngle(creature_->getRotAngle() + 10.0f);
+			creature_->TurnLeft();
 			break;
 		case SDLK_RIGHT:
-			creature_->setRotAngle(creature_->getRotAngle() - 10.0f);
+			//creature_->setRotAngle(creature_->getRotAngle() - 10.0f);
+			creature_->TurnRight();
 			break;
 		case SDLK_q:
 			finished_ = true;
@@ -162,6 +166,20 @@ void Interface::HandleKeyDown(const SDL_Event& event) {
 	}
 }
 
+void Interface::HandleKeyUp(const SDL_Event& event) {
+	switch(event.key.keysym.sym) {
+		case SDLK_UP: case SDLK_DOWN:
+			creature_->Stop();
+			break;
+		case SDLK_LEFT: case SDLK_RIGHT:
+			creature_->TurnStop();
+			break;
+		default:
+			break;
+	}
+}
+
+
 void Interface::ResizeEvent(const SDL_Event& event) {
 	DEBUG_M("Screen resize %dx%d...", event.resize.w, event.resize.h);
 	width_ = event.resize.w;
@@ -186,6 +204,9 @@ void Interface::CheckEvents() {
 				break;
 			case SDL_KEYDOWN:
 				HandleKeyDown(event);
+				break;
+			case SDL_KEYUP:
+				HandleKeyUp(event);
 				break;
 			case SDL_MOUSEMOTION:
 				if(cam_move_) {
