@@ -6,25 +6,27 @@
 
 Object::Object() {
 	model_ = NULL;
-	setX(0.0f);
+	setX(1.0f);
 	setY(0.0f);
 	setZ(0.0f);
 	setRotX(0.0f);
-	setRotY(0.0f);
+	setRotY(1.0f);
 	setRotZ(0.0f);
-	setRotX(-90.0f);
+
+	setRotAngle(0.0f);
 
 #warning ['TODO']: This shoud be the current time...
 	last_update_ = 0;
 }
 
+#warning ['TODO']: Use this of kill it...
 Object::~Object() {
 }
 
 void Object::Draw() {
 	glPushMatrix();
-	glTranslatef(getX(), getY(), getZ());
-	glRotatef(getAngle(), getRotX(), getRotY(), getRotZ());
+	glTranslatef(-getX(), getY(), -getZ());
+	glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
 	RCBC_Render(model_);
 	glPopMatrix();
 }
@@ -51,15 +53,15 @@ void Object::setZ(const float z) {
 	z_ = z;
 }
 
-float Object::getX() {
+const float Object::getX() {
 	return x_;
 }
 
-float Object::getY() {
+const float Object::getY() {
 	return y_;
 }
 
-float Object::getZ() {
+const float Object::getZ() {
 	return z_;
 }
 
@@ -79,18 +81,26 @@ void Object::setRotAngle(const float angle) {
 	angle_ = angle;
 }
 
-float Object::getRotX() {
+const float Object::getRotX() {
 	return rx_;
 }
 
-float Object::getRotY() {
+const float Object::getRotY() {
 	return ry_;
 }
 
-float Object::getRotZ() {
+const float Object::getRotZ() {
 	return rz_;
 }
 
-float Object::getAngle() {
+const float Object::getRotAngle() {
 	return angle_;
+}
+
+const float Object::getLastUpdate() {
+	return last_update_;
+}
+
+void Object::setModel(const Model* model) {
+	model_ = model;
 }

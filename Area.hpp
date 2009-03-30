@@ -1,7 +1,7 @@
 #ifndef TX_AREA_HPP
 #define TX_AREA_HPP
 
-#define TILEWIDTH 1.0f
+const float TILEWIDTH = 1.0f;
 
 #include <iostream>
 #include <string.h>
@@ -29,6 +29,9 @@ class Area {
 
 		int height_;
 		int width_;
+		int x_offset_;
+		int y_offset_;
+		
 		Model **tiles_;
 		ResourceManager* rm_;
 };

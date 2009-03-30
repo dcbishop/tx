@@ -36,13 +36,13 @@ void Area::LoadFile(const string filename) {
 			setTile(x, y, grass);
 		}
 	}
+	setTile(0, 0, monkey);
+	setTile(1, 0, monkey);
 	setTile(4, 4, monkey);
 	setTile(2, 7, monkey);
 }
 
 Model* Area::getTile(const int x, const int y) {
-	//return (*(tiles_ + x) + y);
-	//DEBUG_A("%s", typeid((tiles_+(y*width_)+x)));
 	if(x > getWidth() || y > getHeight() || x < 0 || y < 0) {
 		return NULL;
 	} 
@@ -50,9 +50,6 @@ Model* Area::getTile(const int x, const int y) {
 }
 
 void Area::setTile(const int x, const int y, Model* tile) {
-	//Model** tmp = ((tiles_+(((y*width_)+x))));
-	//*tmp = tile;
-	//tiles_+(((y*width_)+x)) = tile;
 	if(x > getWidth() || y > getHeight() || x < 0 || y < 0) {
 		return;
 	}
@@ -60,16 +57,17 @@ void Area::setTile(const int x, const int y, Model* tile) {
 }
 
 void Area::Draw() {
-	glTranslatef( -TILEWIDTH * width_ / 2, 0.0f, -TILEWIDTH * height_ / 2 );
+#warning ['TODO']: Delete me....
+	//glTranslatef( -TILEWIDTH * width_ / 2, 0.0f, -TILEWIDTH * height_ / 2 );
 	for(int y = 0; y < height_; y++) {
 		glPushMatrix();
 		for(int x = 0; x < width_; x++) {
 			Model* tile = getTile(x, y);
 			RCBC_Render(tile);
-			glTranslatef(TILEWIDTH, 0.0f, 0.0f);
+			glTranslatef(-TILEWIDTH, 0.0f, 0.0f);
 		}
 		glPopMatrix();
-		glTranslatef(0.0f, 0.0f, TILEWIDTH);
+		glTranslatef(0.0f, 0.0f, -TILEWIDTH);
 	}
 }
 

@@ -13,19 +13,21 @@ class Object {
 		void setX(const float x);
 		void setY(const float y);
 		void setZ(const float z);
-		float getX();
-		float getY();
-		float getZ();
+		const float getX();
+		const float getY();
+		const float getZ();
 		void setRotX(const float rx);
 		void setRotY(const float ry);
 		void setRotZ(const float rz);
 		void setRotAngle(const float z);
-		float getRotX();
-		float getRotY();
-		float getRotZ();
-		float getAngle();
+		const float getRotX();
+		const float getRotY();
+		const float getRotZ();
+		const float getRotAngle();
+		const float getLastUpdate();
+		void setModel(const Model* model);
 
-	protected:
+	private:
 		float x_;
 		float y_;
 		float z_;
@@ -37,7 +39,7 @@ class Object {
 
 		int last_update_;
 
-		Model* model_;
+		const Model* model_;
 };
 
 #endif

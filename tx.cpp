@@ -16,15 +16,21 @@ int main(int argc, char* argv[])
 	LOG("TX starting...");
 
 	ResourceManager rm;
+
 	Area area;
 	area.setResourceManager(&rm);
-	Interface* interface = new Interface(800, 600);
-	RCBC_Init();
-	area.LoadFile("data/areas/test-area.xml");
-	interface->setArea(&area);
-	interface->MainLoop();
 
-	delete(interface);
+	Interface interface(800, 600);
+	RCBC_Init();
+
+	Creature player;
+	Model* playermod = RCBC_LoadFile("data/models/monkey-robot.dae", rm.getImages());
+	player.setModel(playermod);
+
+	area.LoadFile("data/areas/test-area.xml");
+	interface.setCreature(&player);
+	interface.setArea(&area);
+	interface.MainLoop();
 
 	LOG("TX finished...");
 	return 0;

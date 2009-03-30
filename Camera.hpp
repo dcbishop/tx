@@ -2,6 +2,7 @@
 #define TX_CAMERA_HPP
 
 #include "Object.hpp"
+#include "DynamicFloat.hpp"
 
 const float PI = 3.14152f;
 
@@ -11,6 +12,8 @@ const float Y_MAX = 75.0f-Y_MIN;
 const float ZOOM_STEP = 0.5f;
 const float ZOOM_MIN = 0.5f;
 const float ZOOM_MAX = 20.0f;
+const float ZOOM_SPEED = 3.0f;
+const float ZOOM_THRESHOLD = 0.001f;
 
 class Camera : public Object {
 	public:
@@ -18,18 +21,20 @@ class Camera : public Object {
 		~Camera();
 		void Draw();
 		void Update(int time);
-		void setTarget(const Object* object);
+		void setTarget(Object* object);
 		GLfloat getFov();
 		void setZoom(GLfloat zoom);
 		GLfloat getZoom();
+		GLfloat getZoomTarget();
 		void Position();
 		void setRotX(const GLfloat rx);
 		void setRotY(GLfloat ry);
+		void setFov(float fov);
 
 	private:
-		const Object* target_;
-		GLfloat fov_;
-		GLfloat zoom_;
+		Object* target_;
+		DynamicFloat fov_;
+		DynamicFloat zoom_;
 };
 
 #endif

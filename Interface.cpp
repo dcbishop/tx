@@ -45,7 +45,7 @@ void Interface::SetTitle(const string title) {
 void Interface::MainLoop() {
 	DEBUG_M("Entering function...");
 	while(!finished_) {
-		camera_.Update(0);
+		camera_.Update(SDL_GetTicks());
 		DrawScene();
 		CheckEvents();
 	}
@@ -95,6 +95,8 @@ void Interface::DrawScene() {
 		area_->Draw();
 	}
 	
+	creature_->Draw();
+	
 	glFlush();
 	SDL_GL_SwapBuffers();
 
@@ -105,10 +107,56 @@ void Interface::setArea(Area* area) {
 	area_ = area;
 }
 
-void Interface::HandleKeys(const SDL_Event& event) {
+void Interface::HandleKeyDown(const SDL_Event& event) {
 	switch(event.key.keysym.sym) {
 		case SDLK_ESCAPE:
 			finished_ = true;
+			break;
+		case SDLK_UP:
+			creature_->setZ(creature_->getZ() - 1.0f);
+			break;
+		case SDLK_DOWN:
+			creature_->setZ(creature_->getZ() + 1.0f);
+			break;
+		case SDLK_LEFT:
+			creature_->setRotAngle(creature_->getRotAngle() + 10.0f);
+			break;
+		case SDLK_RIGHT:
+			creature_->setRotAngle(creature_->getRotAngle() - 10.0f);
+			break;
+		case SDLK_q:
+			finished_ = true;
+			break;
+		case SDLK_1:
+			camera_.setFov(15.0f);
+			break;
+		case SDLK_2:
+			camera_.setFov(30.0f);
+			break;
+		case SDLK_3:
+			camera_.setFov(45.0f);
+			break;
+		case SDLK_4:
+			camera_.setFov(60.0f);
+			break;
+		case SDLK_5:
+			camera_.setFov(90.0f);
+			break;
+		case SDLK_6:
+			camera_.setFov(110.0f);
+			break;
+		case SDLK_7:
+			camera_.setFov(120.0f);
+			break;
+		case SDLK_8:
+			camera_.setFov(130.0f);
+			break;
+		case SDLK_9:
+			camera_.setFov(140.0f);
+			break;
+		case SDLK_0:
+			camera_.setFov(175.0f);
+			break;
 		default:
 			DEBUG_A("Unknown key down %d...", event.key.keysym.sym);
 	}
@@ -133,11 +181,11 @@ void Interface::CheckEvents() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
-			case SDL_QUIT: case SDLK_q:
+			case SDL_QUIT:
 				finished_ = true;
 				break;
 			case SDL_KEYDOWN:
-				HandleKeys(event);
+				HandleKeyDown(event);
 				break;
 			case SDL_MOUSEMOTION:
 				if(cam_move_) {
@@ -159,9 +207,9 @@ void Interface::CheckEvents() {
 					case 3:
 						cam_move_ = false; break;
 					case 5:
-						camera_.setZoom(camera_.getZoom() + ZOOM_STEP); break;
+						camera_.setZoom(camera_.getZoomTarget() + ZOOM_STEP); break;
 					case 4:
-						camera_.setZoom(camera_.getZoom() - ZOOM_STEP); break;
+						camera_.setZoom(camera_.getZoomTarget() - ZOOM_STEP); break;
 				}
 				break;
 			case SDL_VIDEORESIZE:
@@ -172,4 +220,9 @@ void Interface::CheckEvents() {
 				break;
 		}
 	}
+}
+
+void Interface::setCreature(Creature* creature) {
+	creature_ = creature;
+	camera_.setTarget(creature_);
 }

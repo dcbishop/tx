@@ -1,5 +1,5 @@
 CXX = $(shell which cpp g++ colorgcc | tail -n 1)
-OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o Object.o Camera.o
+OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o Object.o Camera.o Creature.o DynamicFloat.o
 all: tx
 
 SDL_CONFIG=sdl-config

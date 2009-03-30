@@ -8,9 +8,26 @@ using namespace std;
 
 #include "Area.hpp"
 #include "Camera.hpp"
+#include "Creature.hpp"
 
 class Interface {
+	public:
+		Interface(const int width, const int height);
+		~Interface();
+		void SetTitle(const string title);
+		void MainLoop();
+		void DrawScene();
+		void setArea(Area* area);
+		void setCreature(Creature* creature);
+		void PerspectiveSet();
+		void PositionCamera();
+
 	private:
+		void HandleKeyDown(const SDL_Event& event);
+		void ResizeEvent(const SDL_Event& event);
+		void RotateCamera(const GLfloat x, const GLfloat y);
+		void CheckEvents();
+
 		bool finished_;
 		int width_;
 		int height_;
@@ -22,20 +39,7 @@ class Interface {
 		int mpf_;
 		bool limit_fps_;
 		Camera camera_;
-
-	public:
-		Interface(const int width, const int height);
-		~Interface();
-		void SetTitle(const string title);
-		void MainLoop();
-		void DrawScene();
-		void HandleKeys(const SDL_Event& event);
-		void ResizeEvent(const SDL_Event& event);
-		void RotateCamera(const GLfloat x, const GLfloat y);
-		void CheckEvents();
-		void setArea(Area* area);
-		void PerspectiveSet();
-		void PositionCamera();
+		Creature* creature_;
 };
 
 #endif
