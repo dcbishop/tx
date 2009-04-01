@@ -48,7 +48,7 @@ void Interface::MainLoop() {
 		int now = SDL_GetTicks();
 		camera_.Update(now);
 		creature_->Update(now);
-		DrawScene();
+		Draw();
 		CheckEvents();
 	}
 }
@@ -61,7 +61,7 @@ void Interface::PerspectiveSet() {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void Interface::DrawScene() {
+void Interface::Draw() {
 	static int frame = 0;
 	static int last_render_time = 0;
 	static int last_fps_time = 0;
@@ -92,13 +92,11 @@ void Interface::DrawScene() {
 	glEnable(GL_LIGHT0);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_COLOR_MATERIAL);
-	
+
 	if(area_) {
 		area_->Draw();
 	}
-	
-	creature_->Draw();
-	
+
 	glFlush();
 	SDL_GL_SwapBuffers();
 

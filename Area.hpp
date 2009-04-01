@@ -4,11 +4,15 @@
 const float TILEWIDTH = 1.0f;
 
 #include <iostream>
-#include <string.h>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
 
 #include <rcbc.h>
 
 #include "ResourceManager.hpp"
+#include "Object.hpp"
 
 using namespace std;
 
@@ -21,6 +25,8 @@ class Area {
 		Model* getTile(const int x, const int y);
 		void setTile(const int x, const int y, Model* tile);
 		void setResourceManager(ResourceManager* rm);
+		void addObject(Object* object);
+		void removeObject(Object* object);
 		void Draw();
 
 	private:
@@ -33,6 +39,7 @@ class Area {
 		int y_offset_;
 		
 		Model **tiles_;
+		vector<Object*> objects_;
 		ResourceManager* rm_;
 };
 

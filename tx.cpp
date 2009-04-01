@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 	player.setModel(playermod);
 
 	area.LoadFile("data/areas/test-area.xml");
+	area.addObject(&player);
 	interface.setCreature(&player);
 	interface.setArea(&area);
 	interface.MainLoop();

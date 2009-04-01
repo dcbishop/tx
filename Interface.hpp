@@ -16,7 +16,7 @@ class Interface {
 		~Interface();
 		void SetTitle(const string title);
 		void MainLoop();
-		void DrawScene();
+		void Draw();
 		void setArea(Area* area);
 		void setCreature(Creature* creature);
 		void PerspectiveSet();

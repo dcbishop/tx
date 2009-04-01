@@ -59,6 +59,7 @@ void Area::setTile(const int x, const int y, Model* tile) {
 void Area::Draw() {
 #warning ['TODO']: Delete me....
 	//glTranslatef( -TILEWIDTH * width_ / 2, 0.0f, -TILEWIDTH * height_ / 2 );
+	glPushMatrix();
 	for(int y = 0; y < height_; y++) {
 		glPushMatrix();
 		for(int x = 0; x < width_; x++) {
@@ -69,6 +70,14 @@ void Area::Draw() {
 		glPopMatrix();
 		glTranslatef(0.0f, 0.0f, -TILEWIDTH);
 	}
+	glPopMatrix();
+
+	/* Draw all the objects in the map */
+	for(vector<Object*>::iterator iter = objects_.begin(); iter != objects_.end(); iter++) {
+		Object* object = *iter;
+		object->Draw();
+	}
+
 }
 
 void Area::setResourceManager(ResourceManager* rm) {
@@ -80,4 +89,17 @@ Area::~Area() {
 	DEBUG_M("Entering function...");
 	delete [] tiles_;
 	tiles_ = NULL;
+}
+
+void Area::addObject(Object* object) {
+	objects_.push_back(object);
+}
+
+void Area::removeObject(Object* object) {
+	vector<Object*>::iterator iter;
+	iter = find(objects_.begin(), objects_.end(), object);
+
+	if(iter != objects_.end()) {
+		objects_.erase(iter);
+	}
 }
