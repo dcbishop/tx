@@ -104,3 +104,8 @@ const float Object::getLastUpdate() {
 void Object::setModel(const Model* model) {
 	model_ = model;
 }
+
+void Object::setArea(Area* area) {
+	area_ = area;
+}
+

@@ -6,6 +6,7 @@
 
 #include "Interface.hpp"
 #include "console.h"
+#include "Object.hpp"
 
 Interface::Interface(const int width = 640, const int height = 480) {
 	DEBUG_M("Entering function...");
@@ -160,7 +161,7 @@ void Interface::HandleKeyDown(const SDL_Event& event) {
 			camera_.setFov(175.0f);
 			break;
 		default:
-			DEBUG_A("Unknown key down %d...", event.key.keysym.sym);
+			DEBUG_M("Unknown key down %d...", event.key.keysym.sym);
 	}
 }
 
@@ -193,6 +194,38 @@ void Interface::ResizeEvent(const SDL_Event& event) {
 	PerspectiveSet();
 }
 
+void Interface::HandleMouse1(const SDL_Event& event) {
+	
+	/* Get infomation to turn window cordinates into opengl ones */
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	
+	GLdouble modelview[16];
+	glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+	
+	GLdouble projection[16];
+	glGetDoublev(GL_PROJECTION_MATRIX, projection);
+
+	GLfloat winX = (float)event.button.x;
+	GLfloat winY = (float)event.button.y;
+	GLfloat winZ;
+
+	winY = viewport[3] - winY;
+	glReadPixels(winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+
+	GLdouble posX, posY, posZ;
+	gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+
+#warning ['TODO']: Test click location code...
+	static Model* model = RCBC_LoadFile("data/models/monkey-robot.dae", area_->getResourceManager()->getImages());
+
+	Object* newobj = new Object;
+	newobj->setModel(model);
+	newobj->setPos(-posX, posY, -posZ);
+
+	area_->addObject(newobj);
+}
+
 void Interface::CheckEvents() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
@@ -213,16 +246,18 @@ void Interface::CheckEvents() {
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-				DEBUG_A("Mouse button %d down at (%d, %d)",
+				DEBUG_M("Mouse button %d down at (%d, %d)",
 					event.button.button, event.button.x, event.button.y);
 				if(event.button.button == 3) {
 					cam_move_ = true;
 				}
 				break;
 			case SDL_MOUSEBUTTONUP:
-				DEBUG_A("Mouse button %d up at (%d, %d)",
+				DEBUG_M("Mouse button %d up at (%d, %d)",
 					event.button.button, event.button.x, event.button.y);
 				switch(event.button.button) {
+					case 1:
+						HandleMouse1(event);
 					case 3:
 						cam_move_ = false; break;
 					case 5:
@@ -235,7 +270,7 @@ void Interface::CheckEvents() {
 				ResizeEvent(event);
 				break;
 			default:
-				DEBUG_A("Unknown event occured...");
+				DEBUG_M("Unknown event occured...");
 				break;
 		}
 	}

@@ -93,6 +93,7 @@ Area::~Area() {
 
 void Area::addObject(Object* object) {
 	objects_.push_back(object);
+	object->setArea(this);
 }
 
 void Area::removeObject(Object* object) {
@@ -102,4 +103,8 @@ void Area::removeObject(Object* object) {
 	if(iter != objects_.end()) {
 		objects_.erase(iter);
 	}
+}
+
+ResourceManager* Area::getResourceManager() {
+	return rm_;
 }

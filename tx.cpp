@@ -27,8 +27,13 @@ int main(int argc, char* argv[])
 	Model* playermod = RCBC_LoadFile("data/models/monkey-robot.dae", rm.getImages());
 	player.setModel(playermod);
 
+	Model* textobjmod = RCBC_LoadFile("data/models/unmaptest.dae", rm.getImages());
+	Object testobj;
+	testobj.setModel(textobjmod);
+
 	area.LoadFile("data/areas/test-area.xml");
 	area.addObject(&player);
+	area.addObject(&testobj);
 	interface.setCreature(&player);
 	interface.setArea(&area);
 	interface.MainLoop();

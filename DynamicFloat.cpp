@@ -18,7 +18,6 @@ float DynamicFloat::getValueTarget() {
 }
 
 void DynamicFloat::setValue(const float value) {
-	DEBUG_A("Set value to: %f", value);
 	value_target_ = value;
 
 	/* If this is the initial setting */

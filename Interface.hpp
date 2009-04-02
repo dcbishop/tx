@@ -25,6 +25,7 @@ class Interface {
 	private:
 		void HandleKeyDown(const SDL_Event& event);
 		void HandleKeyUp(const SDL_Event& event);
+		void HandleMouse1(const SDL_Event& event);
 		void ResizeEvent(const SDL_Event& event);
 		void RotateCamera(const GLfloat x, const GLfloat y);
 		void CheckEvents();

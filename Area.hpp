@@ -12,6 +12,8 @@ using namespace std;
 #include <rcbc.h>
 
 #include "ResourceManager.hpp"
+
+class Object;
 #include "Object.hpp"
 
 using namespace std;
@@ -25,6 +27,7 @@ class Area {
 		Model* getTile(const int x, const int y);
 		void setTile(const int x, const int y, Model* tile);
 		void setResourceManager(ResourceManager* rm);
+		ResourceManager* getResourceManager();
 		void addObject(Object* object);
 		void removeObject(Object* object);
 		void Draw();

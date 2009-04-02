@@ -3,6 +3,9 @@
 
 #include <rcbc.h>
 
+class Area;
+#include "Area.hpp"
+
 class Object {
 	public:
 		Object();
@@ -26,6 +29,7 @@ class Object {
 		const float getRotAngle();
 		const float getLastUpdate();
 		void setModel(const Model* model);
+		void setArea(Area* area);
 
 	private:
 		float x_;
@@ -40,6 +44,7 @@ class Object {
 		int last_update_;
 
 		const Model* model_;
+		Area* area_;
 };
 
 #endif
