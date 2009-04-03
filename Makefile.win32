@@ -14,7 +14,7 @@ SDL_CFLAGS:= $(shell ${SDL_CONFIG} --cflags)
 
 OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o  Object.o Camera.o Creature.o DynamicFloat.o AccelerateFloat.o
 all: tx.exe
-LIBS = -lmxml -lrcbc ${SDL_LIBS} -lopengl32 -lglu32 ${MINGW_LIBDIR}/libSOIL.a -L${MINGW_LIBDIR} 
+LIBS = -lmxml -lrcbc ${SDL_LIBS} -lopengl32 -lglu32 -L${MINGW_LIBDIR}  -llua -lluabind
 CFLAGS = $(SDL_CFLAGS) $(shell pkg-config --cflags mxml)
 DIRECTLIBS = ${MINGW_LIBDIR}/librcbc.a ${MINGW_LIBDIR}/DevIL.lib ${MINGW_LIBDIR}/libopengl32.a ${MINGW_LIBDIR}/libmxml.a
 

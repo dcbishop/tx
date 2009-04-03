@@ -6,11 +6,12 @@ SDL_CONFIG=sdl-config
 SDL_LIBS:= $(shell ${SDL_CONFIG} --libs)
 SDL_CFLAGS:= $(shell ${SDL_CONFIG} --cflags)
 
-LIBS = ${SDL_LIBS} -lmxml -lrcbc  -lGL -lGLU -lIL
+LIBS = ${SDL_LIBS} -lmxml -lrcbc  -lGL -lGLU -lIL -llua5.1 -lluabind
 CFLAGS = ${SDL_CFLAGS} $(shell pkg-config --cflags mxml)
+INC = -I/usr/include/lua5.1
 
 tx: tx.cpp ${OBJS}
-	${CXX} ${OBJS} $< -o tx ${LIBS} ${CFLAGS} -Wall
+	${CXX} ${OBJS} ${INC} $< -o tx ${LIBS} ${CFLAGS} -Wall
 
 .cpp.o:
 	${CXX} ${LIBS} ${CFLAGS} -c $< -Wall
