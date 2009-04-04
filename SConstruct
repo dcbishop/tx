@@ -11,6 +11,8 @@ debug_flag = ARGUMENTS.get('debug', 0)
 
 env.AppendUnique(LIBS=['m', 'IL', 'mxml', 'rcbc', 'luabind'])
 
+env.Tool('colourful', toolpath=['scons-tools'])
+
 if int(win32):
 	env.Tool('crossmingw', toolpath = ['scons-tools'])
 	env['MINGWROOT'] = '/usr/$MINGWPREFIX'

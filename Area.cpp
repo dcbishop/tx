@@ -8,6 +8,10 @@
 
 #include "console.h"
 
+Area::Area() {
+	height_ = 0;
+	width_ = 0;
+}
 
 int Area::getHeight() {
 	return height_;
@@ -83,6 +87,15 @@ void Area::Draw() {
 void Area::setResourceManager(ResourceManager* rm) {
 	DEBUG_M("Entering function...");
 	rm_ = rm;
+}
+
+Physics* Area::getPhysics() {
+	return physics_;
+}
+
+void Area::setPhysics(Physics* physics) {
+	DEBUG_M("Entering function...");
+	physics_ = physics;
 }
 
 Area::~Area() {
