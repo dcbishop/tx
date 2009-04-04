@@ -6,9 +6,9 @@ SDL_CONFIG=sdl-config
 SDL_LIBS:= $(shell ${SDL_CONFIG} --libs)
 SDL_CFLAGS:= $(shell ${SDL_CONFIG} --cflags)
 
-LIBS = ${SDL_LIBS} -lmxml -lrcbc  -lGL -lGLU -lIL -llua5.1 -lluabind
-CFLAGS = ${SDL_CFLAGS} $(shell pkg-config --cflags mxml)
-INC = -I/usr/include/lua5.1
+LIBS = ${SDL_LIBS} -lrcbc  -lGL -lGLU -lIL -lluabind
+CFLAGS = ${SDL_CFLAGS} $(shell pkg-config --cflags lua5.1) $(shell pkg-config --cflags mxml) $(shell pkg-config --cflags bullet --static)
+INC = $(shell pkg-config --libs lua5.1) $(shell pkg-config --libs mxml) $(shell pkg-config --libs bullet --static) 
 
 tx: tx.cpp ${OBJS}
 	${CXX} ${OBJS} ${INC} $< -o tx ${LIBS} ${CFLAGS} -Wall

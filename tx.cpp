@@ -13,6 +13,8 @@ extern "C"
 #include <iostream>
 #include <luabind/luabind.hpp>
 
+#include <btBulletDynamicsCommon.h>
+
 #include <rcbc.h>
 
 #include "Area.hpp"
@@ -26,6 +28,7 @@ void lua_log(string message) {
 
 int main(int argc, char* argv[]) {
 	LOG("TX starting...");
+	
 	lua_State *myLuaState = lua_open();
 	luabind::open(myLuaState);
 	luabind::module(myLuaState) [
@@ -37,6 +40,17 @@ int main(int argc, char* argv[]) {
 	} catch(const std::exception &TheError) {
 		errorit("LUA: %s", TheError.what());
 	}
+	
+
+	
+	int maxProxies = 1024; /* Maximum number of rigid bodies */
+#warning ['TODO']: This should be the size of the world.
+	btVector3 worldAabbMin(-10000,-10000,-10000);
+	btVector3 worldAabbMax(10000,10000,10000);
+	btAxisSweep3* broadphase = new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
+	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+    btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 	
 	ResourceManager rm;
 

@@ -6,3 +6,9 @@ rcbcview
 tx
 *.exe
 data/*
+.scons*
+*.os
+*.so
+*.pyc
+*.def
+*.lib
