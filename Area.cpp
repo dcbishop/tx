@@ -78,10 +78,11 @@ void Area::Draw() {
 
 	/* Draw all the objects in the map */
 	for(vector<Object*>::iterator iter = objects_.begin(); iter != objects_.end(); iter++) {
-		Object* object = *iter;
-		object->Draw();
+		//Object* object = *iter;
+		(*iter)->Draw();
 	}
 
+	physics_->debugDrawWorld();
 }
 
 void Area::setResourceManager(ResourceManager* rm) {
@@ -100,6 +101,7 @@ void Area::setPhysics(Physics* physics) {
 
 Area::~Area() {
 	DEBUG_M("Entering function...");
+	#warning ['TODO']: Delete objects?
 	delete [] tiles_;
 	tiles_ = NULL;
 }
@@ -120,4 +122,9 @@ void Area::removeObject(Object* object) {
 
 ResourceManager* Area::getResourceManager() {
 	return rm_;
+}
+
+void Area::Update(int time) {
+	physics_->Update(time);
+	//last_update_ = time;
 }

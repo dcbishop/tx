@@ -12,6 +12,7 @@ using std::string;
 #include "Interface.hpp"
 #include "ResourceManager.hpp"
 #include "Physics.hpp"
+#include "RigidBody.hpp"
 #include "Scripting.hpp"
 #include "console.h"
 
@@ -32,15 +33,22 @@ int main(int argc, char* argv[]) {
 	Model* playermod = RCBC_LoadFile("data/models/monkey-robot.dae", rm.getImages());
 	player.setModel(playermod);
 
-	Model* textobjmod = RCBC_LoadFile("data/models/unmaptest.dae", rm.getImages());
-	Object testobj;
-	testobj.setModel(textobjmod);
+	//Model* textobjmod = RCBC_LoadFile("data/models/unmaptest.dae", rm.getImages());
+	//Object testobj;
+	//testobj.setModel(textobjmod);
+	
+	Model* grass = RCBC_LoadFile("data/models/mayagrass.dae", rm.getImages());
+
+	RigidBody ground;
+	ground.setMass(0);
+	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
+	ground.setModel(grass);	
+	ground.setPos(-1.0f, 0.0f, 0.0f);
 	
 	area.setPhysics(&physics);
 	area.LoadFile("data/areas/test-area.xml");
 	area.addObject(&player);
-	area.addObject(&testobj);
-	
+	area.addObject(&ground);
 	interface.setCreature(&player);
 
 #warning ['TODO']: We should get the area from the controlled creature...
@@ -48,8 +56,9 @@ int main(int argc, char* argv[]) {
 	interface.MainLoop();
 		
 	DELETE(playermod);
-	DELETE(textobjmod);
-	
+	//DELETE(textobjmod);
+	DELETE(grass);
+
 	LOG("TX finished...");
 	return 0;
 }

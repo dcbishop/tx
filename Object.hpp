@@ -10,26 +10,28 @@ class Object {
 	public:
 		Object();
 		~Object();
-		void Update(const int time);
-		void Draw();
-		void setPos(const float x, const float y, const float z);
-		void setX(const float x);
-		void setY(const float y);
-		void setZ(const float z);
-		const float getX();
-		const float getY();
-		const float getZ();
-		void setRotX(const float rx);
-		void setRotY(const float ry);
-		void setRotZ(const float rz);
-		void setRotAngle(const float z);
-		const float getRotX();
-		const float getRotY();
-		const float getRotZ();
-		const float getRotAngle();
-		const float getLastUpdate();
-		void setModel(const Model* model);
-		void setArea(Area* area);
+		virtual void Update(const int time);
+		virtual void Draw();
+		virtual void setPos(const float x, const float y, const float z);
+		virtual void setX(const float x);
+		virtual void setY(const float y);
+		virtual void setZ(const float z);
+		virtual const float getX();
+		virtual const float getY();
+		virtual const float getZ();
+		virtual void setRotX(const float rx);
+		virtual void setRotY(const float ry);
+		virtual void setRotZ(const float rz);
+		virtual void setRotAngle(const float z);
+		virtual const float getRotX();
+		virtual const float getRotY();
+		virtual const float getRotZ();
+		virtual const float getRotAngle();
+		virtual const float getLastUpdate();
+		virtual void setModel(const Model* model);
+		virtual const Model* getModel();
+		virtual void setArea(Area* area);
+		virtual Area* getArea();
 
 	private:
 		float x_;

@@ -35,6 +35,8 @@ class Area {
 		void addObject(Object* object);
 		void removeObject(Object* object);
 		void Draw();
+		void Update(int time);
+
 
 	private:
 		int setHeight(const int height);

@@ -17,6 +17,7 @@ Object::Object() {
 
 #warning ['TODO']: This shoud be the current time...
 	last_update_ = 0;
+	area_ = NULL;
 }
 
 #warning ['TODO']: Use this of kill it...
@@ -24,6 +25,10 @@ Object::~Object() {
 }
 
 void Object::Draw() {
+	if(!model_) {
+		return;
+	}
+	
 	glPushMatrix();
 	glTranslatef(-getX(), getY(), -getZ());
 	glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
@@ -106,6 +111,19 @@ void Object::setModel(const Model* model) {
 }
 
 void Object::setArea(Area* area) {
+	DEBUG_M("Entering function...");
+	if(area_) {
+		DEBUG_H("removing...");
+		area_->removeObject(this);
+	}
+	
 	area_ = area;
 }
 
+Area* Object::getArea() {
+	return area_;
+}
+
+const Model* Object::getModel() {
+	return model_;
+}

@@ -7,6 +7,7 @@
 #include "Interface.hpp"
 #include "console.h"
 #include "Object.hpp"
+#include "RigidBody.hpp"
 
 Interface::Interface(const int width = 640, const int height = 480) {
 	DEBUG_M("Entering function...");
@@ -49,6 +50,7 @@ void Interface::MainLoop() {
 		int now = SDL_GetTicks();
 		camera_.Update(now);
 		creature_->Update(now);
+		area_->Update(now);
 		Draw();
 		CheckEvents();
 	}
@@ -194,8 +196,7 @@ void Interface::ResizeEvent(const SDL_Event& event) {
 	PerspectiveSet();
 }
 
-void Interface::HandleMouse1(const SDL_Event& event) {
-	
+void Interface::windowToWorld(int mx, int my, GLdouble* x, GLdouble* y, GLdouble* z) {
 	/* Get infomation to turn window cordinates into opengl ones */
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -206,25 +207,45 @@ void Interface::HandleMouse1(const SDL_Event& event) {
 	GLdouble projection[16];
 	glGetDoublev(GL_PROJECTION_MATRIX, projection);
 
-	GLfloat winX = (float)event.button.x;
-	GLfloat winY = (float)event.button.y;
+	GLfloat winX = mx;
+	GLfloat winY = my;
 	GLfloat winZ;
 
 	winY = viewport[3] - winY;
 	glReadPixels(winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+	gluUnProject(winX, winY, winZ, modelview, projection, viewport, x, y, z);
+}
 
-	GLdouble posX, posY, posZ;
-	gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+void Interface::HandleMouse1(const SDL_Event& event) {
+	
+	GLdouble x, y, z;
+	windowToWorld(event.button.x, event.button.y, &x, &y, &z);
 
-#warning ['TODO']: Test click location code...
 	static Model* model = RCBC_LoadFile("data/models/monkey-robot.dae", area_->getResourceManager()->getImages());
 
-	Object* newobj = new Object;
+	RigidBody* newobj = new RigidBody;
 	newobj->setModel(model);
-	newobj->setPos(-posX, posY, -posZ);
-
+	newobj->setShape(new btBoxShape(btVector3(.5,.5,.5)));
+	newobj->setPos(x, y+1.0f, z);
+	
 	area_->addObject(newobj);
 }
+
+void Interface::HandleMouse3(const SDL_Event& event) {
+	
+	GLdouble x, y, z;
+	windowToWorld(event.button.x, event.button.y, &x, &y, &z);
+
+	static Model* model = RCBC_LoadFile("data/models/unmaptest.dae", area_->getResourceManager()->getImages());
+
+	RigidBody* newobj = new RigidBody;
+	newobj->setModel(model);
+	newobj->setShape(new btSphereShape(1));
+	newobj->setPos(x, y+1.0f, z);
+	
+	area_->addObject(newobj);
+}
+
 
 void Interface::CheckEvents() {
 	SDL_Event event;
@@ -257,7 +278,9 @@ void Interface::CheckEvents() {
 					event.button.button, event.button.x, event.button.y);
 				switch(event.button.button) {
 					case 1:
-						HandleMouse1(event);
+						HandleMouse1(event); break;
+					case 2:
+						HandleMouse3(event); break;
 					case 3:
 						cam_move_ = false; break;
 					case 5:

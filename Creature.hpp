@@ -21,7 +21,7 @@ class Creature : public Object {
 		void setTurnRate(float turn_rate);
 		void setSpeed(float speed);
 		void setSpeedReverse(float speed_reverse);
-
+	
 	private:
 		AccelerateFloat speed_;
 		AccelerateFloat spin_;

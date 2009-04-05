@@ -1,3 +1,4 @@
+#include "console.h"
 #include "Creature.hpp"
 #include <math.h>
 
