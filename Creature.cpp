@@ -67,5 +67,5 @@ void Creature::Update(int time) {
 	setZ(getZ() + zdiff);
 	setX(getX() + xdiff);
 
-	Object::Update(time);
+	RigidBody::Update(time);
 }

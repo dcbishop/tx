@@ -20,9 +20,11 @@ class Scripting {
 
 	private:
 		static void ScriptLog_(string msg);		
+		
 		void bindAll_();
 		luabind::scope bindObject_();
-		
+		luabind::scope bindRigidBody_();
+
 		lua_State *myLuaState_;
 };
 

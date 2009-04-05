@@ -58,7 +58,7 @@ void RigidBody::setArea(Area* area) {
 
 void RigidBody::removeRigidBody_() {
 	Area* area = getArea();
-	if(area && area->getPhysics()) {
+	if(area && area->getPhysics() && body_) {
 		area->getPhysics()->removeRigidBody(body_);
 	}
 }
@@ -73,25 +73,40 @@ RigidBody::~RigidBody() {
 
 #warning ['TODO']: Implement getPos, setPos&XYZ
 const float RigidBody::getX() {
+	if(!body_) {
+		return 0.0f;
+	}
+	
 	btTransform trans;
     body_->getMotionState()->getWorldTransform(trans);
 	return trans.getOrigin().getX();
 }
 
 const float RigidBody::getY() {
+	if(!body_) {
+		return 0.0f;
+	}
+	
 	btTransform trans;
     body_->getMotionState()->getWorldTransform(trans);
 	return trans.getOrigin().getY();
 }
 
 const float RigidBody::getZ() {
+	if(!body_) {
+		return 0.0f;
+	}
+	
 	btTransform trans;
     body_->getMotionState()->getWorldTransform(trans);
 	return trans.getOrigin().getZ();
 }
 
 void RigidBody::Update(int time) {
-	getArea()->getPhysics()->Update(time);
+	Area* area = getArea();
+	if(!area || area->getPhysics()) {
+		area->getPhysics()->Update(time);
+	}
 }
 
 void RigidBody::setMass(btScalar mass) {
@@ -99,19 +114,27 @@ void RigidBody::setMass(btScalar mass) {
 }
 
 void RigidBody::setPos(float x, float y, float z) {
-	body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
+	if(body_) {
+		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
+	}
 }
 
 void RigidBody::setX(float x) {
-	body_->getWorldTransform().setOrigin( btVector3(x, getY(), getZ()) );
+	if(body_) {
+		body_->getWorldTransform().setOrigin( btVector3(x, getY(), getZ()) );
+	}
 }
 
 void RigidBody::setY(float y) {
-	body_->getWorldTransform().setOrigin( btVector3(getX(), y, getZ()) );
+	if(body_) {
+		body_->getWorldTransform().setOrigin( btVector3(getX(), y, getZ()) );
+	}
 }
 
 void RigidBody::setZ(float z) {
-	body_->getWorldTransform().setOrigin( btVector3(getX(), getY(), z) );
+	if(body_) {
+		body_->getWorldTransform().setOrigin( btVector3(getX(), getY(), z) );
+	}
 }
 
 void drawCube() {
@@ -153,22 +176,16 @@ void drawCube() {
 
 void RigidBody::Draw() {
 	const Model* model = getModel();
-	if(!model) {
+	if(!model || !body_) {
 		return;
 	}
 	
 	glPushMatrix();
-	//glTranslatef(-getX(), getY(), -getZ());
-	//glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
-	
-	//btTransform
-	
 	btScalar m[15];
-	body_->getWorldTransform().getOpenGLMatrix(m);  // Get the OpenGL transformation matrix directly.
+	body_->getWorldTransform().getOpenGLMatrix(m);
 	glMultMatrixf(m);
 	drawCube();
 	
-	//glMultiMatrix(body_->getWorldTransform().get
 	RCBC_Render(model);
 	glPopMatrix();
 }

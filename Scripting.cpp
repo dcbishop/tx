@@ -3,12 +3,19 @@
 #include "console.h"
 
 #include "Object.hpp"
+#include "RigidBody.hpp"
+
 
 Scripting::Scripting() {
 	myLuaState_ = lua_open();
+	if(!myLuaState_) {
+		ERROR("Failed to init Lua...");
+		throw "LUAFAILED";
+	}
+	
+	luaL_openlibs(myLuaState_);
 	
 	luabind::open(myLuaState_);
-
 	luabind::module(myLuaState_) [
 		luabind::def("ScriptLog", Scripting::ScriptLog_)
 	];
@@ -18,10 +25,8 @@ Scripting::Scripting() {
 	try {
 		luaL_dostring(myLuaState_, "ScriptLog(\"Lua successfully initilized...\")\n");
 	} catch(const std::exception &TheError) {
-		errorit("LUA: %s", TheError.what());
-	}
-	
-	
+		ERROR("LUA: %s", TheError.what());
+	}	
 }
 
 Scripting::~Scripting() {
@@ -34,7 +39,8 @@ void Scripting::ScriptLog_(string message) {
 
 void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
-		bindObject_()
+		bindObject_(),
+		bindRigidBody_()
 	];
 }
 
@@ -51,4 +57,10 @@ luabind::scope Scripting::bindObject_() {
 			.property("rz", &Object::getRotZ, &Object::setRotZ)
 			.property("angle", &Object::getRotAngle, &Object::setRotAngle)
 		;
+}
+
+luabind::scope Scripting::bindRigidBody_() {
+	return
+		luabind::class_<RigidBody, Object>("RigidBody")
+	;
 }

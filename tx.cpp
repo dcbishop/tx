@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
 	Physics physics;
 	Creature player;
 	Model* playermod = RCBC_LoadFile("data/models/monkey-robot.dae", rm.getImages());
+	player.setShape(new btBoxShape(btVector3(.5,.5,.5)));
 	player.setModel(playermod);
 
 	//Model* textobjmod = RCBC_LoadFile("data/models/unmaptest.dae", rm.getImages());

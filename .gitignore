@@ -12,3 +12,4 @@ data/*
 *.pyc
 *.def
 *.lib
+a.out

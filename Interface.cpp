@@ -69,7 +69,7 @@ void Interface::Draw() {
 	static int last_render_time = 0;
 	static int last_fps_time = 0;
 	int current_time = SDL_GetTicks();
-
+	
 	/* Limit framerate */
 	if(limit_fps_ && !( (current_time - last_render_time) >= 1000/60) ) {
 		return;
@@ -83,19 +83,19 @@ void Interface::Draw() {
 		frame = 0;
 		LOG("FPS: %d,\tMPF: %d", fps_, mpf_);
 	}
-	
 	last_render_time = current_time;
 	
 	PerspectiveSet();
 	glLoadIdentity();
 	camera_.Position();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_LIGHTING) ;
 	glEnable(GL_LIGHT0);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_COLOR_MATERIAL);
-
+	
 	if(area_) {
 		area_->Draw();
 	}

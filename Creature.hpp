@@ -3,9 +3,10 @@
 
 #include "Camera.hpp"
 #include "Object.hpp"
+#include "RigidBody.hpp"
 #include "AccelerateFloat.hpp"
 
-class Creature : public Object {
+class Creature : public RigidBody {
 	public:
 		Creature();
 		void Foward();
