@@ -31,6 +31,14 @@ Physics::~Physics() {
     delete broadphase_;
 }
 
+btAxisSweep3* Physics::getBroadphase() {
+	return broadphase_;
+}
+
+btDiscreteDynamicsWorld* Physics::getWorld() {
+	return dynamicsWorld_;
+}
+
 void Physics::setGravity(float gravity) {
 	dynamicsWorld_->setGravity(btVector3(0, -gravity, 0));
 }
@@ -52,13 +60,8 @@ void Physics::Update(int time) {
 	#warning ['TODO']: This should be calculated...
 	int time_diff = time - last_update_;
 	
-	
-	if(time_diff <= 0) {
-		return;
-	}
-	
 	btScalar timeStep = ((float)time_diff) / 1000.0f;
-	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,10);
+	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,1);
 	last_update_ = time;
 }
 

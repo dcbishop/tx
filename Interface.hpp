@@ -14,14 +14,14 @@ class Interface {
 	public:
 		Interface(const int width, const int height);
 		~Interface();
-		void SetTitle(const string title);
-		void MainLoop();
-		void Draw();
-		void setArea(Area* area);
-		void setCreature(Creature* creature);
-		void PerspectiveSet();
+		virtual void SetTitle(const string title);
+		virtual void MainLoop();
+		virtual void Draw();
+		virtual void setArea(Area* area);
+		virtual void setCreature(Creature* creature);
+		virtual void PerspectiveSet();
 		void PositionCamera();
-		void windowToWorld(int mx, int my, GLdouble* x, GLdouble* y, GLdouble* z);
+		virtual void windowToWorld(int mx, int my, GLdouble* x, GLdouble* y, GLdouble* z);
 
 
 	private:

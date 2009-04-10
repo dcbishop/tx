@@ -7,8 +7,8 @@ class ResourceManager {
 	public:
 		ResourceManager();
 		~ResourceManager();
-		List* getImages();
-		List* getTextures();
+		virtual List* getImages();
+		virtual List* getTextures();
 	private:
 		List* images_;
 		List* models_;

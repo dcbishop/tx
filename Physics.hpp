@@ -20,11 +20,14 @@ class Physics {
 	public:
 		Physics();
 		~Physics();
-		void Update(int time);
-		void addRigidBody(btRigidBody* body);
-		void removeRigidBody(btRigidBody* body);
-		void setGravity(float gravity);
-		void debugDrawWorld();
+		virtual void Update(int time);
+		virtual void addRigidBody(btRigidBody* body);
+		virtual void removeRigidBody(btRigidBody* body);
+		virtual void setGravity(float gravity);
+		virtual void debugDrawWorld();
+		virtual btAxisSweep3* getBroadphase();
+		virtual btDiscreteDynamicsWorld* getWorld();
+
 
 	private:
 		btAxisSweep3* broadphase_;

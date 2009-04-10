@@ -27,16 +27,18 @@ int main(int argc, char* argv[]) {
 
 	Interface interface(800, 600);
 	RCBC_Init();
-
 	Physics physics;
+
 	Creature player;
 	Model* playermod = RCBC_LoadFile("data/models/monkey-robot.dae", rm.getImages());
-	player.setShape(new btBoxShape(btVector3(.5,.5,.5)));
+	//player.setShape(new btBoxShape(btVector3(.5,.5,.5)));
 	player.setModel(playermod);
-
-	//Model* textobjmod = RCBC_LoadFile("data/models/unmaptest.dae", rm.getImages());
-	//Object testobj;
-	//testobj.setModel(textobjmod);
+	player.setPos(0.0f, 6.5f, 0.0f);
+	Model* testobjmod = RCBC_LoadFile("data/models/unmaptest.dae", rm.getImages());
+	Object testobj;
+	testobj.setModel(testobjmod);
+	testobj.setPos(-3.0f, 0.0f, 0.0f);
+	
 	
 	Model* grass = RCBC_LoadFile("data/models/mayagrass.dae", rm.getImages());
 
@@ -44,12 +46,13 @@ int main(int argc, char* argv[]) {
 	ground.setMass(0);
 	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
 	ground.setModel(grass);	
-	ground.setPos(-1.0f, 0.0f, 0.0f);
+	ground.setPos(-1.0f, 0.0f, -1.0f);
 	
 	area.setPhysics(&physics);
 	area.LoadFile("data/areas/test-area.xml");
 	area.addObject(&player);
 	area.addObject(&ground);
+	area.addObject(&testobj);
 	interface.setCreature(&player);
 
 #warning ['TODO']: We should get the area from the controlled creature...

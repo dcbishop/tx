@@ -94,7 +94,7 @@ void Interface::Draw() {
 	glEnable(GL_LIGHTING) ;
 	glEnable(GL_LIGHT0);
 	glColor3f(1.0f, 1.0f, 1.0f);
-	glEnable(GL_COLOR_MATERIAL);
+	//glEnable(GL_COLOR_MATERIAL);
 	
 	if(area_) {
 		area_->Draw();
@@ -116,22 +116,32 @@ void Interface::HandleKeyDown(const SDL_Event& event) {
 			finished_ = true;
 			break;
 		case SDLK_UP:
-			creature_->Foward();
+			creature_->Forward(true);
 			break;
 		case SDLK_DOWN:
-			creature_->Reverse();
+			creature_->Reverse(true);
 			break;
-		case SDLK_LEFT:
-			//creature_->setRotAngle(creature_->getRotAngle() + 10.0f);
-			creature_->TurnLeft();
+		case SDLK_LEFT: case SDLK_q:
+			creature_->TurnRight(true);
 			break;
-		case SDLK_RIGHT:
-			//creature_->setRotAngle(creature_->getRotAngle() - 10.0f);
-			creature_->TurnRight();
+		case SDLK_RIGHT: case SDLK_e:
+			creature_->TurnLeft(true);
 			break;
-		case SDLK_q:
+		case SDLK_a:
+			creature_->StrafeLeft(true);
+			break;
+		case SDLK_d:
+			creature_->StrafeRight(true);
+			break;	
+		case SDLK_SPACE:
+			creature_->Jump();
+			break;
+		case SDLK_LSHIFT: case SDLK_RSHIFT:
+			creature_->Run(true);
+			break;
+		/*case SDLK_q:
 			finished_ = true;
-			break;
+			break;*/
 		case SDLK_1:
 			camera_.setFov(15.0f);
 			break;
@@ -169,12 +179,26 @@ void Interface::HandleKeyDown(const SDL_Event& event) {
 
 void Interface::HandleKeyUp(const SDL_Event& event) {
 	switch(event.key.keysym.sym) {
-		case SDLK_UP: case SDLK_DOWN:
-			creature_->Stop();
+		case SDLK_UP:
+			creature_->Forward(false);
 			break;
-		case SDLK_LEFT: case SDLK_RIGHT:
-			creature_->TurnStop();
+		case SDLK_DOWN:
+			creature_->Reverse(false);
 			break;
+		case SDLK_LEFT: case SDLK_q: 
+			creature_->TurnRight(false);
+		case SDLK_RIGHT: case SDLK_e:
+			creature_->TurnLeft(false);
+			break;
+		case SDLK_LSHIFT: case SDLK_RSHIFT:
+			creature_->Run(false);
+			break;
+		case SDLK_a:
+			creature_->StrafeLeft(false);
+			break;
+		case SDLK_d:
+			creature_->StrafeRight(false);
+			break;	
 		default:
 			break;
 	}
@@ -225,8 +249,9 @@ void Interface::HandleMouse1(const SDL_Event& event) {
 
 	RigidBody* newobj = new RigidBody;
 	newobj->setModel(model);
+	newobj->setMass(0.1f);
 	newobj->setShape(new btBoxShape(btVector3(.5,.5,.5)));
-	newobj->setPos(x, y+1.0f, z);
+	newobj->setPos(-x, y+1.0f, z);
 	
 	area_->addObject(newobj);
 }
@@ -241,7 +266,7 @@ void Interface::HandleMouse3(const SDL_Event& event) {
 	RigidBody* newobj = new RigidBody;
 	newobj->setModel(model);
 	newobj->setShape(new btSphereShape(1));
-	newobj->setPos(x, y+1.0f, z);
+	newobj->setPos(-x, y+1.0f, z);
 	
 	area_->addObject(newobj);
 }
@@ -300,6 +325,6 @@ void Interface::CheckEvents() {
 }
 
 void Interface::setCreature(Creature* creature) {
-	creature_ = creature;
+	creature_ = (Creature*)creature;
 	camera_.setTarget(creature_);
 }

@@ -78,7 +78,6 @@ void Area::Draw() {
 
 	/* Draw all the objects in the map */
 	for(vector<Object*>::iterator iter = objects_.begin(); iter != objects_.end(); iter++) {
-		//Object* object = *iter;
 		(*iter)->Draw();
 	}
 

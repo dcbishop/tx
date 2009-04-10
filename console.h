@@ -3,7 +3,9 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
-#define DEBUG_LEVEL DEBUG_VERY_HIGH
+#ifndef DEBUG_LEVEL
+#define DEBUG_LEVEL DEBUG_HIGH
+#endif
 
 #define DEBUG_VERY_HIGH 40
 #define DEBUG_HIGH 30
@@ -57,6 +59,11 @@
 
 #define DEBUG(level, fmt, ...) debugit(level, "%s[%s%s:%u%s]: [%s%s%s] %s" fmt, COLOUR_WHITE, COLOUR_LIGHT_CYAN, __FILE__, __LINE__, COLOUR_WHITE, COLOUR_LIGHT_BLUE, __FUNCTION__, COLOUR_WHITE, COLOUR_NONE, ## __VA_ARGS__)
 
+#ifndef _DEBUG
+#undef DEBUG
+#define DEBUG(level, fmt, ...)
+#endif
+
 #define DEBUG_A(fmt, ...) DEBUG(DEBUG_ALWAYS, fmt, ## __VA_ARGS__)
 #define DEBUG_L(fmt, ...) DEBUG(DEBUG_LOW, fmt, ## __VA_ARGS__)
 #define DEBUG_M(fmt, ...) DEBUG(DEBUG_MEDIUM, fmt, ## __VA_ARGS__)
@@ -64,16 +71,8 @@
 #define DEBUG_V(fmt, ...) DEBUG(DEBUG_VERY_HIGH, fmt, ## __VA_ARGS__)
 
 #define LOG(fmt, ...) logit("%s[%s%s%s:%s%s%s]:%s " fmt, COLOUR_WHITE, COLOUR_LIGHT_CYAN, __DATE__, COLOUR_WHITE, COLOUR_LIGHT_CYAN, __TIME__, COLOUR_WHITE, COLOUR_NONE, ## __VA_ARGS__)
-
 #define WARNING(fmt, ...) warnit("%s[%s%s:%u%s]: [%s%s%s] %s" fmt, COLOUR_WHITE, COLOUR_LIGHT_CYAN, __FILE__, __LINE__, COLOUR_WHITE, COLOUR_LIGHT_BLUE, __FUNCTION__, COLOUR_WHITE, COLOUR_NONE, ## __VA_ARGS__)
-
 #define ERROR(fmt, ...) errorit("%s[%s%s:%u%s]: [%s%s%s] %s" fmt, COLOUR_WHITE, COLOUR_LIGHT_CYAN, __FILE__, __LINE__, COLOUR_WHITE, COLOUR_LIGHT_BLUE, __FUNCTION__, COLOUR_WHITE, COLOUR_NONE, ## __VA_ARGS__)
-
-#define _DEBUG
-#ifndef _DEBUG
-#undef DEBUG
-#define DEBUG(level, fmt, ...)
-#endif
 
 #define BREAK() char buffer[255]; ERROR("Break point..."); fgets(buffer, 254, stdin)
 

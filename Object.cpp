@@ -9,10 +9,10 @@ Object::Object() {
 	setX(1.0f);
 	setY(0.0f);
 	setZ(0.0f);
+	
 	setRotX(0.0f);
 	setRotY(1.0f);
 	setRotZ(0.0f);
-
 	setRotAngle(0.0f);
 
 #warning ['TODO']: This shoud be the current time...
@@ -28,9 +28,9 @@ void Object::Draw() {
 	if(!model_) {
 		return;
 	}
-	
+
 	glPushMatrix();
-	glTranslatef(-getX(), getY(), -getZ());
+	glTranslatef(getX(), getY(), getZ());
 	glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
 	RCBC_Render(model_);
 	glPopMatrix();

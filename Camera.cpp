@@ -30,7 +30,7 @@ void Camera::setTarget(Object* object) {
 void Camera::Draw() {
 }
 
-/* Position camera around object using some voodoo math */
+/* Position camera around object using some math */
 void Camera::Update(int time) {
 	/* http://en.wikipedia.org/wiki/Spherical_coordinates */
 	GLfloat theta = getRotX();
@@ -67,7 +67,7 @@ void Camera::Position() {
 		cz = target_->getZ();
 	}
 	
-	gluLookAt( getX()-cx, getY()+cy, getZ()-cz, -cx, cy, -cz, 0.0f, 10.0f, 0.0f );
+	gluLookAt( getX()-cx, getY()+cy, getZ()+cz, -cx, cy, cz, 0.0f, 10.0f, 0.0f );
 }
 
 GLfloat Camera::getZoom() {

@@ -10,7 +10,7 @@ ResourceManager::ResourceManager() {
 ResourceManager::~ResourceManager() {
 	DEBUG_M("Entering function...");
 
-	#warning: TODO: Free correctly...
+	#warning: ['TODO']: Free correctly...
 	//List_DeleteData(images_);
 	//List_DeleteData(models_);
 	DELETE(images_);

@@ -13,3 +13,4 @@ data/*
 *.def
 *.lib
 a.out
+tmp/*

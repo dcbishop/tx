@@ -4,7 +4,7 @@
 RigidBody::RigidBody() {
 	shape_ = NULL;
 	body_ = NULL;
-	mass_ = 1;
+	mass_ = 1.0f;
 	
 	motionState_ = new btDefaultMotionState(
 					btTransform(btQuaternion(0,0,0,1),
@@ -16,27 +16,26 @@ RigidBody::RigidBody() {
 void RigidBody::setShape(btCollisionShape* shape) {
 	if(body_) {
 		#warning ['TODO']: If there is already a body... need to update it somehow?
-		//body_
 	} else {
 		#warning ['TODO']: Otherwise make a new body...
 	}
 	
-	if(shape_) {
+	if(shape_ && shape != shape_) {
 		delete shape_;
 	}
 	
 	shape_ = shape;
 	shape_->calculateLocalInertia(mass_, inertia_);
+	delete(body_);
 	
-	if(!body_) {
-		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-			mass_,
-			motionState_,
-			shape_,
-			inertia_
-		);
-		body_ = new btRigidBody(rigidBodyCI);
-	}	
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
+		mass_,
+		motionState_,
+		shape_,
+		inertia_
+	);
+	
+	body_ = new btRigidBody(rigidBodyCI);
 }
 
 void RigidBody::setArea(Area* area) {
@@ -51,7 +50,7 @@ void RigidBody::setArea(Area* area) {
 	if(body_) {
 		#warning ['TODO']: Add body to physics, but only if it isn't already in an engine...
 		if(getArea() && getArea()->getPhysics()) {
-			getArea()->getPhysics()->addRigidBody(body_);
+			getArea()->getPhysics()->addRigidBody((btRigidBody*)body_);
 		}
 	}
 }
@@ -59,7 +58,7 @@ void RigidBody::setArea(Area* area) {
 void RigidBody::removeRigidBody_() {
 	Area* area = getArea();
 	if(area && area->getPhysics() && body_) {
-		area->getPhysics()->removeRigidBody(body_);
+		area->getPhysics()->removeRigidBody((btRigidBody*)body_);
 	}
 }
 
@@ -71,42 +70,40 @@ RigidBody::~RigidBody() {
 	delete motionState_;
 }
 
-#warning ['TODO']: Implement getPos, setPos&XYZ
-const float RigidBody::getX() {
+btVector3& RigidBody::getPos() {
 	if(!body_) {
-		return 0.0f;
+		throw "No body...";
 	}
-	
-	btTransform trans;
-    body_->getMotionState()->getWorldTransform(trans);
-	return trans.getOrigin().getX();
+	btTransform trans = body_->getWorldTransform();
+	return trans.getOrigin();
+}
+
+const float RigidBody::getX() {
+	try {
+		return getPos().getX();
+	} catch(char const* str) {
+		return Object::getX();
+	}
 }
 
 const float RigidBody::getY() {
-	if(!body_) {
-		return 0.0f;
+	try {
+		return getPos().getY();
+	} catch(char const* str) {
+		return Object::getY();
 	}
-	
-	btTransform trans;
-    body_->getMotionState()->getWorldTransform(trans);
-	return trans.getOrigin().getY();
 }
 
 const float RigidBody::getZ() {
-	if(!body_) {
-		return 0.0f;
+	try {
+		return getPos().getZ();
+	} catch(char const* str) {
+		return Object::getZ();
 	}
-	
-	btTransform trans;
-    body_->getMotionState()->getWorldTransform(trans);
-	return trans.getOrigin().getZ();
 }
 
 void RigidBody::Update(int time) {
-	Area* area = getArea();
-	if(!area || area->getPhysics()) {
-		area->getPhysics()->Update(time);
-	}
+	Object::Update(time);
 }
 
 void RigidBody::setMass(btScalar mass) {
@@ -183,9 +180,15 @@ void RigidBody::Draw() {
 	glPushMatrix();
 	btScalar m[15];
 	body_->getWorldTransform().getOpenGLMatrix(m);
+	m[12] = -m[12]; // Need to reverse this to rotate correctly o_O.
 	glMultMatrixf(m);
+	glDisable(GL_LIGHTING);
 	drawCube();
-	
+	glEnable(GL_LIGHTING);
 	RCBC_Render(model);
 	glPopMatrix();
+}
+
+btRigidBody* RigidBody::getBody() {
+	return (btRigidBody*)body_;
 }

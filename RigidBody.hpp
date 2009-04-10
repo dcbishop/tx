@@ -8,26 +8,31 @@ class RigidBody : public Object {
 	public:
 		RigidBody();
 		~RigidBody();
-		void setArea(Area* area);
-		void setShape(btCollisionShape* shape);
-		const float getX();
-		const float getY();
-		const float getZ();
-		void Update(int time);
-		void setMass(btScalar mass);
-		void setPos(float x, float y, float z);
-		void setX(float x);
-		void setY(float y);
-		void setZ(float z);
-		void Draw();
+		virtual void setArea(Area* area);
+		virtual void setShape(btCollisionShape* shape);
+		virtual btVector3& getPos();
+		virtual const float getX();
+		virtual const float getY();
+		virtual const float getZ();
+		virtual void Update(int time);
+		virtual void setMass(btScalar mass);
+		virtual void setPos(float x, float y, float z);
+		virtual void setX(float x);
+		virtual void setY(float y);
+		virtual void setZ(float z);
+		virtual void Draw();
+		virtual btRigidBody* getBody();
+	
+	protected:
+		btCollisionShape* shape_;
+		btCollisionObject* body_;
 		
 	private:
 		void removeRigidBody_();
-		btCollisionShape* shape_;
-		btRigidBody* body_;
 		btDefaultMotionState* motionState_;
 		btScalar mass_;
 		btVector3 inertia_;
+	
 };
 
 #endif
