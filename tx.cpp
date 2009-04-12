@@ -59,9 +59,9 @@ int main(int argc, char* argv[]) {
 	interface.setArea(&area);
 	interface.MainLoop();
 		
-	DELETE(playermod);
+	//DELETE(playermod);
 	//DELETE(textobjmod);
-	DELETE(grass);
+	//DELETE(grass);
 
 	LOG("TX finished...");
 	return 0;

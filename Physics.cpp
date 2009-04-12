@@ -17,9 +17,9 @@ Physics::Physics() {
 	setGravity(GRAVITY_EARTH);
 	
 	last_update_ = 0;
-	BulletDebugDraw *debugdraw = new BulletDebugDraw;
+	/*BulletDebugDraw *debugdraw = new BulletDebugDraw;
 	debugdraw->setDebugMode(1);
-	dynamicsWorld_->setDebugDrawer(new BulletDebugDraw);
+	dynamicsWorld_->setDebugDrawer(new BulletDebugDraw);*/
 	body_count_ = 0;
 }
 

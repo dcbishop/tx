@@ -44,7 +44,7 @@
 #ifdef USE_UNICODE
 #define SYMBOL_SMILEY "☺"
 #define SYMBOL_INVERTED_SMILEY "☻"
-#define SYMBOL_SADLY "☹"
+#define SYMBOL_SADLEY "☹"
 #define SYMBOL_FATAL "☠"
 #define SYMBOL_WARNING "☢"
 #define SYMBOL_DEGREES "°"
@@ -75,7 +75,6 @@
 #define ERROR(fmt, ...) errorit("%s[%s%s:%u%s]: [%s%s%s] %s" fmt, COLOUR_WHITE, COLOUR_LIGHT_CYAN, __FILE__, __LINE__, COLOUR_WHITE, COLOUR_LIGHT_BLUE, __FUNCTION__, COLOUR_WHITE, COLOUR_NONE, ## __VA_ARGS__)
 
 #define BREAK() char buffer[255]; ERROR("Break point..."); fgets(buffer, 254, stdin)
-
 
 void logit(const char* format, ...);
 void errorit(const char* format, ...);

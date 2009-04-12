@@ -9,7 +9,7 @@
 Scripting::Scripting() {
 	myLuaState_ = lua_open();
 	if(!myLuaState_) {
-		ERROR("Failed to init Lua...");
+		//ERROR("Failed to init Lua...");
 		throw "LUAFAILED";
 	}
 	
@@ -25,7 +25,7 @@ Scripting::Scripting() {
 	try {
 		luaL_dostring(myLuaState_, "ScriptLog(\"Lua successfully initilized...\")\n");
 	} catch(const std::exception &TheError) {
-		ERROR("LUA: %s", TheError.what());
+		//ERROR("LUA: %s", TheError.what());
 	}	
 }
 

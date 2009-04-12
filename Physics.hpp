@@ -40,7 +40,8 @@ class Physics {
 		int body_max_;
 };
 
-class BulletDebugDraw : public btIDebugDraw {
+#warning ['TODO']: Remove nonworking bullet debugdraw...
+/*class BulletDebugDraw : public btIDebugDraw {
 	public:
 		void drawLine(const btVector3& from,const btVector3& to,const btVector3& colour) {
 			glBegin(GL_LINES);
@@ -73,6 +74,6 @@ class BulletDebugDraw : public btIDebugDraw {
 	private:
 		int debug_;
 
-};
+};*/
 
 #endif

@@ -100,7 +100,7 @@ void Creature::Forward(bool state) {
 }
 
 void Creature::Jump() {
-	LOG("Robots carn't jump %s...", SYMBOL_SADLY);
+	LOG("Robots carn't jump %s...", SYMBOL_SADLEY);
 }
 
 void Creature::Run(bool state) {
