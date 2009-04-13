@@ -39,7 +39,7 @@ void Camera::setTarget(Object* object) {
 /**
  * Updates the camera's position around object
  */
-void Camera::Update(int time) {
+void Camera::Update(const int time) {
 	/* http://en.wikipedia.org/wiki/Spherical_coordinates */
 	GLfloat theta = getRotX();
 	GLfloat phi = getRotY();
@@ -108,7 +108,7 @@ GLfloat Camera::getFov() {
  * Sets the target field of view.
  * @param fov field of view
  */
-void Camera::setFov(float fov) {
+void Camera::setFov(const float fov) {
 	fov_.setValue(fov);
 }
 
@@ -116,15 +116,15 @@ void Camera::setFov(float fov) {
  * Sets the camera zoom (distance from target Object)
  * @param zoom Distance from the target in meters.
  */
-void Camera::setZoom(GLfloat zoom) {
+void Camera::setZoom(const GLfloat zoom) {
 	/* Ensure the camera zoom is sane */
 	if(zoom < ZOOM_MIN) {
-		zoom = ZOOM_MIN;
+		zoom_.setValue(ZOOM_MIN);
 	} else if(zoom > ZOOM_MAX) {
-		zoom = ZOOM_MAX;
+		zoom_.setValue(ZOOM_MAX);
+	} else {
+		zoom_.setValue(zoom);
 	}
-
-	zoom_.setValue(zoom);
 }
 
 /**
@@ -139,13 +139,13 @@ void Camera::setRotX(const GLfloat rx) {
  * Sets the camera rotation above the target.
  * @param ry
  */
-void Camera::setRotY(GLfloat ry) {
+void Camera::setRotY(const GLfloat ry) {
 	/* Stop flipping over the top  */
 	if(ry < Y_MIN) {
-		ry = Y_MIN;
+		Object::setRotY(Y_MIN);
 	} else if(ry > Y_MAX) {
-		ry = Y_MAX;
+		Object::setRotY(Y_MAX);
+	} else {
+		Object::setRotY(ry);
 	}
-
-	Object::setRotY(ry);
 }

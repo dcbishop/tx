@@ -5,7 +5,7 @@
  * Constructor
  * @param tag
  */
-RigidBody::RigidBody(string tag) {
+RigidBody::RigidBody(const string tag) {
 	setTag(tag);
 	
 	shape_ = NULL;
@@ -123,29 +123,29 @@ void RigidBody::Update(int time) {
  * Sets the mass of the Object.
  * @param mass
  */
-void RigidBody::setMass(btScalar mass) {
+void RigidBody::setMass(const btScalar mass) {
 	mass_ = mass;
 }
 
-void RigidBody::setPos(float x, float y, float z) {
+void RigidBody::setPos(const float x, const float y, const float z) {
 	if(body_) {
 		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
 	}
 }
 
-void RigidBody::setX(float x) {
+void RigidBody::setX(const float x) {
 	if(body_) {
 		body_->getWorldTransform().setOrigin( btVector3(x, getY(), getZ()) );
 	}
 }
 
-void RigidBody::setY(float y) {
+void RigidBody::setY(const float y) {
 	if(body_) {
 		body_->getWorldTransform().setOrigin( btVector3(getX(), y, getZ()) );
 	}
 }
 
-void RigidBody::setZ(float z) {
+void RigidBody::setZ(const float z) {
 	if(body_) {
 		body_->getWorldTransform().setOrigin( btVector3(getX(), getY(), z) );
 	}

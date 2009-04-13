@@ -22,16 +22,16 @@ class Camera : public Object {
 	public:
 		Camera(string tag = DEFAULT_TAG);
 		~Camera();
-		void Update(int time);
+		void Update(const int time);
 		void setTarget(Object* object);
 		GLfloat getFov();
-		void setZoom(GLfloat zoom);
+		void setZoom(const GLfloat zoom);
 		GLfloat getZoom();
 		GLfloat getZoomTarget();
 		void Position();
 		void setRotX(const GLfloat rx);
-		void setRotY(GLfloat ry);
-		void setFov(float fov);
+		void setRotY(const GLfloat ry);
+		void setFov(const float fov);
 
 	private:
 		Object* target_;

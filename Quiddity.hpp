@@ -11,7 +11,7 @@ class Quiddity {
 	public:
 		Quiddity(string tag = DEFAULT_TAG);
 		string getTag();
-		void setTag(string tag);
+		void setTag(const string tag);
 	private:
 		string tag_;
 };

@@ -257,7 +257,7 @@ void Interface::ResizeEvent_(const SDL_Event& event) {
  * @param y Y cord to set.
  * @param z Z cord to set.
  */
-void Interface::windowToWorld(int mx, int my, GLdouble* x, GLdouble* y, GLdouble* z) {
+void Interface::windowToWorld(const int mx, const int my, GLdouble* x, GLdouble* y, GLdouble* z) {
 	/* Get infomation to turn window cordinates into opengl ones */
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);

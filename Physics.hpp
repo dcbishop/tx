@@ -25,10 +25,10 @@ class Physics : public Updateable {
 	public:
 		Physics();
 		~Physics();
-		virtual void Update(int time);
+		virtual void Update(const int time);
 		virtual void addRigidBody(btRigidBody* body);
 		virtual void removeRigidBody(btRigidBody* body);
-		virtual void setGravity(float gravity);
+		virtual void setGravity(const float gravity);
 		virtual btAxisSweep3* getBroadphase();
 		virtual btDiscreteDynamicsWorld* getWorld();
 

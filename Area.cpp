@@ -182,7 +182,7 @@ void Area::removeObject(Object* object) {
  * Updates the Area based on the time.
  * @param time The current game time in milliseconds.
  */
-void Area::Update(int time) {
+void Area::Update(const int time) {
 	DEBUG_M("FlagZ 1...");
 	physics_->Update(time);
 	Updateable::Update(time);

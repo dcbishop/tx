@@ -17,12 +17,12 @@ class RigidBody : public Object {
 		virtual const float getX();
 		virtual const float getY();
 		virtual const float getZ();
-		virtual void Update(int time);
-		virtual void setMass(btScalar mass);
-		virtual void setPos(float x, float y, float z);
-		virtual void setX(float x);
-		virtual void setY(float y);
-		virtual void setZ(float z);
+		virtual void Update(const int time);
+		virtual void setMass(const btScalar mass);
+		virtual void setPos(const float x, const float y, const float z);
+		virtual void setX(const float x);
+		virtual void setY(const float y);
+		virtual void setZ(const float z);
 		virtual void Draw();
 		virtual btRigidBody* getBody();
 	

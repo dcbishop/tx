@@ -51,7 +51,7 @@ btDiscreteDynamicsWorld* Physics::getWorld() {
  * Sets the gravity used in the physics world.
  * @param gravity
  */
-void Physics::setGravity(float gravity) {
+void Physics::setGravity(const float gravity) {
 	dynamicsWorld_->setGravity(btVector3(0, -gravity, 0));
 }
 
@@ -80,7 +80,7 @@ void Physics::removeRigidBody(btRigidBody* body) {
  * Updates the physics based on the time.
  * @param time The current game time in milliseconds.
  */
-void Physics::Update(int time) {
+void Physics::Update(const int time) {
 	#warning ['TODO']: This should be calculated...
 	int time_diff = time - getLastUpdate();
 	DEBUG_M("FlagZ 1...");

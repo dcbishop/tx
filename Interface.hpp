@@ -21,7 +21,7 @@ class Interface {
 		virtual void MainLoop();
 		virtual void Draw();
 		virtual void setCreature(Creature* creature);
-		virtual void windowToWorld(int mx, int my, GLdouble* x, GLdouble* y, GLdouble* z);
+		virtual void windowToWorld(const int mx, const int my, GLdouble* x, GLdouble* y, GLdouble* z);
 
 
 	private:

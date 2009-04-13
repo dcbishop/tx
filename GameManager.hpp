@@ -9,11 +9,11 @@ using namespace std;
  */
 class {
 	public:
-		void Update();
+		void Update(const int time);
 
 	private:
 		Scripting scripting_;
 		Physics physics_;
 		vector<Area*> areas_;
-		multimap<string, Quiddity*> tags_;		
+		multimap<string, Quiddity*> tags_;
 }

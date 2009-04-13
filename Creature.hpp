@@ -17,23 +17,23 @@
  */
 class Creature : public RigidBody {
 	public:
-		Creature(string tag = DEFAULT_TAG, Model* model = NULL);
+		Creature(const string tag = DEFAULT_TAG, Model* model = NULL);
 		~Creature();
-		void Update(int time);
+		virtual void Update(const int time);
 		
-		virtual void Forward(bool state=true);
-		virtual void Reverse(bool state=true);
-		virtual void TurnLeft(bool state=true);
-		virtual void TurnRight(bool state=true);
-		virtual void StrafeLeft(bool state=true);
-		virtual void StrafeRight(bool state=true);
+		virtual void Forward(const bool state=true);
+		virtual void Reverse(const bool state=true);
+		virtual void TurnLeft(const bool state=true);
+		virtual void TurnRight(const bool state=true);
+		virtual void StrafeLeft(const bool state=true);
+		virtual void StrafeRight(const bool state=true);
 		virtual void Jump();
-		virtual void Run(bool state=true);
+		virtual void Run(const bool state=true);
 
-		virtual void setTurnRate(float turn_rate);
+		virtual void setTurnRate(const float turn_rate);
 		virtual void setShape(btCollisionShape* shape);
 		virtual void setArea(Area* area);
-		virtual void setPos(float x, float y, float z);
+		virtual void setPos(const float x, const float y, const float z);
 		virtual btVector3& getPos();
 	
 	private:

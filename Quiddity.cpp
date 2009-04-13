@@ -23,6 +23,6 @@ string Quiddity::getTag() {
  * @see getTag()
  * @param tag The object's tag.
  */
-void Quiddity::setTag(string tag) {
+void Quiddity::setTag(const string tag) {
 	tag_ = tag;
 }

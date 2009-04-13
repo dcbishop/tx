@@ -40,7 +40,7 @@ class Area  : public Quiddity, public Updateable {
 		void addObject(Object* object);
 		void removeObject(Object* object);
 		void Draw();
-		void Update(int time);
+		void Update(const int time);
 
 
 	private:

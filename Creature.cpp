@@ -7,7 +7,7 @@
  * @param tag The Objects tag.
  * @param model The Objects RCBC model pointer.
  */
-Creature::Creature(string tag, Model* model) {
+Creature::Creature(const string tag, Model* model) {
 	setTag(tag);
 	setModel(model);
 	setMass(100.0f);
@@ -66,7 +66,7 @@ btVector3& Creature::getPos() {
 	return body_->getWorldTransform().getOrigin();
 }
 
-void Creature::setPos(float x, float y, float z) {
+void Creature::setPos(const float x, const float y, const float z) {
 	if(body_) {
 		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
 	}
@@ -102,7 +102,7 @@ void Creature::setArea(Area* area) {
  * Sets the creature as moving backwards.
  * @param turn_rate
  */
-void Creature::setTurnRate(float turn_rate) {
+void Creature::setTurnRate(const float turn_rate) {
 	turn_rate_ = turn_rate;
 }
 
@@ -123,7 +123,7 @@ void Creature::Jump() {
  * @see StrafeLeft()
  * @see StrafeRight()
  */
-void Creature::Run(bool isRunning) {
+void Creature::Run(const bool isRunning) {
 	running_ = isRunning;
 }
 
@@ -137,7 +137,7 @@ void Creature::Run(bool isRunning) {
  * @see StrafeLeft()
  * @see StrafeRight()
  */
-void Creature::Forward(bool state) {
+void Creature::Forward(const bool state) {
 	forward_ = state;
 }
 
@@ -151,7 +151,7 @@ void Creature::Forward(bool state) {
  * @see StrafeLeft()
  * @see StrafeRight()
  */
-void Creature::Reverse(bool state) {
+void Creature::Reverse(const bool state) {
 	backward_ = state;
 }
 
@@ -165,7 +165,7 @@ void Creature::Reverse(bool state) {
  * @see StrafeLeft()
  * @see StrafeRight()
  */
-void Creature::TurnLeft(bool state) {
+void Creature::TurnLeft(const bool state) {
 	turn_left_ = state;
 }
 /**
@@ -178,7 +178,7 @@ void Creature::TurnLeft(bool state) {
  * @see StrafeLeft()
  * @see StrafeRight()
  */
-void Creature::TurnRight(bool state) {
+void Creature::TurnRight(const bool state) {
 	turn_right_ = state;
 }
 
@@ -192,7 +192,7 @@ void Creature::TurnRight(bool state) {
  * @see StrafeLeft()
  * @see StrafeRight()
  */
-void Creature::StrafeLeft(bool state) {
+void Creature::StrafeLeft(const bool state) {
 	strafe_left_ = state;
 }
 
@@ -206,13 +206,14 @@ void Creature::StrafeLeft(bool state) {
  * @see StrafeLeft()
  * @see StrafeRight()
  */
-void Creature::StrafeRight(bool state) {
+void Creature::StrafeRight(const bool state) {
 	strafe_right_ = state;
 }
 
-void Creature::Update(int time) {
+void Creature::Update(const int time) {
 	float dt = ((float)time - getLastUpdate()) / 1000;
 	
+	// Get the current position and rotation
 	btTransform xform;
 	xform = body_->getWorldTransform();
 	btVector3 forwardDir = xform.getBasis()[2];
@@ -222,6 +223,7 @@ void Creature::Update(int time) {
 	btVector3 walkDirection = btVector3(0.0f, 0.0f, 0.0f);
 	btScalar walkSpeed = walk_velocity_ * dt;
 	
+	// Get any movement flags
 	if(running_) {
 		walkSpeed *= running_multiplier_;
 	}	
@@ -232,10 +234,10 @@ void Creature::Update(int time) {
 		walkDirection += forwardDir;
 	}
 	if(strafe_left_) {
-		walkDirection -= strafeDir;
+		walkDirection += strafeDir;
 	}
 	if(strafe_right_) {
-		walkDirection += strafeDir;
+		walkDirection -= strafeDir;
 	}
 	if(turn_left_) {
 		turn_angle_ -= turn_rate_ * dt;
@@ -244,6 +246,7 @@ void Creature::Update(int time) {
 		turn_angle_ += turn_rate_ * dt;
 	}
 
+	// Update the position
 	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), turn_angle_));
 	((btPairCachingGhostObject*)body_)->setWorldTransform (xform);	
 	controller_->setWalkDirection(walkDirection * walkSpeed);
