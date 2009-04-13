@@ -4,9 +4,12 @@
 #include "Object.hpp"
 #include "Physics.hpp"
 
+/**
+ * A dynamic rigid body object.
+ */
 class RigidBody : public Object {
 	public:
-		RigidBody();
+		RigidBody(string tag = DEFAULT_TAG);
 		~RigidBody();
 		virtual void setArea(Area* area);
 		virtual void setShape(btCollisionShape* shape);
@@ -24,8 +27,8 @@ class RigidBody : public Object {
 		virtual btRigidBody* getBody();
 	
 	protected:
-		btCollisionShape* shape_;
-		btCollisionObject* body_;
+		btCollisionShape* shape_; /**< The collision shape. */
+		btCollisionObject* body_; /**< The collision body. */
 		
 	private:
 		void removeRigidBody_();

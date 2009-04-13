@@ -12,9 +12,12 @@
 #include "RigidBody.hpp"
 #include "AccelerateFloat.hpp"
 
+/**
+ * A controllable creature.
+ */
 class Creature : public RigidBody {
 	public:
-		Creature();
+		Creature(string tag = DEFAULT_TAG, Model* model = NULL);
 		~Creature();
 		void Update(int time);
 		
@@ -37,7 +40,6 @@ class Creature : public RigidBody {
 		btKinematicCharacterController* controller_;
 		btPairCachingGhostObject* controller_ghost_;
 
-#warning ['TODO']: Prune out deperacted.
 		float turn_rate_;
 		bool turn_left_;
 		bool turn_right_;

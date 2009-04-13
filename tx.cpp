@@ -16,6 +16,9 @@ using std::string;
 #include "Scripting.hpp"
 #include "console.h"
 
+/**
+ * Let there be main...
+ */
 int main(int argc, char* argv[]) {
 	LOG("TX starting...");
 	
@@ -29,7 +32,7 @@ int main(int argc, char* argv[]) {
 	RCBC_Init();
 	Physics physics;
 
-	Creature player;
+	Creature player("Player");
 	Model* playermod = RCBC_LoadFile("data/models/monkey-robot.dae", rm.getImages());
 	//player.setShape(new btBoxShape(btVector3(.5,.5,.5)));
 	player.setModel(playermod);
@@ -56,7 +59,7 @@ int main(int argc, char* argv[]) {
 	interface.setCreature(&player);
 
 #warning ['TODO']: We should get the area from the controlled creature...
-	interface.setArea(&area);
+	//interface.setArea(&area);
 	interface.MainLoop();
 		
 	//DELETE(playermod);
@@ -64,5 +67,6 @@ int main(int argc, char* argv[]) {
 	//DELETE(grass);
 
 	LOG("TX finished...");
+
 	return 0;
 }

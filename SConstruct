@@ -7,7 +7,7 @@ sources = glob('*.cpp')
 
 env = Environment()
 win32 = ARGUMENTS.get('win32', 0)
-debug_flag = ARGUMENTS.get('DEBUG', 0)
+debug_flag = ARGUMENTS.get('debug', 0)
 
 env.AppendUnique(LIBS=['m', 'IL', 'mxml', 'rcbc', 'luabind'])
 

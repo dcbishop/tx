@@ -14,20 +14,25 @@ using namespace std;
 #include "ResourceManager.hpp"
 
 class Object;
+#include "Updateable.hpp"
 #include "Object.hpp"
 #include "Physics.hpp"
 
 using namespace std;
 
-class Area {
+typedef Model Tile;
+/**
+ * A game area. A load of tiles and objects.
+ */
+class Area  : public Quiddity, public Updateable {
 	public:
 		Area();
 		~Area();
 		int getHeight();
 		int getWidth();
 		void LoadFile(string filename);
-		Model* getTile(const int x, const int y);
-		void setTile(const int x, const int y, Model* tile);
+		Tile* getTile(const int x, const int y);
+		void setTile(const int x, const int y, Tile* tile);
 		void setResourceManager(ResourceManager* rm);
 		ResourceManager* getResourceManager();
 		void setPhysics(Physics* phy);

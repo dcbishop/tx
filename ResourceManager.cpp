@@ -17,12 +17,17 @@ ResourceManager::~ResourceManager() {
 	DELETE(models_);
 }
 
+/**
+ * @return Pointer to a RCBC List containing all the Images.
+ */
 List* ResourceManager::getImages() {
 	DEBUG_M("Entering function...");
 	return images_;
 }
-
-List* ResourceManager::getTextures() {
+/**
+ * @return Pointer to a RCBC List containing all the Models.
+ */
+List* ResourceManager::getModels() {
 	DEBUG_M("Entering function...");
 	return models_;
 }

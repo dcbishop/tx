@@ -5,6 +5,8 @@
 #include <GL/gl.h>
 #include "console.h"
 
+#include "Updateable.hpp"
+
 const float GRAVITY_MERCURY	=	3.7f;
 const float GRAVITY_VENUS	=	8.8f;
 const float GRAVITY_EARTH	=	9.8f;
@@ -16,7 +18,10 @@ const float GRAVITY_URANUS	=	8.7f;
 const float GRAVITY_NEPTUNE	=	11.1f;
 const float GRAVITY_PLUTO	=	0.6f;
 
-class Physics {
+/**
+ * A class responsible for running the games physics.
+ */
+class Physics : public Updateable {
 	public:
 		Physics();
 		~Physics();
@@ -24,7 +29,6 @@ class Physics {
 		virtual void addRigidBody(btRigidBody* body);
 		virtual void removeRigidBody(btRigidBody* body);
 		virtual void setGravity(float gravity);
-		virtual void debugDrawWorld();
 		virtual btAxisSweep3* getBroadphase();
 		virtual btDiscreteDynamicsWorld* getWorld();
 
@@ -35,7 +39,6 @@ class Physics {
 		btCollisionDispatcher* dispatcher_;
 		btSequentialImpulseConstraintSolver* solver_;
 		btDiscreteDynamicsWorld* dynamicsWorld_;
-		int last_update_;
 		int body_count_;
 		int body_max_;
 };

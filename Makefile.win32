@@ -12,7 +12,7 @@ SDL_CONFIG=/usr/${MINGW_PREFIX}/bin/sdl-config
 SDL_LIBS:= $(shell ${SDL_CONFIG} --libs)
 SDL_CFLAGS:= $(shell ${SDL_CONFIG} --cflags)
 
-OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o  Object.o Camera.o Creature.o DynamicFloat.o AccelerateFloat.o
+OBJS = console.o Area.o Interface.o ResourceManager.o ImageManager.o  Object.o Camera.o Creature.o DynamicFloat.o AccelerateFloat.o Physics.o RigidBody.o Scripting.o
 all: tx.exe
 LIBS = -lmxml -lrcbc ${SDL_LIBS} -lopengl32 -lglu32 -L${MINGW_LIBDIR}  -llua -lluabind -lbulletdynamics -lbulletcollision -lbulletmath
 CFLAGS = $(SDL_CFLAGS) $(shell pkg-config --cflags mxml) -I/usr/i586-mingw32msvc/include/bullet/

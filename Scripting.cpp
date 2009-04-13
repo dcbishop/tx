@@ -44,6 +44,7 @@ void Scripting::bindAll_() {
 	];
 }
 
+#warning ['TODO']: Reenable this...
 luabind::scope Scripting::bindObject_() {
 	return
 		luabind::class_<Object>("Object")
@@ -56,6 +57,7 @@ luabind::scope Scripting::bindObject_() {
 			.property("ry", &Object::getRotY, &Object::setRotY)
 			.property("rz", &Object::getRotZ, &Object::setRotZ)
 			.property("angle", &Object::getRotAngle, &Object::setRotAngle)
+			.property("last_update", &Object::getLastUpdate)
 		;
 }
 
@@ -63,4 +65,5 @@ luabind::scope Scripting::bindRigidBody_() {
 	return
 		luabind::class_<RigidBody, Object>("RigidBody")
 	;
+
 }

@@ -2,7 +2,14 @@
 #include "Creature.hpp"
 #include <math.h>
 
-Creature::Creature() {
+/**
+ * The constructor. Sets cordinates to 0,0,0.
+ * @param tag The Objects tag.
+ * @param model The Objects RCBC model pointer.
+ */
+Creature::Creature(string tag, Model* model) {
+	setTag(tag);
+	setModel(model);
 	setMass(100.0f);
 	turn_angle_ = 0.0;
 	walk_velocity_ = 2.0f;
@@ -90,39 +97,115 @@ void Creature::setArea(Area* area) {
 		world->addCharacter(controller_);            
 	}
 }
-	
+
+/**
+ * Sets the creature as moving backwards.
+ * @param turn_rate
+ */
 void Creature::setTurnRate(float turn_rate) {
 	turn_rate_ = turn_rate;
 }
 
-void Creature::Forward(bool state) {
-	forward_ = state;
-}
-
+/**
+ * Performs a jump action.
+ */
 void Creature::Jump() {
 	LOG("Robots carn't jump %s...", SYMBOL_SADLEY);
 }
 
-void Creature::Run(bool state) {
-	running_ = state;
+/**
+ * Sets the creature running.
+ * @see Run()
+ * @see Reverse()
+ * @see Forward()
+ * @see TurnLeft()
+ * @see TurnRight()
+ * @see StrafeLeft()
+ * @see StrafeRight()
+ */
+void Creature::Run(bool isRunning) {
+	running_ = isRunning;
 }
 
+/**
+ * Sets the creature as moving forwards.
+ * @see Run()
+ * @see Reverse()
+ * @see Forward()
+ * @see TurnLeft()
+ * @see TurnRight()
+ * @see StrafeLeft()
+ * @see StrafeRight()
+ */
+void Creature::Forward(bool state) {
+	forward_ = state;
+}
+
+/**
+ * Sets the creature as moving backwards.
+ * @see Run()
+ * @see Reverse()
+ * @see Forward()
+ * @see TurnLeft()
+ * @see TurnRight()
+ * @see StrafeLeft()
+ * @see StrafeRight()
+ */
 void Creature::Reverse(bool state) {
 	backward_ = state;
 }
 
+/**
+ * Sets the creature as turning left.
+ * @see Run()
+ * @see Reverse()
+ * @see Forward()
+ * @see TurnLeft()
+ * @see TurnRight()
+ * @see StrafeLeft()
+ * @see StrafeRight()
+ */
 void Creature::TurnLeft(bool state) {
 	turn_left_ = state;
 }
-
+/**
+ * Sets the creature as turning right.
+ * @see Run()
+ * @see Reverse()
+ * @see Forward()
+ * @see TurnLeft()
+ * @see TurnRight()
+ * @see StrafeLeft()
+ * @see StrafeRight()
+ */
 void Creature::TurnRight(bool state) {
 	turn_right_ = state;
 }
 
+/**
+ * Sets the creature as strafing left.
+ * @see Run()
+ * @see Reverse()
+ * @see Forward()
+ * @see TurnLeft()
+ * @see TurnRight()
+ * @see StrafeLeft()
+ * @see StrafeRight()
+ */
 void Creature::StrafeLeft(bool state) {
 	strafe_left_ = state;
 }
 
+/**
+ * Sets the creature as strafing right.
+ * @see Run()
+ * @see Reverse()
+ * @see Forward()
+ * @see TurnLeft()
+ * @see TurnRight()
+ * @see StrafeLeft()
+ * @see StrafeRight()
+ */
 void Creature::StrafeRight(bool state) {
 	strafe_right_ = state;
 }

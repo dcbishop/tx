@@ -15,11 +15,13 @@ const float ZOOM_MAX = 20.0f;
 const float ZOOM_SPEED = 3.0f;
 const float ZOOM_THRESHOLD = 0.001f;
 
+/**
+ * A camera.
+ */
 class Camera : public Object {
 	public:
-		Camera();
+		Camera(string tag = DEFAULT_TAG);
 		~Camera();
-		void Draw();
 		void Update(int time);
 		void setTarget(Object* object);
 		GLfloat getFov();

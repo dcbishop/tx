@@ -10,6 +10,9 @@ using namespace std;
 #include "Camera.hpp"
 #include "Creature.hpp"
 
+/**
+ * A interface used for playing the game (SDL OpenGL Window and Input).
+ */
 class Interface {
 	public:
 		Interface(const int width, const int height);
@@ -17,27 +20,23 @@ class Interface {
 		virtual void SetTitle(const string title);
 		virtual void MainLoop();
 		virtual void Draw();
-		virtual void setArea(Area* area);
 		virtual void setCreature(Creature* creature);
-		virtual void PerspectiveSet();
-		void PositionCamera();
 		virtual void windowToWorld(int mx, int my, GLdouble* x, GLdouble* y, GLdouble* z);
 
 
 	private:
-		void HandleKeyDown(const SDL_Event& event);
-		void HandleKeyUp(const SDL_Event& event);
-		void HandleMouse1(const SDL_Event& event);
-		void HandleMouse3(const SDL_Event& event);
+		void HandleKeyDown_(const SDL_Event& event);
+		void HandleKeyUp_(const SDL_Event& event);
+		void HandleMouse1_(const SDL_Event& event);
+		void HandleMouse3_(const SDL_Event& event);
 
-		void ResizeEvent(const SDL_Event& event);
-		void RotateCamera(const GLfloat x, const GLfloat y);
-		void CheckEvents();
+		void ResizeEvent_(const SDL_Event& event);
+		void CheckEvents_();
+		void PerspectiveSet_();
 
 		bool finished_;
 		int width_;
 		int height_;
-		Area* area_;
 
 		bool cam_move_;
 

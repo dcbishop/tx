@@ -1,7 +1,13 @@
 #include "RigidBody.hpp"
 #include "console.h"
 
-RigidBody::RigidBody() {
+/**
+ * Constructor
+ * @param tag
+ */
+RigidBody::RigidBody(string tag) {
+	setTag(tag);
+	
 	shape_ = NULL;
 	body_ = NULL;
 	mass_ = 1.0f;
@@ -10,9 +16,20 @@ RigidBody::RigidBody() {
 					btTransform(btQuaternion(0,0,0,1),
 					btVector3(0,0,0))
 	);
-
 }
 
+RigidBody::~RigidBody() {
+	removeRigidBody_();
+	
+	delete body_;
+	delete shape_;
+	delete motionState_;
+}
+
+/**
+ * Sets the bullet collision shape.
+ * @param shape The collision shape.
+ */
 void RigidBody::setShape(btCollisionShape* shape) {
 	if(body_) {
 		#warning ['TODO']: If there is already a body... need to update it somehow?
@@ -62,14 +79,10 @@ void RigidBody::removeRigidBody_() {
 	}
 }
 
-RigidBody::~RigidBody() {
-	removeRigidBody_();
-	
-	delete body_;
-	delete shape_;
-	delete motionState_;
-}
-
+#warning ['TODO']: Might be best as a generic struct of float and in Object class
+/**
+ * @return a vector containing the x, y, z cordinates.
+ */
 btVector3& RigidBody::getPos() {
 	if(!body_) {
 		throw "No body...";
@@ -106,6 +119,10 @@ void RigidBody::Update(int time) {
 	Object::Update(time);
 }
 
+/**
+ * Sets the mass of the Object.
+ * @param mass
+ */
 void RigidBody::setMass(btScalar mass) {
 	mass_ = mass;
 }
@@ -189,6 +206,9 @@ void RigidBody::Draw() {
 	glPopMatrix();
 }
 
+/**
+ * Returns the Object's physics body.
+ */
 btRigidBody* RigidBody::getBody() {
 	return (btRigidBody*)body_;
 }

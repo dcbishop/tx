@@ -13,6 +13,9 @@ extern "C"
 
 #include <luabind/luabind.hpp>
 
+/**
+ * A class controlling the LUA script virtual machine.
+ */
 class Scripting {
 	public:
 		Scripting();

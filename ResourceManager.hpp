@@ -3,12 +3,15 @@
 
 #include <rcbc.h>
 
+/**
+ * Contains a list of game resources that are in memory such as textures.
+ */
 class ResourceManager {
 	public:
 		ResourceManager();
 		~ResourceManager();
 		virtual List* getImages();
-		virtual List* getTextures();
+		virtual List* getModels();
 	private:
 		List* images_;
 		List* models_;

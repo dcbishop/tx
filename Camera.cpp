@@ -6,7 +6,13 @@
 
 #include "console.h"
 
-Camera::Camera() {
+/**
+ * Constructor.
+ * @param tag
+ */
+Camera::Camera(string tag) {
+	setTag(tag);
+	
 	target_ = NULL;
 
 	zoom_.setValue(2.5f);
@@ -19,18 +25,20 @@ Camera::Camera() {
 	fov_.setValue(45.0f);
 }
 
-#warning ['TODO']: Use this of kill it...
+#warning ['TODO']: Use this or kill it...
 Camera::~Camera() {
 }
 
+/**
+ * Sets the Object that the camera tracks.
+ */
 void Camera::setTarget(Object* object) {
 	target_ = object;
 }
 
-void Camera::Draw() {
-}
-
-/* Position camera around object using some math */
+/**
+ * Updates the camera's position around object
+ */
 void Camera::Update(int time) {
 	/* http://en.wikipedia.org/wiki/Spherical_coordinates */
 	GLfloat theta = getRotX();
@@ -56,6 +64,9 @@ void Camera::Update(int time) {
 	Object::Update(time);
 }
 
+/**
+ * Positions the camera for OpenGL.
+ */
 void Camera::Position() {
 	float cx = 0.0f;
 	float cy = 0.0f;
@@ -70,22 +81,41 @@ void Camera::Position() {
 	gluLookAt( getX()-cx, getY()+cy, getZ()+cz, -cx, cy, cz, 0.0f, 10.0f, 0.0f );
 }
 
+/**
+ * Gets the current zoom value
+ * @return The zoom value as it actually is, not target value the camera is moving to.
+ */
 GLfloat Camera::getZoom() {
 	return zoom_.getValueCurrent();
 }
 
+/**
+ * @return The zoom value that the camera it moving to.
+ */
 GLfloat Camera::getZoomTarget() {
 	return zoom_.getValueTarget();
 }
 
+/**
+ * Gets the current field of view.
+ * @return The current FOV (not the target FOV).
+ */
 GLfloat Camera::getFov() {
 	return fov_.getValueCurrent();
 }
 
+/**
+ * Sets the target field of view.
+ * @param fov field of view
+ */
 void Camera::setFov(float fov) {
 	fov_.setValue(fov);
 }
 
+/**
+ * Sets the camera zoom (distance from target Object)
+ * @param zoom Distance from the target in meters.
+ */
 void Camera::setZoom(GLfloat zoom) {
 	/* Ensure the camera zoom is sane */
 	if(zoom < ZOOM_MIN) {
@@ -97,10 +127,18 @@ void Camera::setZoom(GLfloat zoom) {
 	zoom_.setValue(zoom);
 }
 
+/**
+ * Sets the camera rotation around the target.
+ * @param rx
+ */
 void Camera::setRotX(const GLfloat rx) {
 	Object::setRotX(rx);
 }
 
+/**
+ * Sets the camera rotation above the target.
+ * @param ry
+ */
 void Camera::setRotY(GLfloat ry) {
 	/* Stop flipping over the top  */
 	if(ry < Y_MIN) {

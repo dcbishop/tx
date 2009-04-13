@@ -1,7 +1,9 @@
 #ifndef TX_DYNAMICFLOAT_HPP
 #define TX_DYNAMICFLOAT_HPP
 
-/* A floating point number that changes with time to reach a target */
+/**
+ * A floating point number that changes with time to reach a target value.
+ */
 class DynamicFloat {
 	public:
 		DynamicFloat();
