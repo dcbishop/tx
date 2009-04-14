@@ -7,7 +7,7 @@ using namespace std;
 const string DEFAULT_TAG = "[NULL]";
 
 /**
- * A object class for tagged objects. Just about all in game things
+ * A abstract class for tagged objects. Just about all ingame things
  * should derive from this. http://en.wikipedia.org/wiki/Tagged
  */
 class Tagged {

@@ -7,7 +7,6 @@ AccelerateFloat::AccelerateFloat() {
 	value_max_ = 10.0f;
 	value_min_ = 0.0f;
 	acceleration_ = 0.0f;
-	last_updated_ = 0;
 	threshold_ = 0.01f;
 	accelerating_ = true;
 }
@@ -35,8 +34,8 @@ void AccelerateFloat::setThreshold(float threshold) {
 }
 
 void AccelerateFloat::Update(int time) {
-	float diff = acceleration_ * (time - last_updated_) / 1000;
-	last_updated_ = time;
+	float diff = acceleration_ * (time - getLastUpdate()) / 1000;
+	Updateable::Update(time);
 	
 	/* If we are at rest and not accelerating, do nothing */
 	if(value_ == 0.0f && !accelerating_) {

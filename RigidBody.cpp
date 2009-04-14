@@ -11,6 +11,7 @@ RigidBody::RigidBody(const string tag) {
 	shape_ = NULL;
 	body_ = NULL;
 	mass_ = 1.0f;
+	friction_ = 1.0f;
 	
 	motionState_ = new btDefaultMotionState(
 					btTransform(btQuaternion(0,0,0,1),
@@ -42,6 +43,17 @@ void RigidBody::setShape(btCollisionShape* shape) {
 	}
 	
 	shape_ = shape;
+	ProcessBody_();
+}
+
+/**
+ * Processes the properties of the body, shape, mass friction etc...
+ */
+void RigidBody::ProcessBody_() {
+	if(!shape_) {
+		return;
+	}
+	
 	shape_->calculateLocalInertia(mass_, inertia_);
 	delete(body_);
 	
@@ -51,6 +63,9 @@ void RigidBody::setShape(btCollisionShape* shape) {
 		shape_,
 		inertia_
 	);
+	rigidBodyCI.m_friction = friction_;
+	rigidBodyCI.m_mass = mass_;
+	
 	
 	body_ = new btRigidBody(rigidBodyCI);
 }
@@ -120,11 +135,21 @@ void RigidBody::Update(int time) {
 }
 
 /**
- * Sets the mass of the Object.
+ * Sets the mass of the body.
  * @param mass
  */
 void RigidBody::setMass(const btScalar mass) {
 	mass_ = mass;
+	ProcessBody_();
+}
+
+/**
+ * Sets the friction of the body.
+ * @param friction The friction.
+ */
+void RigidBody::setFriction(const btScalar friction) {
+	friction_ = friction;
+	ProcessBody_();
 }
 
 void RigidBody::setPos(const float x, const float y, const float z) {
@@ -195,14 +220,17 @@ void RigidBody::Draw() {
 	}
 	
 	glPushMatrix();
-	btScalar m[15];
+	
+	btScalar m[16];
 	body_->getWorldTransform().getOpenGLMatrix(m);
 	m[12] = -m[12]; // Need to reverse this to rotate correctly o_O.
 	glMultMatrixf(m);
+	
 	glDisable(GL_LIGHTING);
 	drawCube();
 	glEnable(GL_LIGHTING);
 	RCBC_Render(model);
+	
 	glPopMatrix();
 }
 
@@ -212,3 +240,5 @@ void RigidBody::Draw() {
 btRigidBody& RigidBody::getBody() {
 	return (btRigidBody&)(*body_);
 }
+
+#warning ['TODO']: Provide rotation accessors...

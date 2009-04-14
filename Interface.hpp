@@ -11,6 +11,9 @@ using namespace std;
 #include "Creature.hpp"
 #include "GameManager.hpp"
 
+const int MODE_NONE = 0;
+const int MODE_EDIT = 1;
+
 /**
  * A interface used for playing the game (SDL OpenGL Window and Input).
  */
@@ -39,15 +42,19 @@ class Interface {
 		bool finished_;
 		int width_;
 		int height_;
-
 		bool cam_move_;
-
+		int mode_;
+		
 		int fps_;
 		int mpf_;
 		bool limit_fps_;
+		
 		Camera camera_;
 		Creature* creature_;
 		GameManager* gm_;
+		
+		// For the cordinates the mouse is targeting
+		GLdouble tx_, ty_, tz_;
 };
 
 #endif

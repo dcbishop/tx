@@ -94,10 +94,7 @@ void Area::Draw() {
 		glPushMatrix();
 		for(int x = 0; x < width_; x++) {
 			Model* tile = getTile(x, y);
-			DEBUG_M("FlagG 1...");
-
 			RCBC_Render(tile);
-			DEBUG_M("FlagG 2...");
 			glTranslatef(-TILEWIDTH, 0.0f, 0.0f);
 		}
 		glPopMatrix();

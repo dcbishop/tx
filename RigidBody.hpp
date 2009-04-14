@@ -19,6 +19,7 @@ class RigidBody : public Object {
 		virtual const float getZ();
 		virtual void Update(const int time);
 		virtual void setMass(const btScalar mass);
+		virtual void setFriction(const btScalar friction);
 		virtual void setPos(const float x, const float y, const float z);
 		virtual void setX(const float x);
 		virtual void setY(const float y);
@@ -29,12 +30,16 @@ class RigidBody : public Object {
 	protected:
 		btCollisionShape* shape_; /**< The collision shape. */
 		btCollisionObject* body_; /**< The collision body. */
+		virtual void ProcessBody_();
+
 		
 	private:
 		void removeRigidBody_();
 		btDefaultMotionState* motionState_;
 		btScalar mass_;
+		btScalar friction_;
 		btVector3 inertia_;
+		
 	
 };
 

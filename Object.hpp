@@ -6,8 +6,9 @@
 
 #include "Tagged.hpp"
 #include "Updateable.hpp"
-class Area;
 #include "Container.hpp"
+
+class Area;
 #include "Area.hpp"
 
 /**

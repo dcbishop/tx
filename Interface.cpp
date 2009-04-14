@@ -36,6 +36,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	limit_fps_ = true;
 	cam_move_ = false;
 	gm_ = NULL;
+	mode_ = MODE_NONE;
 	
 	SetTitle("Tilxor...");
 }
@@ -61,22 +62,18 @@ void Interface::MainLoop() {
 	DEBUG_M("Entering function...");
 	
 	while(!finished_) {
-		DEBUG_M("Flag 1...");
 		int now = SDL_GetTicks();
-		DEBUG_M("Flag 2...");
 		camera_.Update(now);
-		DEBUG_M("Flag 3...");
 		
-		if(creature_) {
+		/*if(creature_) {
 			creature_->Update(now);
 			if(creature_->getArea()) {
 				creature_->getArea()->Update(now);
 			}
-		}
-		
-		DEBUG_M("Flag 5...");
+		}*/
+		//creature_->Update(now);
+		gm_->Update(now);
 		Draw();
-		DEBUG_M("Flag 6...");
 		CheckEvents_();
 	}
 }
@@ -129,7 +126,6 @@ void Interface::Draw() {
 	if(creature_) {
 		Area* area = creature_->getArea();
 		if(area) {
-			DEBUG_A("FlagQ 1...");
 			area->Draw();
 		}
 	}
@@ -228,7 +224,15 @@ void Interface::HandleKeyUp_(const SDL_Event& event) {
 			break;
 		case SDLK_d:
 			creature_->StrafeRight(false);
-			break;	
+			break;
+		case SDLK_F1:
+			LOG("Setting game mode.");
+			mode_ = MODE_NONE;
+			break;
+		case SDLK_F2:
+			LOG("Setting edit mode.");
+			mode_ = MODE_EDIT;
+			break;
 		default:
 			break;
 	}
@@ -287,8 +291,8 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 		return;
 	}
 	
-	GLdouble x, y, z;
-	windowToWorld(event.button.x, event.button.y, x, y, z);
+	//GLdouble x, y, z;
+	//windowToWorld(event.button.x, event.button.y, x, y, z);
 
 	Area* area = creature_->getArea();
 
@@ -296,9 +300,8 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 
 	RigidBody* newobj = new RigidBody;
 	newobj->setModel(*model);
-	newobj->setMass(0.1f);
 	newobj->setShape(new btBoxShape(btVector3(.5,.5,.5)));
-	newobj->setPos(-x, y+1.0f, z);
+	newobj->setPos(-tx_, ty_+1.0f, tz_);
 	
 	area->addObject(*newobj);
 }
@@ -312,8 +315,8 @@ void Interface::HandleMouse3_(const SDL_Event& event) {
 		return;
 	}
 	
-	GLdouble x, y, z;
-	windowToWorld(event.button.x, event.button.y, x, y, z);
+	//GLdouble x, y, z;
+	//windowToWorld(event.button.x, event.button.y, x, y, z);
 	
 	Area* area = creature_->getArea();
 
@@ -322,7 +325,7 @@ void Interface::HandleMouse3_(const SDL_Event& event) {
 	RigidBody* newobj = new RigidBody;
 	newobj->setModel(*model);
 	newobj->setShape(new btSphereShape(1));
-	newobj->setPos(-x, y+1.0f, z);
+	newobj->setPos(-tx_, ty_+1.0f, tz_);
 	
 	area->addObject(*newobj);
 }
@@ -348,10 +351,15 @@ void Interface::CheckEvents_() {
 					camera_.setRotX(camera_.getRotX() + (GLfloat)event.motion.xrel / width_ * 100);
 					camera_.setRotY(camera_.getRotY() - (GLfloat)event.motion.yrel / height_ * 100);
 				}
+				if(mode_ == MODE_EDIT) {
+					windowToWorld(event.button.x, event.button.y, tx_, ty_, tz_);
+				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				DEBUG_M("Mouse button %d down at (%d, %d)",
 					event.button.button, event.button.x, event.button.y);
+
+				windowToWorld(event.button.x, event.button.y, tx_, ty_, tz_);
 				if(event.button.button == 3) {
 					cam_move_ = true;
 				}

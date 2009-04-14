@@ -3,15 +3,15 @@
 /**
  * Update physics, everything with a tag (Areas, Objects).
  */
-void GameManager::Update(const int time) {
-	physics_.Update(time);
-	
+void GameManager::Update(const int time) {	
 	for(multimap<string, Tagged*>::iterator iter = tags_.begin(); iter != tags_.end(); ++iter) {
 		Updateable *u = dynamic_cast<Updateable*>(iter->second);
 		if(u) {
 			u->Update(time);
 		}
 	}
+	
+	physics_.Update(time);
 
 	Updateable::Update(time);
 }

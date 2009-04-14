@@ -2,11 +2,13 @@
 #ifndef TX_ACCELERATEFLOAT_HPP
 #define TX_ACCELERATEFLOAT_HPP
 
+#include "Updateable.hpp"
+
 /**
  * A floating point number that changes with time at an increasing rate.
  * Useable for acceleration. This is no longer used.
  */
-class AccelerateFloat {
+class AccelerateFloat : public Updateable {
 	public:
 		AccelerateFloat();
 		void Accelerate(float amount);
@@ -23,7 +25,6 @@ class AccelerateFloat {
 		float value_min_;
 		float acceleration_;
 		float threshold_;
-		int last_updated_;
 		bool accelerating_;
 };
 

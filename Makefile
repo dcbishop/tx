@@ -17,4 +17,4 @@ tx: tx.cpp ${OBJS}
 	${CXX} ${LIBS} ${CFLAGS} -c $< -Wall
 
 clean:
-	rm -f *.o tx tx.exe *.a *~ core
+	rm -f *.o tx tx.exe *.a *~ core *.gch
