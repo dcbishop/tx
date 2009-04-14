@@ -277,22 +277,22 @@ const float Object::getRotAngle() {
  * @param model The RCBC model.
  * @see getModel()
  */
-void Object::setModel(const Model* model) {
-	model_ = model;
+void Object::setModel(const Model& model) {
+	model_ = &model;
 }
 
 /**
  * Puts the object in an area.
  * @see getArea()
  */
-void Object::setArea(Area* area) {
+void Object::setArea(Area& area) {
 	DEBUG_M("Entering function...");
 	if(area_) {
 		DEBUG_H("removing...");
-		area_->removeObject(this);
+		area_->removeObject(*this);
 	}
 	
-	area_ = area;
+	area_ = &area;
 }
 
 /**
@@ -309,6 +309,6 @@ Area* Object::getArea() {
  * @see setModel()
  * @return The RCBC model.
  */
-const Model* Object::getModel() {
-	return model_;
+const Model& Object::getModel() {
+	return *model_;
 }

@@ -11,7 +11,7 @@ class RigidBody : public Object {
 	public:
 		RigidBody(string tag = DEFAULT_TAG);
 		~RigidBody();
-		virtual void setArea(Area* area);
+		virtual void setArea(Area& area);
 		virtual void setShape(btCollisionShape* shape);
 		virtual btVector3& getPos();
 		virtual const float getX();
@@ -24,7 +24,7 @@ class RigidBody : public Object {
 		virtual void setY(const float y);
 		virtual void setZ(const float z);
 		virtual void Draw();
-		virtual btRigidBody* getBody();
+		virtual btRigidBody& getBody();
 	
 	protected:
 		btCollisionShape* shape_; /**< The collision shape. */

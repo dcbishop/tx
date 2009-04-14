@@ -32,8 +32,8 @@ Camera::~Camera() {
 /**
  * Sets the Object that the camera tracks.
  */
-void Camera::setTarget(Object* object) {
-	target_ = object;
+void Camera::setTarget(Object& object) {
+	target_ = &object;
 }
 
 /**

@@ -2,7 +2,10 @@
 #ifndef TX_ACCELERATEFLOAT_HPP
 #define TX_ACCELERATEFLOAT_HPP
 
-/* A floating point number that changes with time to reach a target */
+/**
+ * A floating point number that changes with time at an increasing rate.
+ * Useable for acceleration. This is no longer used.
+ */
 class AccelerateFloat {
 	public:
 		AccelerateFloat();

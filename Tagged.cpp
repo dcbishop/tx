@@ -1,10 +1,10 @@
-#include "Quiddity.hpp"
+#include "Tagged.hpp"
 
 /**
  * The constructor.
  * @param tag The objects tag.
  */
-Quiddity::Quiddity(string tag)
+Tagged::Tagged(string tag)
 {
 	setTag(tag);
 }
@@ -14,7 +14,7 @@ Quiddity::Quiddity(string tag)
  * @see setTag()
  * @return The object's tag.
  */
-string Quiddity::getTag() {
+string Tagged::getTag() {
 	return tag_;
 }
 
@@ -23,6 +23,6 @@ string Quiddity::getTag() {
  * @see getTag()
  * @param tag The object's tag.
  */
-void Quiddity::setTag(const string tag) {
+void Tagged::setTag(const string tag) {
 	tag_ = tag;
 }

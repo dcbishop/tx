@@ -5,6 +5,9 @@
 #include <rcbc.h>
 #include <rcbc_data.h>
 
+/**
+ * This isn't used and should be deleted...
+ */
 class ImageManager {
 	private:
 		List* images_;

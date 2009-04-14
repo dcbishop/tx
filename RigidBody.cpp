@@ -55,7 +55,7 @@ void RigidBody::setShape(btCollisionShape* shape) {
 	body_ = new btRigidBody(rigidBodyCI);
 }
 
-void RigidBody::setArea(Area* area) {
+void RigidBody::setArea(Area& area) {
 	Area* old_area = getArea();
 	if(old_area) { /* If its already in an area */
 		#warning ['TODO']: Check to see if both areas are using the same physics engine...
@@ -189,7 +189,7 @@ void drawCube() {
 }
 
 void RigidBody::Draw() {
-	const Model* model = getModel();
+	const Model* model = &getModel();
 	if(!model || !body_) {
 		return;
 	}
@@ -209,6 +209,6 @@ void RigidBody::Draw() {
 /**
  * Returns the Object's physics body.
  */
-btRigidBody* RigidBody::getBody() {
-	return (btRigidBody*)body_;
+btRigidBody& RigidBody::getBody() {
+	return (btRigidBody&)(*body_);
 }

@@ -105,7 +105,7 @@ void Area::Draw() {
 	}
 	glPopMatrix();
 
-	/* Draw all the objects in the map */
+	// Draw all the objects in the map
 	for(vector<Object*>::iterator iter = objects_.begin(); iter != objects_.end(); iter++) {
 		(*iter)->Draw();
 	}
@@ -116,9 +116,9 @@ void Area::Draw() {
  * @param rm The resource manager.
  * @see getResourceManager()
  */
-void Area::setResourceManager(ResourceManager* rm) {
+void Area::setResourceManager(ResourceManager& rm) {
 	DEBUG_M("Entering function...");
-	rm_ = rm;
+	rm_ = &rm;
 }
 
 /**
@@ -142,9 +142,9 @@ Physics* Area::getPhysics() {
  * Sets the physics engine for the are to use.
  * @param physics The Physics engine pointer.
  */
-void Area::setPhysics(Physics* physics) {
+void Area::setPhysics(Physics& physics) {
 	DEBUG_M("Entering function...");
-	physics_ = physics;
+	physics_ = &physics;
 }
 
 Area::~Area() {
@@ -159,9 +159,9 @@ Area::~Area() {
  * @param object The Object's pointer.
  * @see removeObject()
  */
-void Area::addObject(Object* object) {
-	objects_.push_back(object);
-	object->setArea(this);
+void Area::addObject(Object& object) {
+	objects_.push_back(&object);
+	object.setArea(*this);
 }
 
 /**
@@ -169,9 +169,9 @@ void Area::addObject(Object* object) {
  * @param object The Object's pointer.
  * @see addObject()
  */
-void Area::removeObject(Object* object) {
+void Area::removeObject(Object& object) {
 	vector<Object*>::iterator iter;
-	iter = find(objects_.begin(), objects_.end(), object);
+	iter = find(objects_.begin(), objects_.end(), &object);
 
 	if(iter != objects_.end()) {
 		objects_.erase(iter);

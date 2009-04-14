@@ -35,6 +35,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	mpf_ = 0;
 	limit_fps_ = true;
 	cam_move_ = false;
+	gm_ = NULL;
 	
 	SetTitle("Tilxor...");
 }
@@ -257,7 +258,7 @@ void Interface::ResizeEvent_(const SDL_Event& event) {
  * @param y Y cord to set.
  * @param z Z cord to set.
  */
-void Interface::windowToWorld(const int mx, const int my, GLdouble* x, GLdouble* y, GLdouble* z) {
+void Interface::windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z) {
 	/* Get infomation to turn window cordinates into opengl ones */
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -274,7 +275,7 @@ void Interface::windowToWorld(const int mx, const int my, GLdouble* x, GLdouble*
 
 	winY = viewport[3] - winY;
 	glReadPixels(winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
-	gluUnProject(winX, winY, winZ, modelview, projection, viewport, x, y, z);
+	gluUnProject(winX, winY, winZ, modelview, projection, viewport, &x, &y, &z);
 }
 
 /**
@@ -287,19 +288,19 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 	}
 	
 	GLdouble x, y, z;
-	windowToWorld(event.button.x, event.button.y, &x, &y, &z);
+	windowToWorld(event.button.x, event.button.y, x, y, z);
 
 	Area* area = creature_->getArea();
 
 	static Model* model = RCBC_LoadFile("data/models/monkey-robot.dae", area->getResourceManager()->getImages());
 
 	RigidBody* newobj = new RigidBody;
-	newobj->setModel(model);
+	newobj->setModel(*model);
 	newobj->setMass(0.1f);
 	newobj->setShape(new btBoxShape(btVector3(.5,.5,.5)));
 	newobj->setPos(-x, y+1.0f, z);
 	
-	area->addObject(newobj);
+	area->addObject(*newobj);
 }
 
 /**
@@ -312,20 +313,23 @@ void Interface::HandleMouse3_(const SDL_Event& event) {
 	}
 	
 	GLdouble x, y, z;
-	windowToWorld(event.button.x, event.button.y, &x, &y, &z);
+	windowToWorld(event.button.x, event.button.y, x, y, z);
 	
 	Area* area = creature_->getArea();
 
 	static Model* model = RCBC_LoadFile("data/models/unmaptest.dae", area->getResourceManager()->getImages());
 
 	RigidBody* newobj = new RigidBody;
-	newobj->setModel(model);
+	newobj->setModel(*model);
 	newobj->setShape(new btSphereShape(1));
 	newobj->setPos(-x, y+1.0f, z);
 	
-	area->addObject(newobj);
+	area->addObject(*newobj);
 }
 
+/**
+ * Checks for any SDL events that have occured.
+ */
 void Interface::CheckEvents_() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
@@ -379,10 +383,19 @@ void Interface::CheckEvents_() {
 }
 
 /**
- * Sets the creature that the interface controlls.
- * @param creature
+ * Sets the creature that the interface controls.
+ * @param creature The creature to follow and control.
  */
-void Interface::setCreature(Creature* creature) {
-	creature_ = (Creature*)creature;
-	camera_.setTarget(creature_);
+void Interface::setCreature(Creature& creature) {
+	creature_ = &creature;
+	camera_.setTarget(creature);
+}
+
+#warning ['TODO']: The game manager shouldnt be driven by the interface. Either make a seperate thread or a class containing both...
+/**
+ * Sets the gamemanger that the interface controls.
+ * @param gm The game manager
+ */
+void Interface::setGameManager(GameManager& gm) {
+	gm_ = &gm;
 }

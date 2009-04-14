@@ -15,7 +15,7 @@
 /**
  * A controllable creature.
  */
-class Creature : public RigidBody {
+class Creature : public RigidBody, public Container {
 	public:
 		Creature(const string tag = DEFAULT_TAG, Model* model = NULL);
 		~Creature();
@@ -32,7 +32,7 @@ class Creature : public RigidBody {
 
 		virtual void setTurnRate(const float turn_rate);
 		virtual void setShape(btCollisionShape* shape);
-		virtual void setArea(Area* area);
+		virtual void setArea(Area& area);
 		virtual void setPos(const float x, const float y, const float z);
 		virtual btVector3& getPos();
 	

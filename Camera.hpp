@@ -23,7 +23,7 @@ class Camera : public Object {
 		Camera(string tag = DEFAULT_TAG);
 		~Camera();
 		void Update(const int time);
-		void setTarget(Object* object);
+		void setTarget(Object& object);
 		GLfloat getFov();
 		void setZoom(const GLfloat zoom);
 		GLfloat getZoom();

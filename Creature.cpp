@@ -9,7 +9,7 @@
  */
 Creature::Creature(const string tag, Model* model) {
 	setTag(tag);
-	setModel(model);
+	setModel(*model);
 	setMass(100.0f);
 	turn_angle_ = 0.0;
 	walk_velocity_ = 2.0f;
@@ -52,8 +52,8 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 	body_->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
 	
 	// This is required for moving bodies... (I think the bullet character controller handles this)
-	getBody()->setSleepingThresholds (0.0, 0.0);
-	getBody()->setAngularFactor (0.0);
+	getBody().setSleepingThresholds (0.0, 0.0);
+	getBody().setAngularFactor (0.0);
 	
 	btScalar stepHeight = btScalar(0.35);
 	controller_ = new btKinematicCharacterController(
@@ -72,11 +72,7 @@ void Creature::setPos(const float x, const float y, const float z) {
 	}
 }
 
-void Creature::setArea(Area* area) {
-	if(!area) {
-		return;
-	}
-	
+void Creature::setArea(Area& area) {
 	Area* old_area = getArea();
 	if(old_area) { /* If its already in an area */
 		/*if(old_area->getPhysics() == area->getPhysics()) {

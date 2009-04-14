@@ -6,7 +6,6 @@ DynamicFloat::DynamicFloat() {
 	value_target_ = 0.0f;
 	value_rate_ = 1.0f;
 	value_threshold_ = 0.01f;
-	last_updated_ = 0;
 }
 
 /**
@@ -36,8 +35,8 @@ float DynamicFloat::getValueTarget() {
 void DynamicFloat::setValue(const float value) {
 	value_target_ = value;
 
-	/* If this is the initial setting */
-	if(last_updated_ == 0) {
+	// If this is the initial setting
+	if(getLastUpdate() == 0) {
 		value_current_ = value;
 	}
 }
@@ -61,13 +60,12 @@ void DynamicFloat::setRate(const float rate) {
 
 /**
  * Updates the floating point value with time.
- * @param time Current game time in milliseconds.
  */
 void DynamicFloat::Update(const int time) {
 	/* Process a smooth zoom */
 	if(value_target_ != value_current_) {
 		float value_diff = value_target_ - value_current_;
-		float value_change = value_diff * value_rate_ * (time - last_updated_) / 1000;
+		float value_change = value_diff * value_rate_ * (time - getLastUpdate()) / 1000;
 
 		value_current_ += value_change;
 
@@ -79,5 +77,6 @@ void DynamicFloat::Update(const int time) {
 			value_current_ = value_target_;
 		}
 	}
-	last_updated_ = time;
+
+	Updateable::Update(time);
 }

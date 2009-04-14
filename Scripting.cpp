@@ -44,7 +44,6 @@ void Scripting::bindAll_() {
 	];
 }
 
-#warning ['TODO']: Reenable this...
 luabind::scope Scripting::bindObject_() {
 	return
 		luabind::class_<Object>("Object")

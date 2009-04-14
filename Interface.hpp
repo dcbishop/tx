@@ -9,6 +9,7 @@ using namespace std;
 #include "Area.hpp"
 #include "Camera.hpp"
 #include "Creature.hpp"
+#include "GameManager.hpp"
 
 /**
  * A interface used for playing the game (SDL OpenGL Window and Input).
@@ -20,8 +21,9 @@ class Interface {
 		virtual void SetTitle(const string title);
 		virtual void MainLoop();
 		virtual void Draw();
-		virtual void setCreature(Creature* creature);
-		virtual void windowToWorld(const int mx, const int my, GLdouble* x, GLdouble* y, GLdouble* z);
+		virtual void setCreature(Creature& creature);
+		virtual void setGameManager(GameManager& gm);
+		virtual void windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z);
 
 
 	private:
@@ -45,6 +47,7 @@ class Interface {
 		bool limit_fps_;
 		Camera camera_;
 		Creature* creature_;
+		GameManager* gm_;
 };
 
 #endif

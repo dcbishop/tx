@@ -4,16 +4,17 @@
 #include <stdlib.h>
 #include <rcbc.h>
 
-#include "Quiddity.hpp"
+#include "Tagged.hpp"
 #include "Updateable.hpp"
 class Area;
+#include "Container.hpp"
 #include "Area.hpp"
 
 /**
  * An ingame object. Has a visual model, cordinates, rotation and
  * attached area.
  */
-class Object : public Quiddity, public Updateable {
+class Object : public Tagged, public Updateable, public Contained {
 	public:
 		Object(string TAG = DEFAULT_TAG, Model* model = NULL);
 		~Object();
@@ -33,9 +34,9 @@ class Object : public Quiddity, public Updateable {
 		virtual const float getRotY();
 		virtual const float getRotZ();
 		virtual const float getRotAngle();
-		virtual void setModel(const Model* model);
-		virtual const Model* getModel();
-		virtual void setArea(Area* area);
+		virtual void setModel(const Model& model);
+		virtual const Model& getModel();
+		virtual void setArea(Area& area);
 		virtual Area* getArea();
 
 	private:

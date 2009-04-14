@@ -1,10 +1,12 @@
 #ifndef TX_DYNAMICFLOAT_HPP
 #define TX_DYNAMICFLOAT_HPP
 
+#include "Updateable.hpp"
+
 /**
  * A floating point number that changes with time to reach a target value.
  */
-class DynamicFloat {
+class DynamicFloat : public Updateable {
 	public:
 		DynamicFloat();
 		float getValueCurrent();
@@ -19,7 +21,6 @@ class DynamicFloat {
 		float value_current_;
 		float value_rate_;
 		float value_threshold_;
-		int last_updated_;
 };
 
 #endif
