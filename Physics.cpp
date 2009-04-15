@@ -83,7 +83,6 @@ void Physics::removeRigidBody(btRigidBody* body) {
 void Physics::Update(const int time) {
 	#warning ['TODO']: This should be calculated...
 	int time_diff = time - getLastUpdate();
-	DEBUG_M("FlagZ 1...");
 	btScalar timeStep = ((float)time_diff) / 1000.0f;
 	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,1);
 	Updateable::Update(time);

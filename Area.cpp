@@ -11,6 +11,7 @@
 Area::Area() {
 	height_ = 0;
 	width_ = 0;
+	tiles_ = NULL;
 }
 
 /**
@@ -27,6 +28,61 @@ int Area::getWidth() {
 	return width_;
 }
 
+/**
+ * Sets the size of the area.
+ * @param width The width.
+ * @param height The heigh.
+ */
+void Area::setSize(int width, int height) {
+	DEBUG_M("Entering function...");
+
+	int old_width = width_;
+	int old_height = height_;
+	width_ = width;
+	height_ = height;
+
+	// Unload any tiles that are dropped
+	if(width < old_width) {
+		for(int y = 0; y < height; y++) {
+			for(int x = old_width; x < width; x++) {
+				rm_->unloadModel(getTile(x, y));
+			}
+		}
+	}
+	if(height < old_height) {
+		for(int y = old_height; y < height; y++) {
+			for(int x = 0; x < old_width; x++) {
+				rm_->unloadModel(getTile(x, y));
+			}
+		}
+	}
+
+	// Realloc space for tiles
+	tiles_ = (Tile**)realloc(tiles_, width * height * sizeof(Tile*));
+	if(!tiles_) {
+		ERROR("Failed to allocate memory for tile map.");
+		return;
+	}
+
+	// Set new tiles to default
+	if(width > old_width) {
+		for(int y = 0; y < height; y++) {
+			for(int x = old_width; x < width; x++) {
+				Model* defaulttile = rm_->loadModel("data/models/mayagrass.dae");
+				setTile(x, y, defaulttile);
+			}
+		}
+	}
+	if(height > old_height) {
+		for(int y = old_height; y < height; y++) {
+			for(int x = 0; x < old_width; x++) {
+				Model* defaulttile = rm_->loadModel("data/models/mayagrass.dae");
+				setTile(x, y, defaulttile);
+			}
+		}
+	}
+}
+
 #warning ['TODO']: Actually load the area from a file.
 /**
  * Load the area from a file.
@@ -34,23 +90,17 @@ int Area::getWidth() {
  */
 void Area::LoadFile(const string filename) {
 	DEBUG_M("Entering function...");
-	height_ = 100;
-	width_ = 100;
-	
-	tiles_ = (Model**)malloc(width_ * height_ * sizeof(Model*));
-	if(!tiles_) {
-		ERROR("Failed to allocate memory for tile map.");
-		return;
-	}
-	
-	Model* grass = RCBC_LoadFile("data/models/mayagrass.dae", rm_->getImages());
-	Model* monkey = RCBC_LoadFile("data/models/monkey-test.dae", rm_->getImages());
-	
-	for(int y = 0; y < height_; y++) {
+	setSize(100, 100);
+
+	Model* grass = rm_->loadModel("data/models/mayagrass.dae");
+	Model* monkey = rm_->loadModel("data/models/monkey-test.dae");
+
+	/*for(int y = 0; y < height_; y++) {
 		for(int x = 0; x < width_; x++) {
 			setTile(x, y, grass);
 		}
-	}
+	}*/
+
 	setTile(0, 0, monkey);
 	setTile(1, 0, monkey);
 	setTile(4, 4, monkey);
@@ -180,7 +230,30 @@ void Area::removeObject(Object& object) {
  * @param time The current game time in milliseconds.
  */
 void Area::Update(const int time) {
-	DEBUG_M("FlagZ 1...");
 	physics_->Update(time);
 	Updateable::Update(time);
+}
+
+/**
+ * Gets the x, y Area grid cordinates from OpenGL world cordinates.
+ * @param fx The world X cordinate to be converted.
+ * @param fz The world Z (depth) cordinate to be converted.
+ * @param gx The value to store the X grid cord in.
+ * @param gy The value to store the Y grid cord in.
+ */
+void Area::getGridCord(const float fx, const float fz, int &gx, int &gy) {
+	gx = (fx-(TILEWIDTH/2))/TILEWIDTH;
+	gy = (fz-(TILEWIDTH/2))/TILEWIDTH;
+}
+
+/**
+ * Gets the x, y world cordinates from Area grid world cordinates.
+ * @param gx The Area grid X cordinate to be converted.
+ * @param gy The Area grid Y cordinate to be converted.
+ * @param fx The value to store the X world cord in.
+ * @param fz The value to store the Z (depth) world cord in.
+ */
+void Area::getWorldCord(const int gx, const int gy, float &fx, float &fz) {
+	fx = gx * TILEWIDTH;
+	fz = gy * TILEWIDTH;
 }

@@ -32,6 +32,7 @@ class Area  : public Tagged, public Updateable, public Contained {
 		~Area();
 		int getHeight();
 		int getWidth();
+		void setSize(int width, int height);
 		void LoadFile(string filename);
 		Tile* getTile(const int x, const int y);
 		void setTile(const int x, const int y, Tile* tile);
@@ -43,12 +44,11 @@ class Area  : public Tagged, public Updateable, public Contained {
 		void removeObject(Object& object);
 		void Draw();
 		void Update(const int time);
+		void getGridCord(const float fx, const float fy, int &x, int &y);
+		void getWorldCord(const int gx, const int gy, float &fx, float &fy);
 
 
 	private:
-		int setHeight(const int height);
-		int setWidth(const int width);
-
 		int height_;
 		int width_;
 		

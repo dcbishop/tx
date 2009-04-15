@@ -37,7 +37,9 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	cam_move_ = false;
 	gm_ = NULL;
 	mode_ = MODE_NONE;
-	
+	tm_ = NULL;
+	creature_ = NULL;
+
 	SetTitle("Tilxor...");
 }
 
@@ -79,13 +81,62 @@ void Interface::MainLoop() {
 }
 
 /**
- *  Set the OpenGL 3D perspective mode.
+ * Set the OpenGL 3D perspective mode.
  */
 void Interface::PerspectiveSet_() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(camera_.getFov(), width_ / height_, 0.1f, 10000.0f);
 	glMatrixMode(GL_MODELVIEW);
+}
+
+/**
+ * Gets the area the controlled creature is in.
+ * @return The area.
+ */
+Area* Interface::getArea() {
+	DEBUG_M("Entering function...");
+	if(!creature_) {
+		return NULL;
+	}
+	return creature_->getArea();
+}
+
+/**
+ * Gets the resource manager of the area the creature is in.
+ * @return The resource manager
+ */
+ResourceManager* Interface::getResourceManager() {
+	DEBUG_M("Entering function...");
+	Area* area = getArea();
+	if(!area) {
+		DEBUG_V("No area...");
+		return NULL;
+	}
+
+	DEBUG_V("done...");
+	return area->getResourceManager();
+}
+
+/**
+ * Sets the tile currently selected for edit mode.
+ * @param filename Filename of model.
+ */
+void Interface::setEditTile_(const string filename) {
+	DEBUG_M("Entering function...");
+	ResourceManager* rm = getResourceManager();
+	if(!rm) {
+		DEBUG_V("No resource manager...");
+		return;
+	}
+
+	rm->unloadModel(tm_);
+	tm_ = rm->loadModel(filename);
+	DEBUG_V("done...");
+}
+
+Tile* Interface::getEditTile_() {
+	return tm_;
 }
 
 /**
@@ -96,13 +147,13 @@ void Interface::Draw() {
 	static int last_render_time = 0;
 	static int last_fps_time = 0;
 	int current_time = SDL_GetTicks();
-	
-	/* Limit framerate */
+
+	// Limit framerate
 	if(limit_fps_ && !( (current_time - last_render_time) >= 1000/60) ) {
 		return;
 	}
 
-	/* Calculate FPS */
+	// Calculate FPS
 	frame++;
 	if(current_time - last_fps_time > 1000) {
 		fps_ = frame*1000.0f/(current_time-last_fps_time);
@@ -111,7 +162,7 @@ void Interface::Draw() {
 		LOG("FPS: %d,\tMPF: %d", fps_, mpf_);
 	}
 	last_render_time = current_time;
-	
+
 	PerspectiveSet_();
 	glLoadIdentity();
 	camera_.Position();
@@ -122,11 +173,32 @@ void Interface::Draw() {
 	glEnable(GL_LIGHT0);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	//glEnable(GL_COLOR_MATERIAL);
-	
+
 	if(creature_) {
 		Area* area = creature_->getArea();
 		if(area) {
 			area->Draw();
+
+			if(mode_ != MODE_NONE) {
+				windowToWorld(mx_, my_, tx_, ty_, tz_);
+			}
+
+			if(mode_ == MODE_EDIT_TILES) {
+				int gx, gy;
+				area->getGridCord(tx_, tz_, gx, gy);
+				float fx, fz;
+				area->getWorldCord(gx, gy, fx, fz);
+
+				Model* tilem = getEditTile_();
+				if(tilem) {
+					glPushMatrix();
+					glTranslatef(fx , 0.0, fz);
+					RCBC_Render(tilem);
+					glPopMatrix();
+					area->getResourceManager()->unloadModel(tilem);
+				}
+			}
+			
 		}
 	}
 
@@ -230,8 +302,13 @@ void Interface::HandleKeyUp_(const SDL_Event& event) {
 			mode_ = MODE_NONE;
 			break;
 		case SDLK_F2:
-			LOG("Setting edit mode.");
-			mode_ = MODE_EDIT;
+			LOG("Setting tiles edit mode.");
+			setEditTile_("data/models/monkey-test.dae");
+			mode_ = MODE_EDIT_TILES;
+			break;
+		case SDLK_F3:
+			LOG("Setting objects edit mode.");
+			mode_ = MODE_EDIT_OBJECTS;
 			break;
 		default:
 			break;
@@ -263,10 +340,9 @@ void Interface::ResizeEvent_(const SDL_Event& event) {
  * @param z Z cord to set.
  */
 void Interface::windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z) {
-	/* Get infomation to turn window cordinates into opengl ones */
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	
+
 	GLdouble modelview[16];
 	glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
 	
@@ -290,20 +366,24 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 	if(!creature_) {
 		return;
 	}
-	
-	//GLdouble x, y, z;
-	//windowToWorld(event.button.x, event.button.y, x, y, z);
 
 	Area* area = creature_->getArea();
-
-	static Model* model = RCBC_LoadFile("data/models/monkey-robot.dae", area->getResourceManager()->getImages());
-
-	RigidBody* newobj = new RigidBody;
-	newobj->setModel(*model);
-	newobj->setShape(new btBoxShape(btVector3(.5,.5,.5)));
-	newobj->setPos(-tx_, ty_+1.0f, tz_);
-	
-	area->addObject(*newobj);
+	switch(mode_) {
+		case(MODE_NONE):
+			return;
+			break;
+		case(MODE_EDIT_TILES):
+			//area->setTile(gx, gy, tile);
+			break;
+		case(MODE_EDIT_OBJECTS):
+			Model* model = area->getResourceManager()->loadModel("data/models/monkey-robot.dae");
+			RigidBody* newobj = new RigidBody;
+			newobj->setModel(*model);
+			newobj->setShape(new btBoxShape(btVector3(.5,.5,.5)));
+			newobj->setPos(-tx_, ty_+1.0f, tz_);
+			area->addObject(*newobj);
+			break;
+	}
 }
 
 /**
@@ -320,7 +400,7 @@ void Interface::HandleMouse3_(const SDL_Event& event) {
 	
 	Area* area = creature_->getArea();
 
-	static Model* model = RCBC_LoadFile("data/models/unmaptest.dae", area->getResourceManager()->getImages());
+	Model* model = area->getResourceManager()->loadModel("data/models/unmaptest.dae");
 
 	RigidBody* newobj = new RigidBody;
 	newobj->setModel(*model);
@@ -347,19 +427,18 @@ void Interface::CheckEvents_() {
 				HandleKeyUp_(event);
 				break;
 			case SDL_MOUSEMOTION:
+				mx_ = event.motion.x;
+				my_ = event.motion.y;
 				if(cam_move_) {
 					camera_.setRotX(camera_.getRotX() + (GLfloat)event.motion.xrel / width_ * 100);
 					camera_.setRotY(camera_.getRotY() - (GLfloat)event.motion.yrel / height_ * 100);
-				}
-				if(mode_ == MODE_EDIT) {
-					windowToWorld(event.button.x, event.button.y, tx_, ty_, tz_);
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				DEBUG_M("Mouse button %d down at (%d, %d)",
 					event.button.button, event.button.x, event.button.y);
-
-				windowToWorld(event.button.x, event.button.y, tx_, ty_, tz_);
+				
+				//windowToWorld(event.button.x, event.button.y, tx_, ty_, tz_);
 				if(event.button.button == 3) {
 					cam_move_ = true;
 				}
