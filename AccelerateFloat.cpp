@@ -1,3 +1,7 @@
+/*
+ * IDMP A Project
+ * David C. Bishop - s3036687
+ */
 #warning ['TODO']: This file isnt needed...
 #include "AccelerateFloat.hpp"
 #include "console.h"

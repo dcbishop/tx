@@ -4,22 +4,26 @@
 #include <stdlib.h>
 #include <rcbc.h>
 
+class Object;
+#include "Area.hpp"
 #include "Tagged.hpp"
 #include "Updateable.hpp"
 #include "Container.hpp"
+#include "Visual.hpp"
 
-class Area;
-#include "Area.hpp"
+const int NUM_SCRIPTS = 1;
+const int SCRIPT_ONUPDATE = 1;
 
 /**
  * An ingame object. Has a visual model, cordinates, rotation and
  * attached area.
  */
-class Object : public Tagged, public Updateable, public Contained {
+class Object : public Tagged, public Updateable, public Contained, public Visual {
 	public:
-		Object(string TAG = DEFAULT_TAG, Model* model = NULL);
+		Object(string TAG = DEFAULT_TAG, Visual* model = NULL);
 		~Object();
-		virtual void Draw();
+		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
+		virtual void Draw(ResourceManager& rm);
 		virtual void setPos(const float x, const float y, const float z);
 		virtual void setX(const float x);
 		virtual void setY(const float y);
@@ -35,10 +39,12 @@ class Object : public Tagged, public Updateable, public Contained {
 		virtual const float getRotY();
 		virtual const float getRotZ();
 		virtual const float getRotAngle();
-		virtual void setModel(const Model& model);
-		virtual const Model& getModel();
+		void setVisual(Visual& visual);
+		Visual& getVisual();
 		virtual void setArea(Area& area);
 		virtual Area* getArea();
+		virtual void setScript(const int type, const string filename);
+		void Update(const int time);
 
 	private:
 		float x_;
@@ -49,9 +55,10 @@ class Object : public Tagged, public Updateable, public Contained {
 		float ry_;
 		float rz_;
 		float angle_;
+		string scripts_[NUM_SCRIPTS];
 
-		const Model* model_;
-		Area* area_;
+		Visual* visual_;
+		GameManager* gm_;
 };
 
 #endif

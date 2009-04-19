@@ -1,13 +1,23 @@
 #include "Container.hpp"
 
 /**
- * Makes the container contain a thing.
+ * Adds a thing to the container.
  * @param child The thing to be contained.
  */
 void Container::addChild(Contained* child) {
 	if(child) {
 		child->setParent(this);
 		children_.push_back(child);
+	}
+}
+
+/**
+ * Removes a thing from the container.
+ * @param child The thing to be contained.
+ */
+void Container::removeChild(Contained* child) {
+	if(child) {
+#warning ['TODO']: This...
 	}
 }
 

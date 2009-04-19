@@ -14,8 +14,9 @@ class Contained;
  */
 class Container {
 	public:
-		void addChild(Contained* child);
-	private:
+		virtual void addChild(Contained* child);
+		virtual void removeChild(Contained* child);
+	protected:
 		vector<Contained*> children_;
 };
 
@@ -29,7 +30,7 @@ class Contained {
 		
 	public:
 		Contained(): parent_(NULL){}
-		void setParent(Container* parent);
+		virtual void setParent(Container* parent);
 		Container* getParent();
 };
 

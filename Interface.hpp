@@ -2,14 +2,18 @@
 #define TX_INTERFACE_HPP
 
 #include <string>
+#include <vector>
 using namespace std;
 
-#include "SDL.h"
 
+
+#include "SDL.h"
+#include "Tile.hpp"
 #include "Area.hpp"
 #include "Camera.hpp"
 #include "Creature.hpp"
 #include "GameManager.hpp"
+
 
 const int MODE_NONE = 0;
 const int MODE_EDIT_TILES = 1;
@@ -29,15 +33,19 @@ class Interface {
 		virtual void setGameManager(GameManager& gm);
 		virtual void windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z);
 		Area* getArea();
-		ResourceManager* getResourceManager();
-		void setEditTile_(const string filename);
+		ResourceManager& getResourceManager();
+		void setResourceManager(ResourceManager& rm);
+
 
 	private:
 		void HandleKeyDown_(const SDL_Event& event);
 		void HandleKeyUp_(const SDL_Event& event);
 		void HandleMouse1_(const SDL_Event& event);
 		void HandleMouse3_(const SDL_Event& event);
-		Tile* getEditTile_();
+		Tile& getEditTile_();
+		void setEditTile_(const string filename);
+		Object& getEditObject_();
+		void setEditObject_(Object& object);
 
 		void ResizeEvent_(const SDL_Event& event);
 		void CheckEvents_();
@@ -56,13 +64,17 @@ class Interface {
 		Camera camera_;
 		Creature* creature_;
 		GameManager* gm_;
+		ResourceManager* rm_;
 		
 		// For the cordinates the mouse is targeting
 		GLdouble tx_, ty_, tz_;
 		
 		// Mouse window cordinates
 		int mx_, my_;
-		Model* tm_;
+		Tile* tm_;
+		Object* to_;
+		bool ts_;
+		vector<string> edit_tiles_;
 };
 
 #endif

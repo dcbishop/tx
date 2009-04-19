@@ -5,13 +5,33 @@
 #include <typeinfo>
 #include <GL/gl.h>
 
+#include "Tile.hpp"
+#include "Object.hpp"
+#include "RigidBody.hpp"
+#include "GameManager.hpp"
 
 #include "console.h"
 
-Area::Area() {
+Area::Area(const string tag) {
+	setTag(tag);
 	height_ = 0;
 	width_ = 0;
 	tiles_ = NULL;
+	clipbox_ = NULL;
+	//clipbox_ = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
+	walkblockers_ = NULL;
+}
+
+/**
+ * Area deconstructor, unloads all the tiles from memory.
+ */
+Area::~Area() {
+	DEBUG_M("Entering function...");
+	#warning ['TODO']: Delete objects?
+	setSize(0, 0);
+	delete [] tiles_;
+	tiles_ = NULL;
+	delete(clipbox_);
 }
 
 /**
@@ -41,46 +61,131 @@ void Area::setSize(int width, int height) {
 	width_ = width;
 	height_ = height;
 
+#warning ['TODO']: Decide when tiles are unloaded
 	// Unload any tiles that are dropped
 	if(width < old_width) {
 		for(int y = 0; y < height; y++) {
 			for(int x = old_width; x < width; x++) {
-				rm_->unloadModel(getTile(x, y));
+				//rm_->unloadModel(getTile(x, y));
+				delete getTile(x, y);
+				setSolid(x, y, false);
 			}
 		}
 	}
 	if(height < old_height) {
 		for(int y = old_height; y < height; y++) {
 			for(int x = 0; x < old_width; x++) {
-				rm_->unloadModel(getTile(x, y));
+				//rm_->unloadModel(getTile(x, y));
+				delete getTile(x, y);
+				setSolid(x, y, false);
 			}
 		}
 	}
 
 	// Realloc space for tiles
 	tiles_ = (Tile**)realloc(tiles_, width * height * sizeof(Tile*));
+	walkblockers_ = (RigidBody**)realloc(walkblockers_, width * height * sizeof(RigidBody*));
+
+	// If we are freeing the Area
+	if(!width || !height) {
+		return;
+	}
+
 	if(!tiles_) {
 		ERROR("Failed to allocate memory for tile map.");
 		return;
 	}
 
+	#warning ['TODO']: This function should be split up some more, also shouldn't need to NULL tiles befoure setting them.
 	// Set new tiles to default
 	if(width > old_width) {
 		for(int y = 0; y < height; y++) {
 			for(int x = old_width; x < width; x++) {
-				Model* defaulttile = rm_->loadModel("data/models/mayagrass.dae");
+				//Model* defaulttile = rm_->loadModel("data/models/mayagrass.dae");
+				Tile* defaulttile = new Tile("data/models/void.dae");
+				defaulttile->setParent(this);
+				setTile(x, y, NULL);
 				setTile(x, y, defaulttile);
+				*(walkblockers_+(y*width_)+x) = NULL;
 			}
 		}
 	}
 	if(height > old_height) {
 		for(int y = old_height; y < height; y++) {
 			for(int x = 0; x < old_width; x++) {
-				Model* defaulttile = rm_->loadModel("data/models/mayagrass.dae");
+				//Model* defaulttile = rm_->loadModel("data/models/mayagrass.dae");
+				Tile* defaulttile = new Tile("data/models/void.dae");
+				defaulttile->setParent(this);
+				setTile(x, y, NULL);
 				setTile(x, y, defaulttile);
+				*(walkblockers_+(y*width_)+x) = NULL;
 			}
 		}
 	}
+}
+
+/**
+ * For debugging, makes a square room on the map.
+ */
+void Area::BoxRoom_(int start_x, int start_y, int size) {
+	//int start_x = 5;
+	//int start_y = 5;
+	int width = size;
+	int height = size;
+	
+	Tile* voidtile = new Tile("data/models/void.dae");
+	Tile* wall;
+	
+	wall = new Tile("data/models/floor.dae");
+	for(int y = start_y+1; y < start_y+height; y++) {
+		for(int x = start_x+1; x < start_x+width; x++) {
+			setTile(x, y, wall);
+		}
+	}
+	for(int y = start_x; y < start_x+width; y++ ) {
+		// Left side
+		wall = new Tile("data/models/Wall.dae");
+		setTile(start_x, y, wall);
+		setSolid(start_x, y, true);
+		
+		// Right side
+		wall = new Tile("data/models/Wall.dae");
+		wall->setRotation(180.0f);
+		setTile(start_x+width, y, wall);
+		setSolid(start_x+width, y, true);
+		
+		// Top
+		wall = new Tile("data/models/Wall.dae");
+		wall->setRotation(-90.0f);
+		setTile(y, start_y, wall);
+		setSolid(y, start_y, true);
+		
+		// Bottom
+		wall = new Tile("data/models/Wall.dae");
+		wall->setRotation(90.0f);
+		setTile(y, start_x + height, wall);
+		setSolid(y, start_x + height, true);		
+	}
+
+	// TL
+	wall = new Tile("data/models/inner corner.dae");
+	wall->setRotation(-90.0f);
+	setTile(start_x, start_x, wall);
+	
+	// BL
+	wall = new Tile("data/models/inner corner.dae");
+	//wall->setRotation(-90.0f);
+	setTile(start_x, start_y+height, wall);
+	
+	// TR
+	wall = new Tile("data/models/inner corner.dae");
+	wall->setRotation(-180.0f);
+	setTile(start_x+width, start_y, wall);
+	
+	// BR
+	wall = new Tile("data/models/inner corner.dae");
+	wall->setRotation(90.0f);
+	setTile(start_x+width, start_y+height, wall);
 }
 
 #warning ['TODO']: Actually load the area from a file.
@@ -90,21 +195,43 @@ void Area::setSize(int width, int height) {
  */
 void Area::LoadFile(const string filename) {
 	DEBUG_M("Entering function...");
-	setSize(100, 100);
+	setSize(20, 20);
 
-	Model* grass = rm_->loadModel("data/models/mayagrass.dae");
-	Model* monkey = rm_->loadModel("data/models/monkey-test.dae");
+	/*Model* grass = rm_->loadModel("data/models/mayagrass.dae");
+	Model* monkey = rm_->loadModel("data/models/monkey-test.dae");*/
+	//VModel* grass = new VModel("data/models/mayagrass.dae");
+	
+	BoxRoom_(5, 5, 5);
+
 
 	/*for(int y = 0; y < height_; y++) {
 		for(int x = 0; x < width_; x++) {
 			setTile(x, y, grass);
 		}
 	}*/
+	
 
-	setTile(0, 0, monkey);
-	setTile(1, 0, monkey);
-	setTile(4, 4, monkey);
-	setTile(2, 7, monkey);
+
+	// Some Pillars
+	/*wall = new Tile("data/models/Pillar.dae");
+	setTile(5, 7, wall);
+	setSolid(5, 7, true);
+
+	setTile(7, 5, wall);
+	setSolid(7, 5, true);
+	
+	setTile(12, 6, wall);
+	setSolid(12, 6, true);
+	
+	setTile(4, 13, wall);
+	setSolid(4, 13, true);
+	setTile(14, 12, wall);
+	setSolid(14, 12, true);
+
+	setTile(10, 16, wall);
+	setSolid(10, 16, true);*/
+
+
 }
 
 /**
@@ -130,21 +257,106 @@ void Area::setTile(const int x, const int y, Tile* tile) {
 	if(x > getWidth() || y > getHeight() || x < 0 || y < 0) {
 		return;
 	}
+
 	*(tiles_+(y*width_)+x) = tile;
 }
 
 /**
- * Renders the area and all its objects.
+ * Sets if a tile is solid or not.
+ * @param x The X grid coordinate.
+ * @param y The Y grid coordinate.
+ * @param solid If true the tile is solid.
+ * @see isSolid()
  */
-void Area::Draw() {
+void Area::setSolid(const int x, const int y, const bool solid) {
+	if(x > getWidth() || y > getHeight() || x < 0 || y < 0) {
+		return;
+	}
+
+	DEBUG_A("Q");
+	if(!solid) {
+		//getPhysics()->removeRigidBody(getSolid(x, y)); done in deconstructor
+		//RigidBody* delme = getSolid(x, y);
+		//*(walkblockers_+(y*width_)+x) = NULL;
+		DEBUG_A("Setting not solid.");
+		//delete(getSolid(x, y));
+		RigidBody* blocker = *(walkblockers_+(y*width_)+x);
+		if(blocker) {
+			blocker->removeRigidBody_();
+		}
+		*(walkblockers_+(y*width_)+x) = NULL;
+		//delete(delme);
+	}
+
+	/*Tile* tile = getTile(x, y);
+	btRigidBody* body = NULL;
+	if(isSolid) {
+		float fx,fz;
+		getWorldCord(x, y, fx, fz);
+
+		btDefaultMotionState* ms = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(fx,0.5f,fz)));
+		body = new btRigidBody(
+			0.0f,
+			ms,
+			clipbox_
+		);
+	}
+	tile->setSolid(body);*/
+
+	if(solid) {
+		DEBUG_A("Setting solid.");
+		float fx,fz;
+		getWorldCord(x, y, fx, fz);
+		RigidBody* blocker = new RigidBody("BLOCKER", NULL);
+		//blocker->setShape(clipbox_);
+		blocker->setShape(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)));
+		blocker->setMass(0.0f);
+		//VModel* visual = new VModel("data/models/robot-monkey.dae");
+		//blocker->setVisual(*visual);
+		blocker->setPos(fx, 0.5f, fz);
+		//getPhysics()->getWorld()->addRigidBody();
+		*(walkblockers_+(y*width_)+x) = blocker;
+		addObject(*blocker);
+	}
+}
+
+/**
+ * Gets the RigidBody that is used to clip walking on the areas tile.
+ * @param x The X grid coordinate.
+ * @param y The Y grid coordinate.
+ * @return The RigidBody or NULL if there is no blocker.
+ */
+RigidBody* Area::getSolid(const int x, const int y) {
+	return *(walkblockers_+(y*width_)+x);
+}
+
+/**
+ * Checks if a tile is solid or not.
+ * @param x The X grid coordinate.
+ * @param y The Y grid coordinate.
+ * @see setSolid()
+ */
+bool Area::isSolid(const int x, const int y) {
+	if(x > getWidth() || y > getHeight() || x < 0 || y < 0) {
+		return true;
+	}
+
+	return getSolid(x, y);
+}
+
+/**
+ * Renders the area and all its objects.
+ * @param rm The resource manager to use to manage models and images.
+ */
+void Area::Draw(ResourceManager& rm) {
 #warning ['TODO']: Delete me....
 	//glTranslatef( -TILEWIDTH * width_ / 2, 0.0f, -TILEWIDTH * height_ / 2 );
 	glPushMatrix();
 	for(int y = 0; y < height_; y++) {
 		glPushMatrix();
 		for(int x = 0; x < width_; x++) {
-			Model* tile = getTile(x, y);
-			RCBC_Render(tile);
+			Tile* tile = getTile(x, y);
+			tile->Draw(rm);
 			glTranslatef(-TILEWIDTH, 0.0f, 0.0f);
 		}
 		glPopMatrix();
@@ -153,28 +365,12 @@ void Area::Draw() {
 	glPopMatrix();
 
 	// Draw all the objects in the map
-	for(vector<Object*>::iterator iter = objects_.begin(); iter != objects_.end(); iter++) {
-		(*iter)->Draw();
+	for(vector<Contained*>::iterator iter = children_.begin(); iter != children_.end(); iter++) {
+		Visual* object = dynamic_cast<Visual*>(*iter);
+		if(object) {
+			object->Draw(rm);
+		}
 	}
-}
-
-/**
- * Sets the resource manager that this area will use.
- * @param rm The resource manager.
- * @see getResourceManager()
- */
-void Area::setResourceManager(ResourceManager& rm) {
-	DEBUG_M("Entering function...");
-	rm_ = &rm;
-}
-
-/**
- * Gets the resource manager that this area uses.
- * @return The resource manager.
- * @see setResourceManager()
- */
-ResourceManager* Area::getResourceManager() {
-	return rm_;
 }
 
 /**
@@ -190,15 +386,16 @@ Physics* Area::getPhysics() {
  * @param physics The Physics engine pointer.
  */
 void Area::setPhysics(Physics& physics) {
-	DEBUG_M("Entering function...");
 	physics_ = &physics;
+	//processWalkmap_();
 }
 
-Area::~Area() {
-	DEBUG_M("Entering function...");
-	#warning ['TODO']: Delete objects?
-	delete [] tiles_;
-	tiles_ = NULL;
+/**
+ * Get GameManager.
+ * @return The GameManager or NULL.
+ */
+GameManager* Area::getGameManager() {
+	return dynamic_cast<GameManager*>(getParent());
 }
 
 /**
@@ -207,8 +404,11 @@ Area::~Area() {
  * @see removeObject()
  */
 void Area::addObject(Object& object) {
-	objects_.push_back(&object);
+	
 	object.setArea(*this);
+	object.setGameManager(getGameManager());
+	
+	addChild(&object);
 }
 
 /**
@@ -217,12 +417,7 @@ void Area::addObject(Object& object) {
  * @see addObject()
  */
 void Area::removeObject(Object& object) {
-	vector<Object*>::iterator iter;
-	iter = find(objects_.begin(), objects_.end(), &object);
-
-	if(iter != objects_.end()) {
-		objects_.erase(iter);
-	}
+	removeChild(&object);
 }
 
 /**
@@ -230,7 +425,7 @@ void Area::removeObject(Object& object) {
  * @param time The current game time in milliseconds.
  */
 void Area::Update(const int time) {
-	physics_->Update(time);
+	//physics_->Update(time);
 	Updateable::Update(time);
 }
 
@@ -242,8 +437,8 @@ void Area::Update(const int time) {
  * @param gy The value to store the Y grid cord in.
  */
 void Area::getGridCord(const float fx, const float fz, int &gx, int &gy) {
-	gx = (fx-(TILEWIDTH/2))/TILEWIDTH;
-	gy = (fz-(TILEWIDTH/2))/TILEWIDTH;
+	gx = -(fx-(TILEWIDTH/2))/TILEWIDTH;
+	gy = -(fz-(TILEWIDTH/2))/TILEWIDTH;
 }
 
 /**

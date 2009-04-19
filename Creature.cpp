@@ -7,9 +7,9 @@
  * @param tag The Objects tag.
  * @param model The Objects RCBC model pointer.
  */
-Creature::Creature(const string tag, Model* model) {
+Creature::Creature(const string tag, Visual* model) {
 	setTag(tag);
-	setModel(*model);
+	setVisual(*model);
 	setMass(100.0f);
 	turn_angle_ = 0.0;
 	walk_velocity_ = 2.0f;
@@ -31,15 +31,26 @@ Creature::~Creature() {
 	#warning ['TODO']: Deregister me from physics engine, area list, delete shapes...
 }
 
+/**
+ * Copy constructor.
+ * @returns deep copy.
+ */
+Object* Creature::clone() {
+	#warning ['TODO']: Copy constructor.
+	return NULL;
+}
+
 void Creature::setShape(btCollisionShape* shape = NULL) {
 	// Set the shape...
 	if(shape != NULL) { // If we are overiding the default...
 		RigidBody::setShape(shape);
 	} else { // A default shape
 #warning ['TODO']: Don't hardcode these numbers? (although it can be overridden...)
-		btScalar characterHeight = 0.5;
-		btScalar characterWidth = 0.25;
+		
+		btScalar characterWidth = 0.35;
+		btScalar characterHeight = 0.8f-characterWidth;
 		shape_ = new btCapsuleShape(characterWidth,characterHeight);
+		//shape_ = new btBoxShape(btVector3(0.45f, 0.5f, 0.2f));
 	}
 	
 	btTransform transform;
@@ -51,11 +62,10 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 	body_->setCollisionShape (shape_);
 	body_->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
 	
-	// This is required for moving bodies... (I think the bullet character controller handles this)
 	getBody().setSleepingThresholds (0.0, 0.0);
 	getBody().setAngularFactor (0.0);
 	
-	btScalar stepHeight = btScalar(0.35);
+	btScalar stepHeight = btScalar(0.01);
 	controller_ = new btKinematicCharacterController(
 						(btPairCachingGhostObject*)body_,
 						(btConvexShape*)shape_,
@@ -68,7 +78,7 @@ btVector3& Creature::getPos() {
 
 void Creature::setPos(const float x, const float y, const float z) {
 	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
+		body_->getWorldTransform().setOrigin( btVector3(x, y, -z) );
 	}
 }
 
@@ -208,21 +218,21 @@ void Creature::StrafeRight(const bool state) {
 
 void Creature::Update(const int time) {
 	float dt = ((float)time - getLastUpdate()) / 1000;
-	
+
 	// Get the current position and rotation
 	btTransform xform;
 	xform = body_->getWorldTransform();
 	btVector3 forwardDir = xform.getBasis()[2];
 	btVector3 upDir = xform.getBasis()[1];
 	btVector3 strafeDir = xform.getBasis()[0];	
-	
+
 	btVector3 walkDirection = btVector3(0.0f, 0.0f, 0.0f);
 	btScalar walkSpeed = walk_velocity_ * dt;
-	
+
 	// Get any movement flags
 	if(running_) {
 		walkSpeed *= running_multiplier_;
-	}	
+	}
 	if(forward_) {
 		walkDirection -= forwardDir;
 	}

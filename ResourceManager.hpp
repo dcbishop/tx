@@ -17,7 +17,8 @@ class ResourceManager {
 		virtual List* getImages();
 		//virtual List* getModels();
 		virtual Model* loadModel(const string filename);
-		void unloadModel(Model* model);
+		//void unloadModel(Model* model);
+		void unloadModel(const string model);
 
 	private:
 		List* images_;

@@ -19,7 +19,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	width_ = width;
 	height_ = height;
 	finished_ = false;
-	
+
 	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
 		ERROR("SDL: Failed to init video: %s", SDL_GetError());
 		throw "SDL init";
@@ -38,7 +38,31 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	gm_ = NULL;
 	mode_ = MODE_NONE;
 	tm_ = NULL;
+	to_ = NULL;
 	creature_ = NULL;
+	rm_ = NULL;
+
+	DEBUG_A("FLAGA");
+	VModel* model = new VModel("data/models/cube.dae");
+	DEBUG_A("FLAGB");
+	RigidBody* object = new RigidBody("Object_00", model);
+	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+	object->setMass(0.2f);
+	to_ = object;
+	ts_ = true;
+
+	edit_tiles_.push_back("data/models/void.dae");
+	edit_tiles_.push_back("data/models/floor.dae");
+	edit_tiles_.push_back("data/models/Wall.dae");
+	edit_tiles_.push_back("data/models/outer corner.dae");
+	edit_tiles_.push_back("data/models/2 sided wall.dae");
+	edit_tiles_.push_back("data/models/3 sided wall.dae");
+	edit_tiles_.push_back("data/models/Pillar.dae");
+	edit_tiles_.push_back("data/models/inner corner.dae");
+	edit_tiles_.push_back("data/models/combined wall + inner corner A.dae");
+	edit_tiles_.push_back("data/models/combined wall + inner corner B.dae");
+	edit_tiles_.push_back("data/models/two inner corners.dae");
+	edit_tiles_.push_back("data/models/opposite inner corners.dae");
 
 	SetTitle("Tilxor...");
 }
@@ -73,10 +97,11 @@ void Interface::MainLoop() {
 				creature_->getArea()->Update(now);
 			}
 		}*/
+		//
+		CheckEvents_();
+		Draw();
 		//creature_->Update(now);
 		gm_->Update(now);
-		Draw();
-		CheckEvents_();
 	}
 }
 
@@ -103,40 +128,32 @@ Area* Interface::getArea() {
 }
 
 /**
- * Gets the resource manager of the area the creature is in.
- * @return The resource manager
- */
-ResourceManager* Interface::getResourceManager() {
-	DEBUG_M("Entering function...");
-	Area* area = getArea();
-	if(!area) {
-		DEBUG_V("No area...");
-		return NULL;
-	}
-
-	DEBUG_V("done...");
-	return area->getResourceManager();
-}
-
-/**
  * Sets the tile currently selected for edit mode.
  * @param filename Filename of model.
  */
 void Interface::setEditTile_(const string filename) {
 	DEBUG_M("Entering function...");
-	ResourceManager* rm = getResourceManager();
-	if(!rm) {
-		DEBUG_V("No resource manager...");
+	ResourceManager& rm = getResourceManager();
+	if(!&rm) {
 		return;
 	}
 
-	rm->unloadModel(tm_);
-	tm_ = rm->loadModel(filename);
-	DEBUG_V("done...");
+	/*rm->unloadModel(tm_);
+	tm_ = rm->loadModel(filename);*/
+	tm_ = new Tile(filename);
 }
 
-Tile* Interface::getEditTile_() {
-	return tm_;
+Tile& Interface::getEditTile_() {
+	return *tm_;
+}
+
+Object& Interface::getEditObject_() {
+	return *to_;
+}
+
+void Interface::setEditObject_(Object& object) {
+	delete(to_);
+	to_ = &object;
 }
 
 /**
@@ -174,10 +191,16 @@ void Interface::Draw() {
 	glColor3f(1.0f, 1.0f, 1.0f);
 	//glEnable(GL_COLOR_MATERIAL);
 
+	ResourceManager& rm = getResourceManager();
+	if(!&rm) {
+		ERROR("No resource manager set.");
+		return;
+	}
+
 	if(creature_) {
 		Area* area = creature_->getArea();
 		if(area) {
-			area->Draw();
+			area->Draw(rm);
 
 			if(mode_ != MODE_NONE) {
 				windowToWorld(mx_, my_, tx_, ty_, tz_);
@@ -189,14 +212,24 @@ void Interface::Draw() {
 				float fx, fz;
 				area->getWorldCord(gx, gy, fx, fz);
 
-				Model* tilem = getEditTile_();
-				if(tilem) {
+				Tile& tilem = getEditTile_();
+				if(&tilem) {
 					glPushMatrix();
-					glTranslatef(fx , 0.0, fz);
-					RCBC_Render(tilem);
+					glTranslatef(-fx , 0.01, -fz);
+					//RCBC_Render(tilem);
+					tilem.Draw(rm);
 					glPopMatrix();
-					area->getResourceManager()->unloadModel(tilem);
+					//area->getResourceManager()->unloadModel(tilem);
 				}
+			}
+
+			if(mode_ == MODE_EDIT_OBJECTS) {
+				Object& object = getEditObject_();
+				glPushMatrix();
+				glTranslatef(tx_, ty_+0.125, tz_);
+				object.Draw(rm);
+				//RCBC_Render(&object.getModel());
+				glPopMatrix();
 			}
 			
 		}
@@ -276,6 +309,7 @@ void Interface::HandleKeyDown_(const SDL_Event& event) {
 }
 
 void Interface::HandleKeyUp_(const SDL_Event& event) {
+	static vector<string>::iterator iter = edit_tiles_.begin();
 	switch(event.key.keysym.sym) {
 		case SDLK_UP:
 			creature_->Forward(false);
@@ -297,13 +331,26 @@ void Interface::HandleKeyUp_(const SDL_Event& event) {
 		case SDLK_d:
 			creature_->StrafeRight(false);
 			break;
+		case SDLK_p:
+			ts_ = !ts_;
+			LOG("Tile solid: %d", ts_);			
+			break;
+		case SDLK_r:
+			tm_->setRotation(tm_->getRotation() + 90.0f);
+			break;
 		case SDLK_F1:
 			LOG("Setting game mode.");
 			mode_ = MODE_NONE;
 			break;
 		case SDLK_F2:
 			LOG("Setting tiles edit mode.");
-			setEditTile_("data/models/monkey-test.dae");
+
+			setEditTile_(*iter);
+
+			iter++;
+			if(iter == edit_tiles_.end()) {
+				iter = edit_tiles_.begin();
+			}
 			mode_ = MODE_EDIT_TILES;
 			break;
 		case SDLK_F3:
@@ -367,21 +414,38 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 		return;
 	}
 
+	Tile* tile;
 	Area* area = creature_->getArea();
 	switch(mode_) {
 		case(MODE_NONE):
 			return;
 			break;
 		case(MODE_EDIT_TILES):
-			//area->setTile(gx, gy, tile);
+			int gx, gy;
+			tile =  new Tile(*tm_);
+			area->getGridCord(tx_, tz_, gx, gy);
+			area->setTile(gx, gy, tile);
+			area->setSolid(gx, gy, ts_);
 			break;
 		case(MODE_EDIT_OBJECTS):
-			Model* model = area->getResourceManager()->loadModel("data/models/monkey-robot.dae");
-			RigidBody* newobj = new RigidBody;
-			newobj->setModel(*model);
-			newobj->setShape(new btBoxShape(btVector3(.5,.5,.5)));
-			newobj->setPos(-tx_, ty_+1.0f, tz_);
-			area->addObject(*newobj);
+			/*RigidBody* object;
+			object->setVisual(getEditObject_().getVisual());
+			object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+			object->setPos(-tx_, ty_+0.125f, -tz_);*/
+			VModel* model = new VModel("data/models/cube.dae");
+			//Object* object = new Object("Object_00", model);
+			RigidBody* object = new RigidBody("Object_00", model);
+			object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+			object->setMass(0.2f);
+			/*object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");*/
+			object->setPos(-tx_, ty_+0.125f, -tz_);
+			gm_->Register(*object);
+			area->addObject(*object);
 			break;
 	}
 }
@@ -394,18 +458,19 @@ void Interface::HandleMouse3_(const SDL_Event& event) {
 	if(!creature_) {
 		return;
 	}
-	
+
 	//GLdouble x, y, z;
 	//windowToWorld(event.button.x, event.button.y, x, y, z);
-	
+
 	Area* area = creature_->getArea();
 
-	Model* model = area->getResourceManager()->loadModel("data/models/unmaptest.dae");
+	//Model* model = area->getResourceManager()->loadModel("data/models/unmaptest.dae");
 
+	VModel* model = new VModel("data/models/unmaptest.dae");
 	RigidBody* newobj = new RigidBody;
-	newobj->setModel(*model);
+	newobj->setVisual(*model);
 	newobj->setShape(new btSphereShape(1));
-	newobj->setPos(-tx_, ty_+1.0f, tz_);
+	newobj->setPos(-tx_, ty_+1.0f, -tz_);
 	
 	area->addObject(*newobj);
 }
@@ -480,9 +545,34 @@ void Interface::setCreature(Creature& creature) {
 
 #warning ['TODO']: The game manager shouldnt be driven by the interface. Either make a seperate thread or a class containing both...
 /**
- * Sets the gamemanger that the interface controls.
- * @param gm The game manager
+ * Sets the GameManager that the interface controls.
+ * @param gm The GameManager
  */
 void Interface::setGameManager(GameManager& gm) {
 	gm_ = &gm;
+}
+
+/**
+ * Sets the ResourceManager that the interface uses.
+ * @param rm The ResourceManager
+ */
+void Interface::setResourceManager(ResourceManager& rm) {
+	rm_ = &rm;
+}
+
+/**
+ * Gets the resource manager.
+ * @return The resource manager refrence or NULL
+ */
+ResourceManager& Interface::getResourceManager() {
+	/*DEBUG_M("Entering function...");
+	Area* area = getArea();
+	if(!area) {
+		DEBUG_V("No area...");
+		return NULL;
+	}
+
+	DEBUG_V("done...");
+	return area->getResourceManager();*/
+	return *rm_;
 }

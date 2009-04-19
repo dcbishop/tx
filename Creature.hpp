@@ -17,10 +17,10 @@
  */
 class Creature : public RigidBody, public Container {
 	public:
-		Creature(const string tag = DEFAULT_TAG, Model* model = NULL);
+		Creature(const string tag = DEFAULT_TAG, Visual* model = NULL);
 		~Creature();
 		virtual void Update(const int time);
-		
+		virtual Object* clone();
 		virtual void Forward(const bool state=true);
 		virtual void Reverse(const bool state=true);
 		virtual void TurnLeft(const bool state=true);
@@ -35,7 +35,7 @@ class Creature : public RigidBody, public Container {
 		virtual void setArea(Area& area);
 		virtual void setPos(const float x, const float y, const float z);
 		virtual btVector3& getPos();
-	
+
 	private:
 		btKinematicCharacterController* controller_;
 		btPairCachingGhostObject* controller_ghost_;

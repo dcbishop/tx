@@ -1,18 +1,21 @@
 #include "RigidBody.hpp"
+#include "Area.hpp"
 #include "console.h"
 
 /**
- * Constructor
+ * Constructor.
  * @param tag
+ * @param model
  */
-RigidBody::RigidBody(const string tag) {
+RigidBody::RigidBody(const string tag, Visual* model) {
 	setTag(tag);
-	
+
+	setVisual(*model);
 	shape_ = NULL;
 	body_ = NULL;
 	mass_ = 1.0f;
 	friction_ = 1.0f;
-	
+
 	motionState_ = new btDefaultMotionState(
 					btTransform(btQuaternion(0,0,0,1),
 					btVector3(0,0,0))
@@ -21,11 +24,23 @@ RigidBody::RigidBody(const string tag) {
 
 RigidBody::~RigidBody() {
 	removeRigidBody_();
-	
+
 	delete body_;
 	delete shape_;
 	delete motionState_;
 }
+
+/**
+ * Copy constructor.
+ * @return A deep copy of this object.
+ */
+Object* RigidBody::clone() {
+	RigidBody* rb = new RigidBody(*this);
+	//rb.setShape(new rb
+	rb->body_ = NULL;
+	rb->ProcessBody_();
+	return rb;
+} 
 
 /**
  * Sets the bullet collision shape.
@@ -37,17 +52,17 @@ void RigidBody::setShape(btCollisionShape* shape) {
 	} else {
 		#warning ['TODO']: Otherwise make a new body...
 	}
-	
+
 	if(shape_ && shape != shape_) {
 		delete shape_;
 	}
-	
+
 	shape_ = shape;
 	ProcessBody_();
 }
 
 /**
- * Processes the properties of the body, shape, mass friction etc...
+ * Processes the properties of the body, shape, mass friction, etc...
  */
 void RigidBody::ProcessBody_() {
 	if(!shape_) {
@@ -66,13 +81,12 @@ void RigidBody::ProcessBody_() {
 	rigidBodyCI.m_friction = friction_;
 	rigidBodyCI.m_mass = mass_;
 	
-	
 	body_ = new btRigidBody(rigidBodyCI);
 }
 
 void RigidBody::setArea(Area& area) {
 	Area* old_area = getArea();
-	if(old_area) { /* If its already in an area */
+	if(old_area) { // If its already in an area
 		#warning ['TODO']: Check to see if both areas are using the same physics engine...
 			#warning ['TODO']: If not remove shape from old area physics...
 	}
@@ -80,7 +94,7 @@ void RigidBody::setArea(Area& area) {
 	Object::setArea(area);
 	
 	if(body_) {
-		#warning ['TODO']: Add body to physics, but only if it isn't already in an engine...
+		#warning ['TODO']: Add body to physics, but only if it isnt already in an engine...
 		if(getArea() && getArea()->getPhysics()) {
 			getArea()->getPhysics()->addRigidBody((btRigidBody*)body_);
 		}
@@ -96,7 +110,7 @@ void RigidBody::removeRigidBody_() {
 
 #warning ['TODO']: Might be best as a generic struct of float and in Object class
 /**
- * @return a vector containing the x, y, z cordinates.
+ * @return a vector containing the -x, y, z cordinates.
  */
 btVector3& RigidBody::getPos() {
 	if(!body_) {
@@ -123,15 +137,8 @@ const float RigidBody::getY() {
 }
 
 const float RigidBody::getZ() {
-	try {
-		return getPos().getZ();
-	} catch(char const* str) {
-		return Object::getZ();
-	}
-}
-
-void RigidBody::Update(int time) {
-	Object::Update(time);
+	btTransform trans = body_->getWorldTransform();
+	return -trans.getOrigin().getZ();
 }
 
 /**
@@ -154,26 +161,33 @@ void RigidBody::setFriction(const btScalar friction) {
 
 void RigidBody::setPos(const float x, const float y, const float z) {
 	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
+		body_->getWorldTransform().setOrigin( btVector3(x, y, -z) );
 	}
 }
 
 void RigidBody::setX(const float x) {
 	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(x, getY(), getZ()) );
+		body_->getWorldTransform().setOrigin( btVector3(x, getY(), -getZ()) );
 	}
 }
 
 void RigidBody::setY(const float y) {
 	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(getX(), y, getZ()) );
+		body_->getWorldTransform().setOrigin( btVector3(getX(), y, -getZ()) );
 	}
 }
 
 void RigidBody::setZ(const float z) {
 	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(getX(), getY(), z) );
+		body_->getWorldTransform().setOrigin( btVector3(getX(), getY(), -z) );
 	}
+}
+
+void RigidBody::setRotAngle(const float angle) {
+	#warning ['TODO']: This shouldnt be only X axis like this... also need get...
+	btTransform xform;
+	xform = getBody().getWorldTransform();
+	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), angle));
 }
 
 void drawCube() {
@@ -181,9 +195,9 @@ void drawCube() {
 	float BOX_SIZE = 0.5f;
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-	/* Draw Cube */
+	// Draw Cube
 	glBegin(GL_LINES);
-		/* Draw front and back of cube */
+		// Draw front and back of cube
 		for(z = -BOX_SIZE; z<=BOX_SIZE; z++) {
 			glVertex3f(-BOX_SIZE, BOX_SIZE, z);
 			glVertex3f(BOX_SIZE, BOX_SIZE, z);
@@ -198,7 +212,7 @@ void drawCube() {
 			glVertex3f(-BOX_SIZE, BOX_SIZE, z);
 		}
 
-		/* Draw sides lines */
+		// Draw sides lines
 		glVertex3f(BOX_SIZE, BOX_SIZE, BOX_SIZE);
 		glVertex3f(BOX_SIZE, BOX_SIZE, -BOX_SIZE);
 
@@ -213,24 +227,25 @@ void drawCube() {
 	glEnd();
 }
 
-void RigidBody::Draw() {
-	const Model* model = &getModel();
-	if(!model || !body_) {
+void RigidBody::Draw(ResourceManager& rm) {
+	Visual& model = getVisual();
+	if(!&model || !body_) {
 		return;
 	}
-	
+
 	glPushMatrix();
-	
+
 	btScalar m[16];
 	body_->getWorldTransform().getOpenGLMatrix(m);
-	m[12] = -m[12]; // Need to reverse this to rotate correctly o_O.
+	m[12] = -m[12]; // Need to reverse this to rotate correctly o_O
 	glMultMatrixf(m);
-	
-	glDisable(GL_LIGHTING);
+
+	/*glDisable(GL_LIGHTING);
 	drawCube();
-	glEnable(GL_LIGHTING);
-	RCBC_Render(model);
-	
+	glEnable(GL_LIGHTING);*/
+	//RCBC_Render(model);
+	model.Draw(rm);
+
 	glPopMatrix();
 }
 

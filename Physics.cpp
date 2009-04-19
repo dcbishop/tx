@@ -84,6 +84,6 @@ void Physics::Update(const int time) {
 	#warning ['TODO']: This should be calculated...
 	int time_diff = time - getLastUpdate();
 	btScalar timeStep = ((float)time_diff) / 1000.0f;
-	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,1);
+	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,0);
 	Updateable::Update(time);
 }

@@ -1,4 +1,5 @@
 #include "Tagged.hpp"
+#include "GameManager.hpp"
 
 /**
  * The constructor.
@@ -7,6 +8,7 @@
 Tagged::Tagged(string tag)
 {
 	setTag(tag);
+	gm_ = NULL;
 }
 
 /**
@@ -14,7 +16,7 @@ Tagged::Tagged(string tag)
  * @see setTag()
  * @return The object's tag.
  */
-string Tagged::getTag() {
+const string Tagged::getTag() {
 	return tag_;
 }
 
@@ -25,4 +27,20 @@ string Tagged::getTag() {
  */
 void Tagged::setTag(const string tag) {
 	tag_ = tag;
+}
+
+/**
+ * Gets the GameManager that manages this object.
+ * @return The pointer to the GameManager or NULL.
+ */
+GameManager* Tagged::getGameManager() {
+	return gm_;
+}
+
+/**
+ * Sets the GameManager to manage this object.
+ * @param gm The GameManager.
+ */
+void Tagged::setGameManager(GameManager* gm) {
+	gm_ = gm;
 }

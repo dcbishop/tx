@@ -20,11 +20,16 @@ class Scripting {
 	public:
 		Scripting();
 		~Scripting();
+		void loadLua(const string filename);
+		lua_State* getLuaState();
 
 	private:
-		static void ScriptLog_(string msg);		
+		static void ScriptLog_(string msg);
+		static long ScriptAddress_(void *ptr);
 		
 		void bindAll_();
+		luabind::scope bindGameManager_();
+		luabind::scope bindUpdateable_();
 		luabind::scope bindObject_();
 		luabind::scope bindRigidBody_();
 

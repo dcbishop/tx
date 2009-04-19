@@ -45,6 +45,7 @@ Model* ResourceManager::loadModel(const string filename) {
 		modref.second++;
 	} else {
 		model = RCBC_LoadFile(filename.c_str(), getImages());
+		DEBUG_L("Loading model '%s'", filename.c_str());
 		pair<Model*, int> modref(model, 1);
 		models_.insert(pair<string, pair<Model*, int> >(filename, modref));
 	}
@@ -54,7 +55,26 @@ Model* ResourceManager::loadModel(const string filename) {
 
 /**
  * Unloads a model from use.
+ * @param model The model to unload.
  */
-void ResourceManager::unloadModel(Model* model) {
+/*void ResourceManager::unloadModel(Model* model) {
 	#warning ['TODO']: Unload models...
+}*/
+
+/**
+ * Decreses a refrence count for a model.
+ * @param filename File of model to deref
+ */
+void ResourceManager::unloadModel(const string filename) {
+	// Find the model in the list
+	map< string, pair<Model*, int> >::iterator moditer = models_.find(filename);
+
+	// If model isn't in list...
+	if(moditer == models_.end()) {
+		return;
+	}
+
+	// Decrese refrence count of model.
+	pair<Model*, int> modref = moditer->second;
+	modref.second--;
 }

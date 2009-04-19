@@ -23,7 +23,7 @@ void GameManager::Update(const int time) {
 void GameManager::Register(Tagged& thing) {
 	// Add to the list of tagged Taggeds.
 	tags_.insert(pair<string, Tagged*>(thing.getTag(), &thing));
-	
+	thing.setGameManager(this);
 	// If its an Area, add to the list of areas.
 	Area* area = dynamic_cast<Area*>(&thing);
 	if(area) {
@@ -41,10 +41,30 @@ void GameManager::Deregister(Tagged& thing) {
 }
 
 /** 
- * @return Pointer to the Physics engine.
+ * @return Refrence to the Physics engine.
  */
 Physics& GameManager::getPhysics() {
 	return physics_;
+}
+
+/**
+ * @return Refrence to the Scripting engine.
+ */
+Scripting& GameManager::getScripting() {
+	return scripting_;
+}
+
+/**
+ * Finds a Tagged object based on its tag id.
+ * @param string The tag of the object.
+ * @return The Tagged object if found or NULL.
+ */
+Tagged* GameManager::getTaggedByTag_(const string tag) {
+	multimap<string, Tagged*>::iterator iter = tags_.find(tag);
+	if(iter != tags_.end()) {
+		return iter->second;
+	}
+	return NULL;
 }
 
 /**
@@ -54,7 +74,7 @@ Physics& GameManager::getPhysics() {
  */
 Area* GameManager::getAreaByTag(const string tag) {
 	#warning ['TODO']: Probabbly faster to get this from Area list...
-	return dynamic_cast<Area*>(tags_.find(tag)->second);
+	return dynamic_cast<Area*>(getTaggedByTag_(tag));
 }
 
 /**
@@ -63,7 +83,7 @@ Area* GameManager::getAreaByTag(const string tag) {
  * @return The Object pointer if found, otherwise NULL
  */
 Object* GameManager::getObjectByTag(const string tag) {
-	return dynamic_cast<Object*>(tags_.find(tag)->second);
+	return dynamic_cast<Object*>(getTaggedByTag_(tag));
 }
 
 /**
@@ -72,5 +92,5 @@ Object* GameManager::getObjectByTag(const string tag) {
  * @return The Object pointer if found, otherwise NULL
  */
 Creature* GameManager::getCreatureByTag(const string tag) {
-	return dynamic_cast<Creature*>(tags_.find(tag)->second);
+	return dynamic_cast<Creature*>(getTaggedByTag_(tag));
 }

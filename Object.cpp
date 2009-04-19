@@ -3,26 +3,29 @@
 #include <GL/gl.h>
 
 #include "console.h"
+#include "GameManager.hpp"
 
 /**
  * The constructor. Sets cordinates to 0,0,0.
  * @param tag The Objects tag.
  * @param model The Objects RCBC model pointer.
  */
-Object::Object(string tag, Model* model) {
+Object::Object(string tag, Visual* model) {
 	setTag(tag);
-	
-	model_ = NULL;
+
+	visual_ = model;
 	setX(0.0f);
 	setY(0.0f);
 	setZ(0.0f);
-	
+
 	setRotX(0.0f);
 	setRotY(1.0f);
 	setRotZ(0.0f);
 	setRotAngle(0.0f);
-
-	area_ = NULL;
+	
+	for(int i = 0; i < NUM_SCRIPTS; i++) {
+		scripts_[i] = "";
+	}
 }
 
 #warning ['TODO']: Use this function or kill it...
@@ -32,15 +35,19 @@ Object::~Object() {
 /**
  * Renders the object to screen using RCBC.
  */
-void Object::Draw() {
-	if(model_ == NULL) {
+void Object::Draw(ResourceManager& rm) {
+	if(!visual_) {
 		return;
 	}
 
 	glPushMatrix();
-	glTranslatef(getX(), getY(), getZ());
+	glTranslatef(-getX(), getY(), -getZ());
 	glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
-	RCBC_Render(model_);
+	
+	//Model* model = getModel(rm);
+	//RCBC_Render(model);
+	visual_->Draw(rm);
+	
 	glPopMatrix();
 }
 
@@ -58,9 +65,9 @@ void Object::Draw() {
  * @see getZ()
  */
 void Object::setPos(const float x, const float y, const float z) {
-	x_ = x;
-	y_ = y;
-	z_ = z;
+	setX(x);
+	setY(y);
+	setZ(z);
 }
 
 /**
@@ -75,7 +82,7 @@ void Object::setPos(const float x, const float y, const float z) {
  * @see getZ()
  */
 void Object::setX(const float x) {
-	x_ = x;
+	x_ = -x;
 }
 
 /**
@@ -105,7 +112,7 @@ void Object::setY(const float y) {
  * @see getZ()
  */
 void Object::setZ(const float z) {
-	z_ = z;
+	z_ = -z;
 }
 
 /**
@@ -120,7 +127,7 @@ void Object::setZ(const float z) {
  * @return The X cordinate in OpenGL style.
  */
 const float Object::getX() {
-	return x_;
+	return -x_;
 }
 
 /**
@@ -150,7 +157,7 @@ const float Object::getY() {
  * @return The Z cordinate in OpenGL style.
  */
 const float Object::getZ() {
-	return z_;
+	return -z_;
 }
 
 /**
@@ -273,12 +280,21 @@ const float Object::getRotAngle() {
 }
 
 /**
- * Sets the object's RCBC model.
- * @param model The RCBC model.
- * @see getModel()
+ * Sets the object's visual information.
+ * @param visual The visual information.
+ * @see getVisual()
  */
-void Object::setModel(const Model& model) {
-	model_ = &model;
+void Object::setVisual(Visual& visual) {
+	visual_ = &visual;
+}
+
+/**
+ * Returns the object's visual information.
+ * @see setVisual()
+ * @return The the visual informaion.
+ */
+Visual& Object::getVisual() {
+	return *visual_;
 }
 
 /**
@@ -287,12 +303,7 @@ void Object::setModel(const Model& model) {
  */
 void Object::setArea(Area& area) {
 	DEBUG_M("Entering function...");
-	if(area_) {
-		DEBUG_H("removing...");
-		area_->removeObject(*this);
-	}
-	
-	area_ = &area;
+	setParent(&area);
 }
 
 /**
@@ -301,14 +312,44 @@ void Object::setArea(Area& area) {
  * @return The area contining the object.
  */
 Area* Object::getArea() {
-	return area_;
+	return dynamic_cast<Area*>(getParent());
 }
 
 /**
- * Returns the object's RCBC model.
- * @see setModel()
- * @return The RCBC model.
+ * Sets the LUA script.
+ * @param type The type of script to set (eg. SCRIPT_ONUPDATE).
+ * @param filename The filename of the script.
  */
-const Model& Object::getModel() {
-	return *model_;
+void Object::setScript(const int type, const string filename) {
+	if(type < 1) {
+		return;
+	}
+	scripts_[type-1] = filename;
+}
+
+/**
+ * Updates the object and fires any onupdate script it has.
+ * @param time The current game time.
+ */
+void Object::Update(const int time) {
+	if(scripts_[SCRIPT_ONUPDATE-1] != "") {
+		GameManager* gm = getGameManager();
+		if(gm_) {
+			Scripting& sc = gm->getScripting();
+			if(&sc) {
+				luabind::globals(sc.getLuaState())["self"] = this;
+				luabind::globals(sc.getLuaState())["time"] = time;
+				luabind::globals(sc.getLuaState())["addr"] = (long)this;
+				luabind::globals(sc.getLuaState())["gm"] = getGameManager();
+				sc.loadLua(scripts_[SCRIPT_ONUPDATE-1]);
+				//luaL_dostring(sc.getLuaState(), "self.x = 1.0\nprint(self.x)\n");
+				/*luaL_dostring(sc.getLuaState(), "print self.getX(0.0)\n");
+				
+				luaL_dostring(sc.getLuaState(), "self.setY(0.0)\n");
+				luaL_dostring(sc.getLuaState(), "self.setZ(0.0)\n");*/
+				
+			}
+		}
+	}
+	Updateable::Update(time);
 }

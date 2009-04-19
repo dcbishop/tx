@@ -9,7 +9,7 @@ class Updateable {
 		Updateable();
 		virtual void Update(const int time);
 		virtual const int getLastUpdate();
-	
+
 	private:
 		int last_update_;
 };

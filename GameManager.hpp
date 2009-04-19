@@ -1,3 +1,7 @@
+#ifndef TX_GAMEMANAGER_HPP
+#define TX_GAMEMANAGER_HPP
+
+
 #include <vector>
 #include <map>
 
@@ -22,14 +26,18 @@ class GameManager : public Updateable, public Container {
 		void Deregister(Tagged& thing);
 		
 		Physics& getPhysics();
+		Scripting& getScripting();
 
 		Area* getAreaByTag(const string tag);
 		Object* getObjectByTag(const string tag);
 		Creature* getCreatureByTag(const string tag);
 
 	private:
+		Tagged* getTaggedByTag_(const string tag);
 		Scripting scripting_;
 		Physics physics_;
 		vector<Area*> areas_;
 		multimap<string, Tagged*> tags_;
 };
+
+#endif

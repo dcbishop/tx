@@ -13,22 +13,26 @@ using namespace std;
 
 #include "ResourceManager.hpp"
 
-class Object;
 #include "Updateable.hpp"
-#include "Object.hpp"
 #include "Physics.hpp"
 #include "Container.hpp"
 #include "Tagged.hpp"
+#include "Visual.hpp"
+#include "VModel.hpp"
+
+class GameManager;
+class Tile;
+class Object;
+class RigidBody;
 
 using namespace std;
 
-typedef Model Tile;
 /**
  * A game area. A load of tiles and objects.
  */
-class Area  : public Tagged, public Updateable, public Contained {
+class Area : public Tagged, public Updateable, public Contained, public Visual, public Container {
 	public:
-		Area();
+		Area(const string tag = DEFAULT_TAG);
 		~Area();
 		int getHeight();
 		int getWidth();
@@ -36,26 +40,31 @@ class Area  : public Tagged, public Updateable, public Contained {
 		void LoadFile(string filename);
 		Tile* getTile(const int x, const int y);
 		void setTile(const int x, const int y, Tile* tile);
-		void setResourceManager(ResourceManager& rm);
-		ResourceManager* getResourceManager();
+		void setSolid(const int x, const int y, const bool isSolid=true);
+		bool isSolid(const int x, const int y);
+
+		//void setResourceManager(ResourceManager& rm);
+		//ResourceManager* getResourceManager();
 		void setPhysics(Physics& phy);
 		Physics* getPhysics();
 		void addObject(Object& object);
 		void removeObject(Object& object);
-		void Draw();
+		void Draw(ResourceManager& rm_);
 		void Update(const int time);
 		void getGridCord(const float fx, const float fy, int &x, int &y);
 		void getWorldCord(const int gx, const int gy, float &fx, float &fy);
-
+		RigidBody* getSolid(const int x, const int y);
+		GameManager* getGameManager();
 
 	private:
 		int height_;
 		int width_;
-		
-		Model **tiles_;
-		vector<Object*> objects_;
-		ResourceManager* rm_;
+		void BoxRoom_(int start_x, int start_y, int size);
+
+		Tile **tiles_;
+		RigidBody **walkblockers_;
 		Physics* physics_;
+		btCollisionShape* clipbox_;
 };
 
 #endif
