@@ -163,24 +163,19 @@ void RigidBody::setPos(const float x, const float y, const float z) {
 	if(body_) {
 		body_->getWorldTransform().setOrigin( btVector3(x, y, -z) );
 	}
+	Object::setPos(x, y, z);
 }
 
 void RigidBody::setX(const float x) {
-	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(x, getY(), -getZ()) );
-	}
+	setPos(x, getY(), -getZ());
 }
 
 void RigidBody::setY(const float y) {
-	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(getX(), y, -getZ()) );
-	}
+	setPos(getX(), y, -getZ());
 }
 
 void RigidBody::setZ(const float z) {
-	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(getX(), getY(), -z) );
-	}
+	setPos(getX(), getY(), -z);
 }
 
 void RigidBody::setRotAngle(const float angle) {
@@ -195,9 +190,9 @@ void drawCube() {
 	float BOX_SIZE = 0.5f;
 	glColor3f(1.0f, 0.0f, 0.0f);
 
-	// Draw Cube
+	// draw Cube
 	glBegin(GL_LINES);
-		// Draw front and back of cube
+		// draw front and back of cube
 		for(z = -BOX_SIZE; z<=BOX_SIZE; z++) {
 			glVertex3f(-BOX_SIZE, BOX_SIZE, z);
 			glVertex3f(BOX_SIZE, BOX_SIZE, z);
@@ -212,7 +207,7 @@ void drawCube() {
 			glVertex3f(-BOX_SIZE, BOX_SIZE, z);
 		}
 
-		// Draw sides lines
+		// draw sides lines
 		glVertex3f(BOX_SIZE, BOX_SIZE, BOX_SIZE);
 		glVertex3f(BOX_SIZE, BOX_SIZE, -BOX_SIZE);
 
@@ -227,7 +222,7 @@ void drawCube() {
 	glEnd();
 }
 
-void RigidBody::Draw(ResourceManager& rm) {
+void RigidBody::draw(ResourceManager& rm) {
 	Visual& model = getVisual();
 	if(!&model || !body_) {
 		return;
@@ -244,7 +239,7 @@ void RigidBody::Draw(ResourceManager& rm) {
 	drawCube();
 	glEnable(GL_LIGHTING);*/
 	//RCBC_Render(model);
-	model.Draw(rm);
+	model.draw(rm);
 
 	glPopMatrix();
 }

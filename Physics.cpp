@@ -16,9 +16,9 @@ Physics::Physics() {
 					broadphase_, solver_, collisionConfiguration_);
 	setGravity(GRAVITY_EARTH);
 	
-	/*BulletDebugDraw *debugdraw = new BulletDebugDraw;
+	/*BulletDebugdraw *debugdraw = new BulletDebugdraw;
 	debugdraw->setDebugMode(1);
-	dynamicsWorld_->setDebugDrawer(new BulletDebugDraw);*/
+	dynamicsWorld_->setDebugdrawer(new BulletDebugdraw);*/
 	body_count_ = 0;
 }
 
@@ -77,13 +77,19 @@ void Physics::removeRigidBody(btRigidBody* body) {
 }
 
 /**
- * Updates the physics based on the time.
+ * updates the physics based on the time.
  * @param time The current game time in milliseconds.
  */
-void Physics::Update(const int time) {
+void Physics::update(const int time) {
 	#warning ['TODO']: This should be calculated...
-	int time_diff = time - getLastUpdate();
+	int time_diff = time - getLastupdate();
+	if(time_diff <= 0) {
+		return;
+	}
 	btScalar timeStep = ((float)time_diff) / 1000.0f;
-	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,0);
-	Updateable::Update(time);
+	//btScalar timeStep = 1.0f/60.0f;
+	//int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,10,1/60.0f);
+	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,0,1.0/60.0);
+	//DEBUG_A("dt: %d, Sim steps: %d", time_diff, numsimsteps);
+	Updateable::update(time);
 }

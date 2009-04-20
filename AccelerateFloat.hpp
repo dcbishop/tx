@@ -13,7 +13,7 @@ class AccelerateFloat : public Updateable {
 		AccelerateFloat();
 		void Accelerate(float amount);
 		void Decelerate(float amount);
-		void Update(int time);
+		void update(int time);
 		void setMax(float max);
 		void setMin(float min);
 		void setThreshold(float threshold);

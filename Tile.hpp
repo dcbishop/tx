@@ -15,9 +15,9 @@ class Tile : public VModel, public Contained {
 		~Tile();
 		void setRotation(float rotation);
 		float getRotation();
-		void Draw(ResourceManager& rm);
-		void setSolid(btRigidBody* clip);
-		btRigidBody* getSolid();
+		void draw(ResourceManager& rm);
+		/*void setSolid(btRigidBody* clip);
+		btRigidBody* getSolid();*/
 		Area* getArea();
 
 	private:

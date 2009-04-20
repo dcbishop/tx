@@ -35,7 +35,7 @@ Object::~Object() {
 /**
  * Renders the object to screen using RCBC.
  */
-void Object::Draw(ResourceManager& rm) {
+void Object::draw(ResourceManager& rm) {
 	if(!visual_) {
 		return;
 	}
@@ -46,7 +46,7 @@ void Object::Draw(ResourceManager& rm) {
 	
 	//Model* model = getModel(rm);
 	//RCBC_Render(model);
-	visual_->Draw(rm);
+	visual_->draw(rm);
 	
 	glPopMatrix();
 }
@@ -65,9 +65,9 @@ void Object::Draw(ResourceManager& rm) {
  * @see getZ()
  */
 void Object::setPos(const float x, const float y, const float z) {
-	setX(x);
-	setY(y);
-	setZ(z);
+	Object::setX(x);
+	Object::setY(y);
+	Object::setZ(z);
 }
 
 /**
@@ -317,7 +317,7 @@ Area* Object::getArea() {
 
 /**
  * Sets the LUA script.
- * @param type The type of script to set (eg. SCRIPT_ONUPDATE).
+ * @param type The type of script to set (eg. SCRIPT_ONupdate).
  * @param filename The filename of the script.
  */
 void Object::setScript(const int type, const string filename) {
@@ -328,11 +328,11 @@ void Object::setScript(const int type, const string filename) {
 }
 
 /**
- * Updates the object and fires any onupdate script it has.
+ * updates the object and fires any onupdate script it has.
  * @param time The current game time.
  */
-void Object::Update(const int time) {
-	if(scripts_[SCRIPT_ONUPDATE-1] != "") {
+void Object::update(const int time) {
+	if(scripts_[SCRIPT_ONupdate-1] != "") {
 		GameManager* gm = getGameManager();
 		if(gm_) {
 			Scripting& sc = gm->getScripting();
@@ -341,7 +341,7 @@ void Object::Update(const int time) {
 				luabind::globals(sc.getLuaState())["time"] = time;
 				luabind::globals(sc.getLuaState())["addr"] = (long)this;
 				luabind::globals(sc.getLuaState())["gm"] = getGameManager();
-				sc.loadLua(scripts_[SCRIPT_ONUPDATE-1]);
+				sc.loadLua(scripts_[SCRIPT_ONupdate-1]);
 				//luaL_dostring(sc.getLuaState(), "self.x = 1.0\nprint(self.x)\n");
 				/*luaL_dostring(sc.getLuaState(), "print self.getX(0.0)\n");
 				
@@ -351,5 +351,5 @@ void Object::Update(const int time) {
 			}
 		}
 	}
-	Updateable::Update(time);
+	Updateable::update(time);
 }

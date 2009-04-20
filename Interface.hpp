@@ -28,7 +28,7 @@ class Interface {
 		~Interface();
 		virtual void SetTitle(const string title);
 		virtual void MainLoop();
-		virtual void Draw();
+		virtual void draw();
 		virtual void setCreature(Creature& creature);
 		virtual void setGameManager(GameManager& gm);
 		virtual void windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z);

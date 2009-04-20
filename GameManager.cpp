@@ -1,19 +1,19 @@
 #include "GameManager.hpp"
 
 /**
- * Update physics, everything with a tag (Areas, Objects).
+ * update physics, everything with a tag (Areas, Objects).
  */
-void GameManager::Update(const int time) {	
+void GameManager::update(const int time) {	
 	for(multimap<string, Tagged*>::iterator iter = tags_.begin(); iter != tags_.end(); ++iter) {
 		Updateable *u = dynamic_cast<Updateable*>(iter->second);
 		if(u) {
-			u->Update(time);
+			u->update(time);
 		}
 	}
 	
-	physics_.Update(time);
+	physics_.update(time);
 
-	Updateable::Update(time);
+	Updateable::update(time);
 }
 
 /**

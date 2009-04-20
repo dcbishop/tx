@@ -10,7 +10,7 @@
 Creature::Creature(const string tag, Visual* model) {
 	setTag(tag);
 	setVisual(*model);
-	setMass(100.0f);
+	setMass(10000.0f);
 	turn_angle_ = 0.0;
 	walk_velocity_ = 2.0f;
 	running_multiplier_ = 2.0f;
@@ -216,8 +216,8 @@ void Creature::StrafeRight(const bool state) {
 	strafe_right_ = state;
 }
 
-void Creature::Update(const int time) {
-	float dt = ((float)time - getLastUpdate()) / 1000;
+void Creature::update(const int time) {
+	float dt = ((float)time - getLastupdate()) / 1000;
 
 	// Get the current position and rotation
 	btTransform xform;
@@ -252,10 +252,10 @@ void Creature::Update(const int time) {
 		turn_angle_ += turn_rate_ * dt;
 	}
 
-	// Update the position
+	// update the position
 	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), turn_angle_));
 	((btPairCachingGhostObject*)body_)->setWorldTransform (xform);	
 	controller_->setWalkDirection(walkDirection * walkSpeed);
 
-	RigidBody::Update(time);
+	RigidBody::update(time);
 }

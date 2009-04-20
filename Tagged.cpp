@@ -8,7 +8,8 @@
 Tagged::Tagged(string tag)
 {
 	setTag(tag);
-	gm_ = NULL;
+	setGameManager(NULL);
+	setTempory(false);
 }
 
 /**
@@ -44,3 +45,20 @@ GameManager* Tagged::getGameManager() {
 void Tagged::setGameManager(GameManager* gm) {
 	gm_ = gm;
 }
+
+/**
+ * Sets the tempory state of the object (tempory objects arn't saved).
+ * @param tempory Set to true to stop object from being saved.
+ */
+void Tagged::setTempory(const bool tempory) {
+	isTempory_ = tempory;
+}
+
+/**
+ * Checks is the object is tempory or not.
+ * @return true or false dude...
+ */
+bool Tagged::isTempory() {
+	return isTempory_;
+}
+	

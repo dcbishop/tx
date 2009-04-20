@@ -14,7 +14,7 @@ class DynamicFloat : public Updateable {
 		void setValue(const float value);
 		void setRate(const float value);
 		void setThreshold(const float value);
-		void Update(const int time);
+		void update(const int time);
 
 	private:
 		float value_target_;

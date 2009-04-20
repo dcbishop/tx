@@ -3,7 +3,7 @@
 
 VModel::VModel() {
 	filename_ = "";
-	model_ = NULL;
+	//model_ = NULL;
 }
 
 /**
@@ -11,7 +11,7 @@ VModel::VModel() {
  */
 VModel::VModel(const string filename) {
 	filename_ = filename;
-	model_ = NULL;
+	//model_ = NULL;
 }
 
 /**
@@ -19,12 +19,12 @@ VModel::VModel(const string filename) {
  * Model to screen using RCBC.
  * @param rm The ResourceManager to use to load the model
  */
-void VModel::Draw(ResourceManager& rm) {
+void VModel::draw(ResourceManager& rm) {
+	/*if(!model_); {
+		model_ = rm.loadModel(filename_);
+	}*/
 	Model* model = rm.loadModel(filename_);
 	RCBC_Render(model);
 	//rm.unloadModel(filename_);
-	/*if(!model_); {
-		model_ = rm.loadModel(filename_);
-	}
-	RCBC_Render(model_);*/
+	//RCBC_Render(model_);
 }

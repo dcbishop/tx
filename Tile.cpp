@@ -34,24 +34,25 @@ void Tile::addRigidBody_() {
 	}
 }
 
+
 /**
  * Sets if the tile can be walked through.
  * @param solid true for a solid tile.
  */
-void Tile::setSolid(btRigidBody* clip) {
+/*void Tile::setSolid(btRigidBody* clip) {
 	removeRigidBody_();
 	delete(clip_);
 	clip_ = clip;
 	addRigidBody_();
-}
+}*/
 
 /**
  * Gets the bullet rigid body of the tile clipping.
  * @return The bullet rigid body.
  */
-btRigidBody* Tile::getSolid() {
+/*btRigidBody* Tile::getSolid() {
 	return clip_;
-}
+}*/
 
 /**
  * Sets rotation on a tile.
@@ -71,14 +72,14 @@ float Tile::getRotation() {
 	return rotation_;
 }
 
-void Tile::Draw(ResourceManager& rm) {
+void Tile::draw(ResourceManager& rm) {
 	Model* model = rm.loadModel(filename_);
 
 	// Debugging, draw solid tiles red...
-	if(getSolid()) {
+	/*if(getSolid()) {
 		glEnable(GL_COLOR_MATERIAL);
 		glColor3f(1.0f, 0.0f, 0.0f);
-	}
+	}*/
 
 	glPushMatrix();
 	glRotatef(rotation_, 0.0f, 1.0f, 0.0f);

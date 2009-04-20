@@ -9,7 +9,7 @@
  */
 class Visual {
 	public:
-		virtual void Draw(ResourceManager& rm) {}
+		virtual void draw(ResourceManager& rm) {}
 };
 
 #endif

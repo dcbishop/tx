@@ -25,7 +25,7 @@ class Physics : public Updateable {
 	public:
 		Physics();
 		~Physics();
-		virtual void Update(const int time);
+		virtual void update(const int time);
 		virtual void addRigidBody(btRigidBody* body);
 		virtual void removeRigidBody(btRigidBody* body);
 		virtual void setGravity(const float gravity);
@@ -44,7 +44,7 @@ class Physics : public Updateable {
 };
 
 #warning ['TODO']: Remove nonworking bullet debugdraw...
-/*class BulletDebugDraw : public btIDebugDraw {
+/*class BulletDebugdraw : public btIDebugdraw {
 	public:
 		void drawLine(const btVector3& from,const btVector3& to,const btVector3& colour) {
 			glBegin(GL_LINES);

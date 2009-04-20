@@ -19,7 +19,7 @@ class Creature : public RigidBody, public Container {
 	public:
 		Creature(const string tag = DEFAULT_TAG, Visual* model = NULL);
 		~Creature();
-		virtual void Update(const int time);
+		virtual void update(const int time);
 		virtual Object* clone();
 		virtual void Forward(const bool state=true);
 		virtual void Reverse(const bool state=true);

@@ -35,9 +35,11 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		Area(const string tag = DEFAULT_TAG);
 		~Area();
 		int getHeight();
+		void setHeight(float height);
 		int getWidth();
+		void setWidth(float width);
 		void setSize(int width, int height);
-		void LoadFile(string filename);
+		void loadFile(const string filename);
 		Tile* getTile(const int x, const int y);
 		void setTile(const int x, const int y, Tile* tile);
 		void setSolid(const int x, const int y, const bool isSolid=true);
@@ -49,18 +51,17 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		Physics* getPhysics();
 		void addObject(Object& object);
 		void removeObject(Object& object);
-		void Draw(ResourceManager& rm_);
-		void Update(const int time);
+		void draw(ResourceManager& rm_);
+		void update(const int time);
 		void getGridCord(const float fx, const float fy, int &x, int &y);
 		void getWorldCord(const int gx, const int gy, float &fx, float &fy);
 		RigidBody* getSolid(const int x, const int y);
-		GameManager* getGameManager();
+		//GameManager* getGameManager();
+		void boxRoom(int start_x, int start_y, int size);
 
 	private:
 		int height_;
 		int width_;
-		void BoxRoom_(int start_x, int start_y, int size);
-
 		Tile **tiles_;
 		RigidBody **walkblockers_;
 		Physics* physics_;

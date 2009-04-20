@@ -10,13 +10,13 @@ class VModel : public Visual {
 	public:
 		VModel();
 		VModel(const string filename);
-		virtual void Draw(ResourceManager& rm);
+		virtual void draw(ResourceManager& rm);
 
 	protected:
 		string filename_;
 
 	private:
-		Model* model_;
+		//Model* model_;
 };
 
 #endif

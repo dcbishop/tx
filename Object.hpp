@@ -12,7 +12,7 @@ class Object;
 #include "Visual.hpp"
 
 const int NUM_SCRIPTS = 1;
-const int SCRIPT_ONUPDATE = 1;
+const int SCRIPT_ONupdate = 1;
 
 /**
  * An ingame object. Has a visual model, cordinates, rotation and
@@ -23,7 +23,7 @@ class Object : public Tagged, public Updateable, public Contained, public Visual
 		Object(string TAG = DEFAULT_TAG, Visual* model = NULL);
 		~Object();
 		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
-		virtual void Draw(ResourceManager& rm);
+		virtual void draw(ResourceManager& rm);
 		virtual void setPos(const float x, const float y, const float z);
 		virtual void setX(const float x);
 		virtual void setY(const float y);
@@ -44,7 +44,7 @@ class Object : public Tagged, public Updateable, public Contained, public Visual
 		virtual void setArea(Area& area);
 		virtual Area* getArea();
 		virtual void setScript(const int type, const string filename);
-		void Update(const int time);
+		void update(const int time);
 
 	private:
 		float x_;

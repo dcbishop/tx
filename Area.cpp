@@ -42,6 +42,22 @@ int Area::getHeight() {
 }
 
 /**
+ * Resizes the area.
+ * @param height The Area's new height in grid size.
+ */
+void Area::setHeight(float height) {
+	setSize(getWidth(), height);
+}
+
+/**
+ * Resizes the area.
+ * @param width The Area's new width in grid size.
+ */
+void Area::setWidth(float width) {
+	setSize(width, getHeight());
+}
+
+/**
  * @return the area's width in tiles.
  */
 int Area::getWidth() {
@@ -127,7 +143,7 @@ void Area::setSize(int width, int height) {
 /**
  * For debugging, makes a square room on the map.
  */
-void Area::BoxRoom_(int start_x, int start_y, int size) {
+void Area::boxRoom(int start_x, int start_y, int size) {
 	//int start_x = 5;
 	//int start_y = 5;
 	int width = size;
@@ -193,7 +209,7 @@ void Area::BoxRoom_(int start_x, int start_y, int size) {
  * Load the area from a file.
  * @param filename
  */
-void Area::LoadFile(const string filename) {
+void Area::loadFile(const string filename) {
 	DEBUG_M("Entering function...");
 	setSize(20, 20);
 
@@ -201,7 +217,7 @@ void Area::LoadFile(const string filename) {
 	Model* monkey = rm_->loadModel("data/models/monkey-test.dae");*/
 	//VModel* grass = new VModel("data/models/mayagrass.dae");
 	
-	BoxRoom_(5, 5, 5);
+	boxRoom(5, 5, 5);
 
 
 	/*for(int y = 0; y < height_; y++) {
@@ -348,7 +364,7 @@ bool Area::isSolid(const int x, const int y) {
  * Renders the area and all its objects.
  * @param rm The resource manager to use to manage models and images.
  */
-void Area::Draw(ResourceManager& rm) {
+void Area::draw(ResourceManager& rm) {
 #warning ['TODO']: Delete me....
 	//glTranslatef( -TILEWIDTH * width_ / 2, 0.0f, -TILEWIDTH * height_ / 2 );
 	glPushMatrix();
@@ -356,7 +372,7 @@ void Area::Draw(ResourceManager& rm) {
 		glPushMatrix();
 		for(int x = 0; x < width_; x++) {
 			Tile* tile = getTile(x, y);
-			tile->Draw(rm);
+			tile->draw(rm);
 			glTranslatef(-TILEWIDTH, 0.0f, 0.0f);
 		}
 		glPopMatrix();
@@ -364,11 +380,11 @@ void Area::Draw(ResourceManager& rm) {
 	}
 	glPopMatrix();
 
-	// Draw all the objects in the map
+	// draw all the objects in the map
 	for(vector<Contained*>::iterator iter = children_.begin(); iter != children_.end(); iter++) {
 		Visual* object = dynamic_cast<Visual*>(*iter);
 		if(object) {
-			object->Draw(rm);
+			object->draw(rm);
 		}
 	}
 }
@@ -394,9 +410,9 @@ void Area::setPhysics(Physics& physics) {
  * Get GameManager.
  * @return The GameManager or NULL.
  */
-GameManager* Area::getGameManager() {
+/*GameManager* Area::getGameManager() {
 	return dynamic_cast<GameManager*>(getParent());
-}
+}*/
 
 /**
  * Adds an Object to the area.
@@ -421,12 +437,12 @@ void Area::removeObject(Object& object) {
 }
 
 /**
- * Updates the Area based on the time.
+ * updates the Area based on the time.
  * @param time The current game time in milliseconds.
  */
-void Area::Update(const int time) {
-	//physics_->Update(time);
-	Updateable::Update(time);
+void Area::update(const int time) {
+	//physics_->update(time);
+	Updateable::update(time);
 }
 
 /**

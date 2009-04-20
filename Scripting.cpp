@@ -57,18 +57,32 @@ long Scripting::ScriptAddress_(void *ptr) {
 void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
 		bindGameManager_(),
-		//bindUpdateable_(),
+		bindTagged_(),
+		bindUpdateable_(),
 		bindObject_(),
-		bindRigidBody_()
+		bindRigidBody_(),
+		bindArea_()
 	];
 }
 
 luabind::scope Scripting::bindUpdateable_() {
 	return luabind::class_<Updateable>("Updateable")
-		.def(luabind::constructor<>())
-		.def("Update", &Updateable::Update)
+		//.def(luabind::constructor<>())
+		//.def("update", &Updateable::update)
+		.property("last_update", &Object::getLastupdate)
 	;
 }
+
+luabind::scope Scripting::bindTagged_() {
+	return luabind::class_<Tagged>("Tagged")
+		//.def(luabind::constructor<>())
+		.property("tag", &Tagged::getTag, &Tagged::setTag)
+		.property("gm", &Tagged::getGameManager, &Tagged::setGameManager)
+		.property("isTempory", &Tagged::isTempory, &Tagged::setTempory)
+	;
+}
+	
+	
 
 luabind::scope Scripting::bindGameManager_() {
 	return
@@ -78,12 +92,11 @@ luabind::scope Scripting::bindGameManager_() {
 			.def("getObjectByTag", &GameManager::getObjectByTag)
 			.def("getCreatureByTag", &GameManager::getCreatureByTag)
 		;
-	return luabind::class_<Object>("Object");
 }
 
 luabind::scope Scripting::bindObject_() {
 	return
-		luabind::class_<Object>("Object")
+		luabind::class_<Object, Tagged>("Object")
 			.def(luabind::constructor<>())
 			.property("area", &Object::getArea, &Object::setArea)
 			.property("x", &Object::getX, &Object::setX)
@@ -93,23 +106,39 @@ luabind::scope Scripting::bindObject_() {
 			.property("ry", &Object::getRotY, &Object::setRotY)
 			.property("rz", &Object::getRotZ, &Object::setRotZ)
 			.property("angle", &Object::getRotAngle, &Object::setRotAngle)
-			.property("last_update", &Object::getLastUpdate)
 		;
 }
 
 luabind::scope Scripting::bindRigidBody_() {
 	return
-		luabind::class_<RigidBody, Object>("RigidBody")
+		luabind::class_<RigidBody, luabind::bases<Object, Tagged> >("RigidBody")
 			.def(luabind::constructor<>())
-			.property("area", &RigidBody::getArea, &RigidBody::setArea)
+			/*.property("area", &RigidBody::getArea, &RigidBody::setArea)
 			.property("x", &RigidBody::getX, &RigidBody::setX)
 			.property("y", &RigidBody::getY, &RigidBody::setY)
 			.property("z", &RigidBody::getZ, &RigidBody::setZ)
 			.property("rx", &RigidBody::getRotX, &RigidBody::setRotX)
 			.property("ry", &RigidBody::getRotY, &RigidBody::setRotY)
 			.property("rz", &RigidBody::getRotZ, &RigidBody::setRotZ)
-			.property("angle", &RigidBody::getRotAngle, &RigidBody::setRotAngle)
-			.property("last_update", &RigidBody::getLastUpdate)
+			.property("angle", &RigidBody::getRotAngle, &RigidBody::setRotAngle)*/
 	;
 
+}
+
+luabind::scope Scripting::bindArea_() {
+	return
+		luabind::class_<Area, luabind::bases<Tagged, Updateable> >("Area")
+			.def(luabind::constructor<>())
+			.property("width", &Area::getWidth, &Area::setWidth)
+			.property("height", &Area::getHeight, &Area::setHeight)
+			.def("setSize", &Area::setSize)
+			.def("loadFile", &Area::loadFile)
+			.def("boxRoom", &Area::boxRoom)
+			.def("addObject", &Area::addObject)
+			.def("removeObject", &Area::removeObject)
+			.def("setSolid", &Area::setSolid)
+			.def("isSolid", &Area::isSolid)
+			.def("getGridCord", &Area::getGridCord)
+			.def("getWorldCord", &Area::getWorldCord)
+	;
 }

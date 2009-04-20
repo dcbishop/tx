@@ -37,15 +37,15 @@ void Camera::setTarget(Object& object) {
 }
 
 /**
- * Updates the camera's position around object
+ * updates the camera's position around object
  */
-void Camera::Update(const int time) {
+void Camera::update(const int time) {
 	/* http://en.wikipedia.org/wiki/Spherical_coordinates */
 	GLfloat theta = getRotX();
 	GLfloat phi = getRotY();
 
-	zoom_.Update(time);
-	fov_.Update(time);
+	zoom_.update(time);
+	fov_.update(time);
 
 	setX(zoom_.getValueCurrent() *
 		(cos(theta*(PI/180))) *
@@ -61,7 +61,7 @@ void Camera::Update(const int time) {
 		(sin(phi*(PI/180)))
 		);
 
-	Object::Update(time);
+	Object::update(time);
 }
 
 /**

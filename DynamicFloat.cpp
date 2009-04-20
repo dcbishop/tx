@@ -36,7 +36,7 @@ void DynamicFloat::setValue(const float value) {
 	value_target_ = value;
 
 	// If this is the initial setting
-	if(getLastUpdate() == 0) {
+	if(getLastupdate() == 0) {
 		value_current_ = value;
 	}
 }
@@ -59,13 +59,13 @@ void DynamicFloat::setRate(const float rate) {
 }
 
 /**
- * Updates the floating point value with time.
+ * updates the floating point value with time.
  */
-void DynamicFloat::Update(const int time) {
+void DynamicFloat::update(const int time) {
 	/* Process a smooth zoom */
 	if(value_target_ != value_current_) {
 		float value_diff = value_target_ - value_current_;
-		float value_change = value_diff * value_rate_ * (time - getLastUpdate()) / 1000;
+		float value_change = value_diff * value_rate_ * (time - getLastupdate()) / 1000;
 
 		value_current_ += value_change;
 
@@ -78,5 +78,5 @@ void DynamicFloat::Update(const int time) {
 		}
 	}
 
-	Updateable::Update(time);
+	Updateable::update(time);
 }

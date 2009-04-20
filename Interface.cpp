@@ -47,7 +47,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	DEBUG_A("FLAGB");
 	RigidBody* object = new RigidBody("Object_00", model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
-	object->setMass(0.2f);
+	object->setMass(1.0f);
 	to_ = object;
 	ts_ = true;
 
@@ -89,19 +89,19 @@ void Interface::MainLoop() {
 	
 	while(!finished_) {
 		int now = SDL_GetTicks();
-		camera_.Update(now);
+		camera_.update(now);
 		
 		/*if(creature_) {
-			creature_->Update(now);
+			creature_->update(now);
 			if(creature_->getArea()) {
-				creature_->getArea()->Update(now);
+				creature_->getArea()->update(now);
 			}
 		}*/
 		//
 		CheckEvents_();
-		Draw();
-		//creature_->Update(now);
-		gm_->Update(now);
+		draw();
+		//creature_->update(now);
+		gm_->update(now);
 	}
 }
 
@@ -159,7 +159,7 @@ void Interface::setEditObject_(Object& object) {
 /**
  * Renders the scene using OpenGL.
  */
-void Interface::Draw() {
+void Interface::draw() {
 	static int frame = 0;
 	static int last_render_time = 0;
 	static int last_fps_time = 0;
@@ -169,7 +169,7 @@ void Interface::Draw() {
 	if(limit_fps_ && !( (current_time - last_render_time) >= 1000/60) ) {
 		return;
 	}
-
+	//gm_->update(current_time);
 	// Calculate FPS
 	frame++;
 	if(current_time - last_fps_time > 1000) {
@@ -200,7 +200,7 @@ void Interface::Draw() {
 	if(creature_) {
 		Area* area = creature_->getArea();
 		if(area) {
-			area->Draw(rm);
+			area->draw(rm);
 
 			if(mode_ != MODE_NONE) {
 				windowToWorld(mx_, my_, tx_, ty_, tz_);
@@ -217,7 +217,7 @@ void Interface::Draw() {
 					glPushMatrix();
 					glTranslatef(-fx , 0.01, -fz);
 					//RCBC_Render(tilem);
-					tilem.Draw(rm);
+					tilem.draw(rm);
 					glPopMatrix();
 					//area->getResourceManager()->unloadModel(tilem);
 				}
@@ -227,7 +227,7 @@ void Interface::Draw() {
 				Object& object = getEditObject_();
 				glPushMatrix();
 				glTranslatef(tx_, ty_+0.125, tz_);
-				object.Draw(rm);
+				object.draw(rm);
 				//RCBC_Render(&object.getModel());
 				glPopMatrix();
 			}
@@ -434,15 +434,16 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 			object->setPos(-tx_, ty_+0.125f, -tz_);*/
 			VModel* model = new VModel("data/models/cube.dae");
 			//Object* object = new Object("Object_00", model);
-			RigidBody* object = new RigidBody("Object_00", model);
-			object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
-			object->setMass(0.2f);
-			/*object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONUPDATE, "data/scripts/runaway.lua");*/
+			//RigidBody* object = new RigidBody("Object_00", model);
+			Object* object = getEditObject_().clone();
+			//object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+			//object->setMass(0.2f);
+			/*object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
+			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");*/
 			object->setPos(-tx_, ty_+0.125f, -tz_);
 			gm_->Register(*object);
 			area->addObject(*object);

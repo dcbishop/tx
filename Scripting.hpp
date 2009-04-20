@@ -29,9 +29,12 @@ class Scripting {
 		
 		void bindAll_();
 		luabind::scope bindGameManager_();
+		luabind::scope bindTagged_();
 		luabind::scope bindUpdateable_();
 		luabind::scope bindObject_();
 		luabind::scope bindRigidBody_();
+		luabind::scope bindArea_();
+
 
 		lua_State *myLuaState_;
 };

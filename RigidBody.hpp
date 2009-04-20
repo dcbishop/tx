@@ -27,7 +27,7 @@ class RigidBody : public Object {
 		virtual void setZ(const float z);
 		virtual void setRotAngle(const float angle);
 
-		virtual void Draw(ResourceManager& rm);
+		virtual void draw(ResourceManager& rm);
 		virtual btRigidBody& getBody();
 		
 		#warning ['TODO']: Make private
