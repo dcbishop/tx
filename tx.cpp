@@ -22,6 +22,12 @@ using std::string;
 int main(int argc, char* argv[]) {
 	LOG("TX starting...");
 
+	/*Editor edit;
+	edit.show();
+	while(true) {
+		edit.processQtEvents();
+	}*/
+
 	ResourceManager rm;
 	GameManager gm;
 
@@ -30,7 +36,7 @@ int main(int argc, char* argv[]) {
 	Area area("TestArea");
 	//area.setResourceManager(rm);
 	gm.Register(area);
-
+	
 	Interface interface(800, 600);
 	interface.setResourceManager(rm);
 
@@ -75,8 +81,8 @@ int main(int argc, char* argv[]) {
 	area.addObject(testobj);
 
 	interface.setCreature(player);
-	interface.setGameManager(gm);
-	interface.MainLoop();
+	//interface.setGameManager(gm);
+	interface.mainLoop();
 
 	/*rm.unloadModel(playermod);
 	rm.unloadModel(testobjmod);

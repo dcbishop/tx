@@ -217,7 +217,7 @@ void Area::loadFile(const string filename) {
 	Model* monkey = rm_->loadModel("data/models/monkey-test.dae");*/
 	//VModel* grass = new VModel("data/models/mayagrass.dae");
 	
-	boxRoom(5, 5, 5);
+	boxRoom(3, 3, 10);
 
 
 	/*for(int y = 0; y < height_; y++) {
@@ -289,12 +289,16 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 		return;
 	}
 
-	DEBUG_A("Q");
+	// Already solid...
+	if(isSolid(x, y) && solid) {
+		return;
+	}
+	
 	if(!solid) {
 		//getPhysics()->removeRigidBody(getSolid(x, y)); done in deconstructor
 		//RigidBody* delme = getSolid(x, y);
 		//*(walkblockers_+(y*width_)+x) = NULL;
-		DEBUG_A("Setting not solid.");
+		//DEBUG_A("Setting not solid.");
 		//delete(getSolid(x, y));
 		RigidBody* blocker = *(walkblockers_+(y*width_)+x);
 		if(blocker) {
@@ -320,7 +324,7 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 	tile->setSolid(body);*/
 
 	if(solid) {
-		DEBUG_A("Setting solid.");
+		//DEBUG_A("Setting solid.");
 		float fx,fz;
 		getWorldCord(x, y, fx, fz);
 		RigidBody* blocker = new RigidBody("BLOCKER", NULL);

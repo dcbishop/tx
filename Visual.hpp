@@ -9,7 +9,12 @@
  */
 class Visual {
 	public:
+		Visual();
 		virtual void draw(ResourceManager& rm) {}
+		virtual void setVisible(const bool visible);
+		virtual bool isVisible();
+	private:
+		bool isVisible_;
 };
 
 #endif

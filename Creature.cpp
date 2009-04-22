@@ -10,7 +10,7 @@
 Creature::Creature(const string tag, Visual* model) {
 	setTag(tag);
 	setVisual(*model);
-	setMass(10000.0f);
+	setMass(1.0f);
 	turn_angle_ = 0.0;
 	walk_velocity_ = 2.0f;
 	running_multiplier_ = 2.0f;
@@ -41,6 +41,11 @@ Object* Creature::clone() {
 }
 
 void Creature::setShape(btCollisionShape* shape = NULL) {
+	// If there is already a shape
+	if(shape_) {
+		delete(shape_);
+	}
+
 	// Set the shape...
 	if(shape != NULL) { // If we are overiding the default...
 		RigidBody::setShape(shape);
@@ -57,15 +62,17 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 	transform.setIdentity();
 	
 	//btTransform transform = getBody()->getWorldTransform();
+	delete(body_);
 	body_ = new btPairCachingGhostObject();
 	body_->setWorldTransform(transform);
 	body_->setCollisionShape (shape_);
 	body_->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
 	
-	getBody().setSleepingThresholds (0.0, 0.0);
-	getBody().setAngularFactor (0.0);
+	/*getBody().setSleepingThresholds (0.0, 0.0);
+	getBody().setAngularFactor (0.0);*/
 	
 	btScalar stepHeight = btScalar(0.01);
+	delete(controller_);
 	controller_ = new btKinematicCharacterController(
 						(btPairCachingGhostObject*)body_,
 						(btConvexShape*)shape_,
@@ -85,9 +92,9 @@ void Creature::setPos(const float x, const float y, const float z) {
 void Creature::setArea(Area& area) {
 	Area* old_area = getArea();
 	if(old_area) { /* If its already in an area */
-		/*if(old_area->getPhysics() == area->getPhysics()) {
+		if(old_area->getPhysics() == area.getPhysics()) {
 			return;
-		}*/
+		}
 			#warning ['TODO']: If not remove shape from old area physics...
 	}
 	

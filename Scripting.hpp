@@ -21,6 +21,7 @@ class Scripting {
 		Scripting();
 		~Scripting();
 		void loadLua(const string filename);
+		void doString(const string str);
 		lua_State* getLuaState();
 
 	private:
@@ -31,6 +32,7 @@ class Scripting {
 		luabind::scope bindGameManager_();
 		luabind::scope bindTagged_();
 		luabind::scope bindUpdateable_();
+		luabind::scope bindVisual_();
 		luabind::scope bindObject_();
 		luabind::scope bindRigidBody_();
 		luabind::scope bindArea_();

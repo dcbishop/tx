@@ -58,7 +58,7 @@ class Object : public Tagged, public Updateable, public Contained, public Visual
 		string scripts_[NUM_SCRIPTS];
 
 		Visual* visual_;
-		GameManager* gm_;
+		//GameManager* gm_;
 };
 
 #endif

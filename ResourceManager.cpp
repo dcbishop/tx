@@ -1,5 +1,7 @@
 #include "ResourceManager.hpp"
 #include "console.h"
+#include <ooc.h>
+#include <List.h>
 
 ResourceManager::ResourceManager() {
 	DEBUG_M("Entering function...");
@@ -13,7 +15,7 @@ ResourceManager::~ResourceManager() {
 	#warning: ['TODO']: Free correctly...
 	//List_DeleteData(images_);
 	//List_DeleteData(models_);
-	DELETE(images_);
+	//DELETE(images_);
 	//DELETE(models_);
 }
 

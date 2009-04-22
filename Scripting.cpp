@@ -34,6 +34,10 @@ Scripting::~Scripting() {
 	lua_close(myLuaState_);
 }
 
+/**
+ * Executes a lua script from a file.
+ * @param filename The name of the file to execute.
+ */
 void Scripting::loadLua(const string filename) {
 	int result = luaL_dofile(myLuaState_, filename.c_str());
 	if(result) {
@@ -42,8 +46,20 @@ void Scripting::loadLua(const string filename) {
 	}
 }
 
+/**
+ * Retusn the Lua virtual machine.
+ * @return The Lua state.
+ */
 lua_State* Scripting::getLuaState() {
 	return myLuaState_;
+}
+
+/**
+ * Executes a lua command on the lua state.
+ * @param str The string to execute.
+ */
+void Scripting::doString(const string str) {
+	luaL_dostring(myLuaState_, str.c_str());
 }
 
 void Scripting::ScriptLog_(string message) {
@@ -59,6 +75,7 @@ void Scripting::bindAll_() {
 		bindGameManager_(),
 		bindTagged_(),
 		bindUpdateable_(),
+		bindVisual_(),
 		bindObject_(),
 		bindRigidBody_(),
 		bindArea_()
@@ -82,7 +99,11 @@ luabind::scope Scripting::bindTagged_() {
 	;
 }
 	
-	
+luabind::scope Scripting::bindVisual_() {
+	return luabind::class_<Visual>("Visual")
+		.property("isVisible", &Visual::isVisible, &Visual::setVisible)
+	;
+}
 
 luabind::scope Scripting::bindGameManager_() {
 	return
@@ -96,7 +117,7 @@ luabind::scope Scripting::bindGameManager_() {
 
 luabind::scope Scripting::bindObject_() {
 	return
-		luabind::class_<Object, Tagged>("Object")
+		luabind::class_<Object, Tagged, Visual>("Object")
 			.def(luabind::constructor<>())
 			.property("area", &Object::getArea, &Object::setArea)
 			.property("x", &Object::getX, &Object::setX)

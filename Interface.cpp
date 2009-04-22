@@ -35,16 +35,15 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	mpf_ = 0;
 	limit_fps_ = true;
 	cam_move_ = false;
-	gm_ = NULL;
+	//gm_ = NULL;
 	mode_ = MODE_NONE;
 	tm_ = NULL;
 	to_ = NULL;
 	creature_ = NULL;
 	rm_ = NULL;
-
-	DEBUG_A("FLAGA");
+	editor_ = NULL;
+	
 	VModel* model = new VModel("data/models/cube.dae");
-	DEBUG_A("FLAGB");
 	RigidBody* object = new RigidBody("Object_00", model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 	object->setMass(1.0f);
@@ -64,11 +63,12 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	edit_tiles_.push_back("data/models/two inner corners.dae");
 	edit_tiles_.push_back("data/models/opposite inner corners.dae");
 
-	SetTitle("Tilxor...");
+	setTitle("Tilxor...");
 }
 
 Interface::~Interface() {
 	DEBUG_M("Entering function...");
+	delete editor_;
 	SDL_Quit();
 }
 
@@ -76,39 +76,55 @@ Interface::~Interface() {
  * Sets the title of the window.
  * @param title
  */
-void Interface::SetTitle(const string title) {
+void Interface::setTitle(const string title) {
 	DEBUG_M("Entering function...");
 	SDL_WM_SetCaption(title.c_str(), NULL);
 }
 
 /**
+ * Starts the Qt editor interface.
+ */
+void Interface::startEditor() {
+	if(!editor_) {
+		editor_ = new Editor();
+		editor_->setInterface(this);
+		editor_->setEditObject(to_);
+		editor_->setEditTile(tm_);
+	}
+	editor_->show();
+}
+
+/**
  * The main rendering and input loop.
  */
-void Interface::MainLoop() {
+void Interface::mainLoop() {
 	DEBUG_M("Entering function...");
 	
 	while(!finished_) {
 		int now = SDL_GetTicks();
 		camera_.update(now);
-		
-		/*if(creature_) {
-			creature_->update(now);
-			if(creature_->getArea()) {
-				creature_->getArea()->update(now);
-			}
-		}*/
-		//
-		CheckEvents_();
+
+		checkEvents_();
 		draw();
-		//creature_->update(now);
-		gm_->update(now);
+
+#warning ['TODO']: Keep track of game time when paused
+		if(creature_) {
+			GameManager* gm = creature_->getGameManager();
+			if(gm) {
+				gm->update(now);
+			}
+		}
+
+		if(editor_) {
+			editor_->processQtEvents();
+		}
 	}
 }
 
 /**
  * Set the OpenGL 3D perspective mode.
  */
-void Interface::PerspectiveSet_() {
+void Interface::perspectiveSet__() {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(camera_.getFov(), width_ / height_, 0.1f, 10000.0f);
@@ -180,7 +196,7 @@ void Interface::draw() {
 	}
 	last_render_time = current_time;
 
-	PerspectiveSet_();
+	perspectiveSet__();
 	glLoadIdentity();
 	camera_.Position();
 
@@ -241,7 +257,7 @@ void Interface::draw() {
 	mpf_ = SDL_GetTicks() - current_time;
 }
 
-void Interface::HandleKeyDown_(const SDL_Event& event) {
+void Interface::handleKeyDown_(const SDL_Event& event) {
 	switch(event.key.keysym.sym) {
 		case SDLK_ESCAPE:
 			finished_ = true;
@@ -308,7 +324,7 @@ void Interface::HandleKeyDown_(const SDL_Event& event) {
 	}
 }
 
-void Interface::HandleKeyUp_(const SDL_Event& event) {
+void Interface::handleKeyUp_(const SDL_Event& event) {
 	static vector<string>::iterator iter = edit_tiles_.begin();
 	switch(event.key.keysym.sym) {
 		case SDLK_UP:
@@ -341,12 +357,14 @@ void Interface::HandleKeyUp_(const SDL_Event& event) {
 		case SDLK_F1:
 			LOG("Setting game mode.");
 			mode_ = MODE_NONE;
+			if(editor_) {
+				editor_->hide();
+			}
 			break;
 		case SDLK_F2:
 			LOG("Setting tiles edit mode.");
-
+			startEditor();
 			setEditTile_(*iter);
-
 			iter++;
 			if(iter == edit_tiles_.end()) {
 				iter = edit_tiles_.begin();
@@ -356,6 +374,7 @@ void Interface::HandleKeyUp_(const SDL_Event& event) {
 		case SDLK_F3:
 			LOG("Setting objects edit mode.");
 			mode_ = MODE_EDIT_OBJECTS;
+			startEditor();
 			break;
 		default:
 			break;
@@ -363,7 +382,7 @@ void Interface::HandleKeyUp_(const SDL_Event& event) {
 }
 
 
-void Interface::ResizeEvent_(const SDL_Event& event) {
+void Interface::resizeEvent(const SDL_Event& event) {
 	DEBUG_M("Screen resize %dx%d...", event.resize.w, event.resize.h);
 	width_ = event.resize.w;
 	height_ = event.resize.h;
@@ -375,7 +394,7 @@ void Interface::ResizeEvent_(const SDL_Event& event) {
 	}
 
 	glViewport(0, 0, width_, height_);
-	PerspectiveSet_();
+	perspectiveSet__();
 }
 
 /**
@@ -409,7 +428,7 @@ void Interface::windowToWorld(const int mx, const int my, GLdouble& x, GLdouble&
  * When the left mouse button is clicked.
  * @param event The SDL event structure.
  */
-void Interface::HandleMouse1_(const SDL_Event& event) {
+void Interface::handleMouse1_(const SDL_Event& event) {
 	if(!creature_) {
 		return;
 	}
@@ -432,7 +451,7 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 			object->setVisual(getEditObject_().getVisual());
 			object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 			object->setPos(-tx_, ty_+0.125f, -tz_);*/
-			VModel* model = new VModel("data/models/cube.dae");
+			//VModel* model = new VModel("data/models/cube.dae");
 			//Object* object = new Object("Object_00", model);
 			//RigidBody* object = new RigidBody("Object_00", model);
 			Object* object = getEditObject_().clone();
@@ -445,7 +464,7 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
 			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
 			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");*/
 			object->setPos(-tx_, ty_+0.125f, -tz_);
-			gm_->Register(*object);
+			getGameManager()->Register(*object);
 			area->addObject(*object);
 			break;
 	}
@@ -455,7 +474,7 @@ void Interface::HandleMouse1_(const SDL_Event& event) {
  * When the middle mouse button is clicked.
  * @param event The SDL event structure.
  */
-void Interface::HandleMouse3_(const SDL_Event& event) {
+void Interface::handleMouse3_(const SDL_Event& event) {
 	if(!creature_) {
 		return;
 	}
@@ -479,7 +498,7 @@ void Interface::HandleMouse3_(const SDL_Event& event) {
 /**
  * Checks for any SDL events that have occured.
  */
-void Interface::CheckEvents_() {
+void Interface::checkEvents_() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
@@ -487,10 +506,10 @@ void Interface::CheckEvents_() {
 				finished_ = true;
 				break;
 			case SDL_KEYDOWN:
-				HandleKeyDown_(event);
+				handleKeyDown_(event);
 				break;
 			case SDL_KEYUP:
-				HandleKeyUp_(event);
+				handleKeyUp_(event);
 				break;
 			case SDL_MOUSEMOTION:
 				mx_ = event.motion.x;
@@ -514,9 +533,9 @@ void Interface::CheckEvents_() {
 					event.button.button, event.button.x, event.button.y);
 				switch(event.button.button) {
 					case 1:
-						HandleMouse1_(event); break;
+						handleMouse1_(event); break;
 					case 2:
-						HandleMouse3_(event); break;
+						handleMouse3_(event); break;
 					case 3:
 						cam_move_ = false; break;
 					case 5:
@@ -526,7 +545,7 @@ void Interface::CheckEvents_() {
 				}
 				break;
 			case SDL_VIDEORESIZE:
-				ResizeEvent_(event);
+				resizeEvent(event);
 				break;
 			default:
 				DEBUG_M("Unknown event occured...");
@@ -549,8 +568,19 @@ void Interface::setCreature(Creature& creature) {
  * Sets the GameManager that the interface controls.
  * @param gm The GameManager
  */
-void Interface::setGameManager(GameManager& gm) {
+/*void Interface::setGameManager(GameManager& gm) {
 	gm_ = &gm;
+}*/
+
+/**
+ * Returns the GameManager of the currently controlled creature.
+ * @return Pointer to the GameManager.
+ */
+GameManager* Interface::getGameManager() {
+	if(!creature_) {
+		return NULL;
+	}
+	return creature_->getGameManager();
 }
 
 /**

@@ -1,7 +1,7 @@
 #include "Physics.hpp"
 
 Physics::Physics() {
-	body_max_ = 1024; /* Maximum number of rigid bodies */
+	body_max_ = 16384; /* Maximum number of rigid bodies */
 
 #warning ['TODO']: This should be the size of the world (doesn't seem to effect anything).
 	btVector3 worldAabbMin(-10000,-10000,-10000);

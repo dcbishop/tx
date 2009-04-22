@@ -16,3 +16,4 @@ a.out
 tmp/*
 doc/*
 *.gch
+moc_*

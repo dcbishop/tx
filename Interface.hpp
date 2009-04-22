@@ -13,7 +13,7 @@ using namespace std;
 #include "Camera.hpp"
 #include "Creature.hpp"
 #include "GameManager.hpp"
-
+#include "Editor.hpp"
 
 const int MODE_NONE = 0;
 const int MODE_EDIT_TILES = 1;
@@ -26,49 +26,52 @@ class Interface {
 	public:
 		Interface(const int width, const int height);
 		~Interface();
-		virtual void SetTitle(const string title);
-		virtual void MainLoop();
+		virtual void setTitle(const string title);
+		virtual void mainLoop();
 		virtual void draw();
 		virtual void setCreature(Creature& creature);
-		virtual void setGameManager(GameManager& gm);
+		//virtual void setGameManager(GameManager& gm);
+		virtual GameManager* getGameManager();
 		virtual void windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z);
 		Area* getArea();
 		ResourceManager& getResourceManager();
 		void setResourceManager(ResourceManager& rm);
+		void startEditor();
 
 
 	private:
-		void HandleKeyDown_(const SDL_Event& event);
-		void HandleKeyUp_(const SDL_Event& event);
-		void HandleMouse1_(const SDL_Event& event);
-		void HandleMouse3_(const SDL_Event& event);
+		void handleKeyDown_(const SDL_Event& event);
+		void handleKeyUp_(const SDL_Event& event);
+		void handleMouse1_(const SDL_Event& event);
+		void handleMouse3_(const SDL_Event& event);
 		Tile& getEditTile_();
 		void setEditTile_(const string filename);
 		Object& getEditObject_();
 		void setEditObject_(Object& object);
 
-		void ResizeEvent_(const SDL_Event& event);
-		void CheckEvents_();
-		void PerspectiveSet_();
+		void resizeEvent(const SDL_Event& event);
+		void checkEvents_();
+		void perspectiveSet__();
 
 		bool finished_;
 		int width_;
 		int height_;
 		bool cam_move_;
 		int mode_;
-		
+
 		int fps_;
 		int mpf_;
 		bool limit_fps_;
-		
+
 		Camera camera_;
-		Creature* creature_;
-		GameManager* gm_;
-		ResourceManager* rm_;
-		
+		Creature *creature_;
+		//GameManager *gm_;
+		ResourceManager *rm_;
+		Editor *editor_;
+
 		// For the cordinates the mouse is targeting
 		GLdouble tx_, ty_, tz_;
-		
+
 		// Mouse window cordinates
 		int mx_, my_;
 		Tile* tm_;

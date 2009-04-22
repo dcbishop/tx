@@ -1,4 +1,5 @@
 #warning ['TODO']: This file isnt needed...
+
 #ifndef TX_IMAGEMANAGER_HPP
 #define TX_IMAGEMANAGER_HPP
 

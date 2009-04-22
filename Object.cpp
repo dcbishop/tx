@@ -22,7 +22,7 @@ Object::Object(string tag, Visual* model) {
 	setRotY(1.0f);
 	setRotZ(0.0f);
 	setRotAngle(0.0f);
-	
+
 	for(int i = 0; i < NUM_SCRIPTS; i++) {
 		scripts_[i] = "";
 	}
@@ -334,7 +334,7 @@ void Object::setScript(const int type, const string filename) {
 void Object::update(const int time) {
 	if(scripts_[SCRIPT_ONupdate-1] != "") {
 		GameManager* gm = getGameManager();
-		if(gm_) {
+		if(gm) {
 			Scripting& sc = gm->getScripting();
 			if(&sc) {
 				luabind::globals(sc.getLuaState())["self"] = this;
