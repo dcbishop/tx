@@ -141,67 +141,72 @@ void Area::setSize(int width, int height) {
 }
 
 /**
+ * Fills an area with tiles.
+ */
+void Area::fill(const int x1, const int y1, const int x2, const int y2, const string filename, const bool solidity, const float rotation) {
+	for(int y = y1; y <= y2; y++) {
+		for(int x = x1; x <= x2; x++) {
+			Tile* tile = new Tile(filename);
+			tile->setRotation(rotation);
+			setTile(x, y, tile);
+			setSolid(x, y, solidity);
+		}
+	}
+}
+
+/**
  * For debugging, makes a square room on the map.
  */
-void Area::boxRoom(int start_x, int start_y, int size) {
-	//int start_x = 5;
-	//int start_y = 5;
-	int width = size;
-	int height = size;
-	
-	Tile* voidtile = new Tile("data/models/void.dae");
-	Tile* wall;
-	
-	wall = new Tile("data/models/floor.dae");
+void Area::boxRoom(const int x1, const int y1, const int x2, const int y2) {
+	//int width = size;
+	//int height = size;
+
+	//Tile* voidtile = new Tile("data/models/void.dae");
+	//Tile* wall;
+
+	/*wall = new Tile("data/models/floor.dae");
 	for(int y = start_y+1; y < start_y+height; y++) {
 		for(int x = start_x+1; x < start_x+width; x++) {
 			setTile(x, y, wall);
+			setSolid(x, y, false);
 		}
-	}
-	for(int y = start_x; y < start_x+width; y++ ) {
-		// Left side
-		wall = new Tile("data/models/Wall.dae");
-		setTile(start_x, y, wall);
-		setSolid(start_x, y, true);
-		
-		// Right side
-		wall = new Tile("data/models/Wall.dae");
-		wall->setRotation(180.0f);
-		setTile(start_x+width, y, wall);
-		setSolid(start_x+width, y, true);
-		
-		// Top
-		wall = new Tile("data/models/Wall.dae");
-		wall->setRotation(-90.0f);
-		setTile(y, start_y, wall);
-		setSolid(y, start_y, true);
-		
-		// Bottom
-		wall = new Tile("data/models/Wall.dae");
-		wall->setRotation(90.0f);
-		setTile(y, start_x + height, wall);
-		setSolid(y, start_x + height, true);		
-	}
+	}*/
+	
+	// Floor
+	fill(x1+1, y1+1, x2-1, x2-1, "data/models/floor.dae");
 
+	// Top side
+	fill(x1+1, y1, x2-1, y1, "data/models/Wall.dae", true, -90.0f);
+
+	// Left side
+	fill(x1, y1+1, x1, y2-1, "data/models/Wall.dae", true);
+
+	// Right side
+	fill(x2, y1+1, x2, y2-1, "data/models/Wall.dae", true, 180.0f);
+
+	// Bottom side
+	fill(x1+1, y2, x2-1, y2, "data/models/Wall.dae", true, 90.0f);
+
+	Tile* wall;
 	// TL
 	wall = new Tile("data/models/inner corner.dae");
 	wall->setRotation(-90.0f);
-	setTile(start_x, start_x, wall);
-	
+	setTile(x1, y1, wall);
+
 	// BL
 	wall = new Tile("data/models/inner corner.dae");
 	//wall->setRotation(-90.0f);
-	setTile(start_x, start_y+height, wall);
-	
+	setTile(x1, y2, wall);
+
 	// TR
 	wall = new Tile("data/models/inner corner.dae");
 	wall->setRotation(-180.0f);
-	setTile(start_x+width, start_y, wall);
-	
+	setTile(x2, y1, wall);
+
 	// BR
 	wall = new Tile("data/models/inner corner.dae");
 	wall->setRotation(90.0f);
-	setTile(start_x+width, start_y+height, wall);
+	setTile(x2, y2, wall);
 }
 
 #warning ['TODO']: Actually load the area from a file.
@@ -213,41 +218,8 @@ void Area::loadFile(const string filename) {
 	DEBUG_M("Entering function...");
 	setSize(20, 20);
 
-	/*Model* grass = rm_->loadModel("data/models/mayagrass.dae");
-	Model* monkey = rm_->loadModel("data/models/monkey-test.dae");*/
-	//VModel* grass = new VModel("data/models/mayagrass.dae");
-	
-	boxRoom(3, 3, 10);
-
-
-	/*for(int y = 0; y < height_; y++) {
-		for(int x = 0; x < width_; x++) {
-			setTile(x, y, grass);
-		}
-	}*/
-	
-
-
-	// Some Pillars
-	/*wall = new Tile("data/models/Pillar.dae");
-	setTile(5, 7, wall);
-	setSolid(5, 7, true);
-
-	setTile(7, 5, wall);
-	setSolid(7, 5, true);
-	
-	setTile(12, 6, wall);
-	setSolid(12, 6, true);
-	
-	setTile(4, 13, wall);
-	setSolid(4, 13, true);
-	setTile(14, 12, wall);
-	setSolid(14, 12, true);
-
-	setTile(10, 16, wall);
-	setSolid(10, 16, true);*/
-
-
+#warning ['TODO']: Do this...
+	boxRoom(3, 3, 13, 13);
 }
 
 /**
@@ -328,6 +300,7 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 		float fx,fz;
 		getWorldCord(x, y, fx, fz);
 		RigidBody* blocker = new RigidBody("BLOCKER", NULL);
+		blocker->setTempory(true);
 		//blocker->setShape(clipbox_);
 		blocker->setShape(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)));
 		blocker->setMass(0.0f);

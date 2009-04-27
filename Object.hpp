@@ -12,7 +12,7 @@ class Object;
 #include "Visual.hpp"
 
 const int NUM_SCRIPTS = 1;
-const int SCRIPT_ONupdate = 1;
+const int SCRIPT_ONUPDATE = 1;
 
 /**
  * An ingame object. Has a visual model, cordinates, rotation and
@@ -44,6 +44,8 @@ class Object : public Tagged, public Updateable, public Contained, public Visual
 		virtual void setArea(Area& area);
 		virtual Area* getArea();
 		virtual void setScript(const int type, const string filename);
+		virtual string getScript(const int type);
+
 		void update(const int time);
 
 	private:

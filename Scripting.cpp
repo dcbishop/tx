@@ -72,9 +72,9 @@ long Scripting::ScriptAddress_(void *ptr) {
 
 void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
+		bindUpdateable_(),
 		bindGameManager_(),
 		bindTagged_(),
-		bindUpdateable_(),
 		bindVisual_(),
 		bindObject_(),
 		bindRigidBody_(),
@@ -86,7 +86,7 @@ luabind::scope Scripting::bindUpdateable_() {
 	return luabind::class_<Updateable>("Updateable")
 		//.def(luabind::constructor<>())
 		//.def("update", &Updateable::update)
-		.property("last_update", &Object::getLastupdate)
+		.property("last_update", &Updateable::getLastupdate)
 	;
 }
 
@@ -107,7 +107,7 @@ luabind::scope Scripting::bindVisual_() {
 
 luabind::scope Scripting::bindGameManager_() {
 	return
-		luabind::class_<GameManager>("GameManager")
+		luabind::class_<GameManager, Updateable>("GameManager")
 			//.def(luabind::constructor<>())
 			.def("getAreaByTag", &GameManager::getAreaByTag)
 			.def("getObjectByTag", &GameManager::getObjectByTag)
@@ -117,7 +117,7 @@ luabind::scope Scripting::bindGameManager_() {
 
 luabind::scope Scripting::bindObject_() {
 	return
-		luabind::class_<Object, Tagged, Visual>("Object")
+		luabind::class_<Object, luabind::bases<Updateable, Tagged, Visual> >("Object")
 			.def(luabind::constructor<>())
 			.property("area", &Object::getArea, &Object::setArea)
 			.property("x", &Object::getX, &Object::setX)
@@ -127,6 +127,8 @@ luabind::scope Scripting::bindObject_() {
 			.property("ry", &Object::getRotY, &Object::setRotY)
 			.property("rz", &Object::getRotZ, &Object::setRotZ)
 			.property("angle", &Object::getRotAngle, &Object::setRotAngle)
+			.def("setScript", &Object::setScript)
+			.def("getScript", &Object::getScript)
 		;
 }
 
@@ -154,6 +156,7 @@ luabind::scope Scripting::bindArea_() {
 			.property("height", &Area::getHeight, &Area::setHeight)
 			.def("setSize", &Area::setSize)
 			.def("loadFile", &Area::loadFile)
+			.def("fill", &Area::fill)
 			.def("boxRoom", &Area::boxRoom)
 			.def("addObject", &Area::addObject)
 			.def("removeObject", &Area::removeObject)

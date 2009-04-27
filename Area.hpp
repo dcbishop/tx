@@ -54,7 +54,9 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		void getGridCord(const float fx, const float fy, int &x, int &y);
 		void getWorldCord(const int gx, const int gy, float &fx, float &fy);
 		RigidBody* getSolid(const int x, const int y);
-		void boxRoom(int start_x, int start_y, int size);
+
+		void fill(const int x1, const int y1, const int x2, const int y2, const string filename, const bool solidity=false, const float rotation = 0.0f);
+		void boxRoom(const int x1, const int y1, const int x2, const int y2);
 
 	private:
 		int height_;

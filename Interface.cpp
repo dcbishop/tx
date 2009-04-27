@@ -69,7 +69,9 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	editor_->setInterface(this);
 	editor_->setEditObject(to_);
 	editor_->setEditTile(tm_);
-	editor_->processQtEvents();
+	editor_->show();
+	//editor_->processQtEvents();
+	//editor_->hide();
 }
 
 Interface::~Interface() {

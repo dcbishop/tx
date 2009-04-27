@@ -11,6 +11,8 @@ class VModel : public Visual {
 		VModel();
 		VModel(const string filename);
 		virtual void draw(ResourceManager& rm);
+		virtual string getFilename();
+		virtual void setFilename(string filename);
 
 	protected:
 		string filename_;

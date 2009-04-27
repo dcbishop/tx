@@ -28,3 +28,20 @@ void VModel::draw(ResourceManager& rm) {
 	//rm.unloadModel(filename_);
 	//RCBC_Render(model_);
 }
+
+/**
+ * Returns the filename.
+ * @return The filename of the model.
+ */
+string VModel::getFilename() {
+	return filename_;
+}
+
+/**
+ * Sets the filename of the model.
+ * @param filename The filename of the model.
+ */
+void VModel::setFilename(string filename) {
+#warning ['TODO']: Maybe unload model (also add deconstructor)...
+	filename_ = filename;
+}

@@ -8,6 +8,8 @@ using namespace std;
 
 class Contained;
 
+typedef vector<Contained*> ChildrenVector;
+typedef ChildrenVector::iterator ChildrenIterator;
 /**
  * An abstract class for things that can contain or own things.
  * Useabble for maps having objects, inventories with items, etc...
@@ -16,8 +18,12 @@ class Container {
 	public:
 		virtual void addChild(Contained* child);
 		virtual void removeChild(Contained* child);
+		//virtual vector<Contained*>* getChildren();
+		virtual ChildrenIterator getFirstChild();
+		virtual ChildrenIterator getChildEnd();
+
 	protected:
-		vector<Contained*> children_;
+		ChildrenVector children_;
 };
 
 /**

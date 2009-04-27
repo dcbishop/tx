@@ -321,10 +321,21 @@ Area* Object::getArea() {
  * @param filename The filename of the script.
  */
 void Object::setScript(const int type, const string filename) {
-	if(type < 1) {
+	if(type < 1 || type > NUM_SCRIPTS) {
 		return;
 	}
 	scripts_[type-1] = filename;
+}
+
+/**
+ * Gets the LUA script filename.
+ * @param type The type of script to get.
+ */
+string Object::getScript(const int type) {
+	if(type < 1 || type > NUM_SCRIPTS) {
+		return "";
+	}
+	return scripts_[type-1];
 }
 
 /**
@@ -332,7 +343,7 @@ void Object::setScript(const int type, const string filename) {
  * @param time The current game time.
  */
 void Object::update(const int time) {
-	if(scripts_[SCRIPT_ONupdate-1] != "") {
+	if(scripts_[SCRIPT_ONUPDATE-1] != "") {
 		GameManager* gm = getGameManager();
 		if(gm) {
 			Scripting& sc = gm->getScripting();
@@ -341,7 +352,7 @@ void Object::update(const int time) {
 				luabind::globals(sc.getLuaState())["time"] = time;
 				luabind::globals(sc.getLuaState())["addr"] = (long)this;
 				luabind::globals(sc.getLuaState())["gm"] = getGameManager();
-				sc.loadLua(scripts_[SCRIPT_ONupdate-1]);
+				sc.loadLua(scripts_[SCRIPT_ONUPDATE-1]);
 				//luaL_dostring(sc.getLuaState(), "self.x = 1.0\nprint(self.x)\n");
 				/*luaL_dostring(sc.getLuaState(), "print self.getX(0.0)\n");
 				

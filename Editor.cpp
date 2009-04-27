@@ -10,6 +10,7 @@ Editor::Editor() {
 	app_ = new QApplication(dummy, &dummy2);
 	window_ = new EditorWin();
 	app_->processEvents();
+	isHidden_ = true;
 
 	DEBUG_H("Exiting function...");
 }
@@ -29,6 +30,7 @@ Editor::~Editor() {
  */
 void Editor::show() {
 	DEBUG_M("Entering function...");
+	isHidden_ = false;
 	window_->show();
 }
 
@@ -37,6 +39,7 @@ void Editor::show() {
  */
 void Editor::hide() {
 	DEBUG_M("Entering function...");
+	isHidden_ = true;
 	window_->hide();
 }
 
@@ -71,7 +74,11 @@ void Editor::setInterface(Interface* interface) {
  */
 void Editor::processQtEvents() {
 	//DEBUG_V("Entering function...");
-	app_->processEvents();
+	if(isHidden_) {
+		window_->hide();
+	} else {
+		app_->processEvents();
+	}
 }
 
 EditorWin::EditorWin() {
@@ -79,8 +86,6 @@ EditorWin::EditorWin() {
 	tile_ = NULL;
 	object_ = NULL;
 
-	luaButton_;
-	luaLineEdit_;
 	resize(320, 340);
 	//window_->show();
 	setWindowTitle(QObject::tr("Tilexor Editor"));
@@ -88,16 +93,21 @@ EditorWin::EditorWin() {
 	QHBoxLayout *luaLayout = new QHBoxLayout;
 
 	QLabel *luaLabel = new QLabel(QObject::tr("Lua:"));
+	luaLabel->setMaximumWidth(40);
 	luaLayout->addWidget(luaLabel);
 
-	luaLineEdit_ = new QLineEdit;
-	luaLayout->addWidget(luaLineEdit_);
+	luaComboBox_ = new QComboBox;
+	luaComboBox_->setEditable(true);
+	luaComboBox_->setMinimumWidth(200);
+	luaLayout->addWidget(luaComboBox_);
 
 	luaButton_ = new QPushButton(QObject::tr("Execute!"));
+	luaButton_->setMaximumWidth(70);
 	luaButton_->move(100, 100);
 	luaButton_->show();
 	QObject::connect(luaButton_, SIGNAL(clicked()), this, SLOT(luaExecute_()));
-	QObject::connect(luaLineEdit_, SIGNAL(returnPressed ()), this, SLOT(luaExecute_()));
+	QObject::connect(luaComboBox_->lineEdit(), SIGNAL(returnPressed()), this, SLOT(luaExecute_()));
+	//QObject::connect(luaComboBox_, SIGNAL(activated(int)), this, SLOT(luaExecute_(int)));
 	luaLayout->addWidget(luaButton_);
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -111,6 +121,7 @@ EditorWin::EditorWin() {
 
 void EditorWin::luaExecute_() {
 	DEBUG_M("Entering function...");
+
 	if(!interface_) {
 		return;
 	}
@@ -125,17 +136,17 @@ void EditorWin::luaExecute_() {
 		return;
 	}
 
-	if(!luaLineEdit_) {
+	if(!luaComboBox_) {
 		return;
 	}
 
-	if(luaLineEdit_->text().length() <= 0) {
+	if(luaComboBox_->currentText().length() <= 0) {
 		return;
 	}
 
-	string str = luaLineEdit_->text().toStdString();
+	string str = luaComboBox_->currentText().toStdString();
 	sc.doString(str);
-	luaLineEdit_->clear();
+	luaComboBox_->clearEditText();
 }
 
 /**

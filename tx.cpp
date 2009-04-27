@@ -14,7 +14,9 @@ using std::string;
 #include "Physics.hpp"
 #include "RigidBody.hpp"
 #include "Scripting.hpp"
+#include "FileProcessor.hpp"
 #include "console.h"
+
 
 /**
  * Let there be main...
@@ -52,7 +54,7 @@ int main(int argc, char* argv[]) {
 	testobj.setTempory(true);
 	testobj.setVisual(testobjvis);
 	testobj.setPos(5.0f, 0.125f, 5.0f);
-	testobj.setScript(SCRIPT_ONupdate, "data/scripts/test.lua");
+	testobj.setScript(SCRIPT_ONUPDATE, "data/scripts/test.lua");
 	gm.Register(testobj);
 
 	//VModel grassvis("data/models/mayagrass.dae");
@@ -62,7 +64,7 @@ int main(int argc, char* argv[]) {
 	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
 	//ground.setVisual(grassvis);
 	ground.setPos(1.0f, 0.0f, 1.0f);
-	ground.setScript(SCRIPT_ONupdate, "data/scripts/test.lua");
+	ground.setScript(SCRIPT_ONUPDATE, "data/scripts/test.lua");
 	gm.Register(ground);
 
 #warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area
@@ -75,6 +77,7 @@ int main(int argc, char* argv[]) {
 
 	interface.setCreature(player);
 	interface.mainLoop();
+	FileProcessor::saveArea(area, "data/areas/test-area.xml");
 
 	LOG("TX finished...");
 

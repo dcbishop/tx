@@ -28,7 +28,7 @@ class EditorWin : public QWidget {
 		Interface* interface_;
 
 		QPushButton* luaButton_;
-		QLineEdit* luaLineEdit_;
+		QComboBox* luaComboBox_;
 };
 
 /**
@@ -48,6 +48,7 @@ class Editor {
 	protected:
 		QApplication *app_;
 		EditorWin *window_;
+		bool isHidden_;
 };
 
 #endif /* TX_EDITOR_HPP */

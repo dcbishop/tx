@@ -22,6 +22,20 @@ void Container::removeChild(Contained* child) {
 }
 
 /**
+ * Returns a pointer to the vector containing the children.
+ */
+ChildrenIterator Container::getFirstChild() {
+	return children_.begin();
+}
+
+/**
+ * Returns a pointer to the vector end.
+ */
+ChildrenIterator Container::getChildEnd() {
+	return children_.end();
+}
+
+/**
  * Sets the parent/owner Container.
  * @param parent The thing within which this thing is contained.
  */
