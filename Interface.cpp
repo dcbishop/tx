@@ -390,7 +390,7 @@ void Interface::handleKeyUp_(const SDL_Event& event) {
 	}
 }
 
-
+#warning ['TODO']: Fix bug when height > width
 void Interface::resizeEvent(const SDL_Event& event) {
 	DEBUG_M("Screen resize %dx%d...", event.resize.w, event.resize.h);
 	width_ = event.resize.w;

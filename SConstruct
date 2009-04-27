@@ -27,7 +27,7 @@ if int(win32):
 	env.MergeFlags(env.subst("$MINGWLIBS/libmxml.a"))
 	env.MergeFlags(env.subst("$MINGWLIBS/DevIL.lib"))
 	env['QTDIR'] = '$MINGWROOT'
-	env['QTLIB'] = 'QtGui4'
+	env['QT_LIB'] = 'QtGui4'
 	env.MergeFlags(env.subst("-DQT_SHARED -I$MINGWINC/qt4 -I$MINGWINC/qt4/QtGui -I$MINGWINC/qt4/QtCore  -lQtGui4 -lQtCore4"))
 else:
 	env.AppendUnique(LIBS=['GL', 'GLU'])
