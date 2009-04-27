@@ -34,4 +34,4 @@ class Contained {
 		Container* getParent();
 };
 
-#endif
+#endif /* TX_CONTAINER_HPP */

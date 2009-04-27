@@ -48,4 +48,4 @@ class RigidBody : public Object {
 	
 };
 
-#endif
+#endif /* TX_RIGIDBODY_HPP */

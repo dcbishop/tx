@@ -39,4 +39,4 @@ class Camera : public Object {
 		DynamicFloat zoom_;
 };
 
-#endif
+#endif /* TX_CAMERA_HPP */

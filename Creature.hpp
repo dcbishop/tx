@@ -53,4 +53,4 @@ class Creature : public RigidBody, public Container {
 		float running_multiplier_;
 };
 
-#endif
+#endif /* TX_CREATURE_HPP */

@@ -42,7 +42,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	creature_ = NULL;
 	rm_ = NULL;
 	editor_ = NULL;
-	
+
 	VModel* model = new VModel("data/models/cube.dae");
 	RigidBody* object = new RigidBody("Object_00", model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
@@ -64,6 +64,12 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	edit_tiles_.push_back("data/models/opposite inner corners.dae");
 
 	setTitle("Tilxor...");
+
+	editor_ = new Editor();
+	editor_->setInterface(this);
+	editor_->setEditObject(to_);
+	editor_->setEditTile(tm_);
+	editor_->processQtEvents();
 }
 
 Interface::~Interface() {
@@ -90,8 +96,9 @@ void Interface::startEditor() {
 		editor_->setInterface(this);
 		editor_->setEditObject(to_);
 		editor_->setEditTile(tm_);
+	} else {
+		editor_->show();
 	}
-	editor_->show();
 }
 
 /**
@@ -349,7 +356,7 @@ void Interface::handleKeyUp_(const SDL_Event& event) {
 			break;
 		case SDLK_p:
 			ts_ = !ts_;
-			LOG("Tile solid: %d", ts_);			
+			LOG("Tile solid: %d", ts_);
 			break;
 		case SDLK_r:
 			tm_->setRotation(tm_->getRotation() + 90.0f);

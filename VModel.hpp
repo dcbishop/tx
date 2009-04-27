@@ -19,4 +19,4 @@ class VModel : public Visual {
 		//Model* model_;
 };
 
-#endif
+#endif /* TX_VMODEL_HPP */

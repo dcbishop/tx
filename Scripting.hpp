@@ -41,4 +41,4 @@ class Scripting {
 		lua_State *myLuaState_;
 };
 
-#endif
+#endif /* TX_SCRIPTING_HPP */

@@ -28,4 +28,4 @@ class Tagged {
 		bool isTempory_;
 };
 
-#endif
+#endif /* TX_TAGGED_HPP */

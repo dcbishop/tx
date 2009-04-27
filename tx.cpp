@@ -31,23 +31,16 @@ int main(int argc, char* argv[]) {
 	ResourceManager rm;
 	GameManager gm;
 
-	//Scripting sc;
-
 	Area area("TestArea");
-	//area.setResourceManager(rm);
 	gm.Register(area);
-	
+
 	Interface interface(800, 600);
 	interface.setResourceManager(rm);
 
 	RCBC_Init();
-	//Physics physics;
 
 	Creature player("Player");
 	player.setTempory(true);
-	//Model* playermod = RCBC_LoadFile("data/models/monkey-robot.dae", rm.getImages());
-	//player.setShape(new btBoxShape(btVector3(.5,.5,.5)));
-	//Model* playermod = rm.loadModel("data/models/monkey-robot.dae");
 	VModel playervis("data/models/monkey-robot.dae");
 	player.setVisual(playervis);
 	player.setPos(7.0f, 2.5f, 7.0f);
@@ -61,8 +54,7 @@ int main(int argc, char* argv[]) {
 	testobj.setPos(5.0f, 0.125f, 5.0f);
 	testobj.setScript(SCRIPT_ONupdate, "data/scripts/test.lua");
 	gm.Register(testobj);
-	
-	//Model* grass = rm.loadModel("data/models/mayagrass.dae");
+
 	//VModel grassvis("data/models/mayagrass.dae");
 	RigidBody ground("TestGround");
 	ground.setMass(0);
@@ -73,20 +65,16 @@ int main(int argc, char* argv[]) {
 	ground.setScript(SCRIPT_ONupdate, "data/scripts/test.lua");
 	gm.Register(ground);
 
-	//area.setPhysics(&physics);
+#warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area
 	area.setPhysics(gm.getPhysics());
+
 	area.loadFile("data/areas/test-area.xml");
 	area.addObject(player);
 	area.addObject(ground);
 	area.addObject(testobj);
 
 	interface.setCreature(player);
-	//interface.setGameManager(gm);
 	interface.mainLoop();
-
-	/*rm.unloadModel(playermod);
-	rm.unloadModel(testobjmod);
-	rm.unloadModel(grass);*/
 
 	LOG("TX finished...");
 

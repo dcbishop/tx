@@ -45,8 +45,6 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		void setSolid(const int x, const int y, const bool isSolid=true);
 		bool isSolid(const int x, const int y);
 
-		//void setResourceManager(ResourceManager& rm);
-		//ResourceManager* getResourceManager();
 		void setPhysics(Physics& phy);
 		Physics* getPhysics();
 		void addObject(Object& object);
@@ -56,7 +54,6 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		void getGridCord(const float fx, const float fy, int &x, int &y);
 		void getWorldCord(const int gx, const int gy, float &fx, float &fy);
 		RigidBody* getSolid(const int x, const int y);
-		//GameManager* getGameManager();
 		void boxRoom(int start_x, int start_y, int size);
 
 	private:
@@ -68,4 +65,4 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		btCollisionShape* clipbox_;
 };
 
-#endif
+#endif /* TX_AREA_HPP */

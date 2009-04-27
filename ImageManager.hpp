@@ -17,4 +17,4 @@ class ImageManager {
 		~ImageManager();
 };
 
-#endif
+#endif /* TX_IMAGEMANAGER_HPP */

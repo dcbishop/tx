@@ -23,4 +23,4 @@ class DynamicFloat : public Updateable {
 		float value_threshold_;
 };
 
-#endif
+#endif /* TX_DYNAMICFLOAT_HPP */

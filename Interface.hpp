@@ -80,4 +80,4 @@ class Interface {
 		vector<string> edit_tiles_;
 };
 
-#endif
+#endif /* TX_INTERFACE_HPP */

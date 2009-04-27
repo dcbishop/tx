@@ -50,4 +50,4 @@ class Editor {
 		EditorWin *window_;
 };
 
-#endif // TX_EDITOR_HPP
+#endif /* TX_EDITOR_HPP */

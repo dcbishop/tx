@@ -17,4 +17,4 @@ class Visual {
 		bool isVisible_;
 };
 
-#endif
+#endif /* TX_VISUAL_HPP */

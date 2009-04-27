@@ -28,4 +28,4 @@ class AccelerateFloat : public Updateable {
 		bool accelerating_;
 };
 
-#endif
+#endif /* TX_ACCELERATEFLOAT_HPP */

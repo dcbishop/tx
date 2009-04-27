@@ -25,4 +25,4 @@ class ResourceManager {
 		map< string, pair<Model*, int> > models_;
 };
 
-#endif
+#endif /* TX_RESOURCEMANAGER_HPP */

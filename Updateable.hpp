@@ -1,5 +1,5 @@
-#ifndef TX_Updateable_HPP
-#define TX_Updateable_HPP
+#ifndef TX_UPDATEABLE_HPP
+#define TX_UPDATEABLE_HPP
 
 /**
  * An abstract class for Objects than can be updated with time.
@@ -14,4 +14,4 @@ class Updateable {
 		int last_update_;
 };
 
-#endif
+#endif /* TX_UPDATEABLE_HPP */

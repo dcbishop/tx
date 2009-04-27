@@ -26,4 +26,4 @@ class Tile : public VModel, public Contained {
 		float rotation_;
 		btRigidBody* clip_;
 };
-#endif
+#endif /* TX_TILE_HPP */

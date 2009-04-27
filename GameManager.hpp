@@ -40,4 +40,4 @@ class GameManager : public Updateable, public Container {
 		multimap<string, Tagged*> tags_;
 };
 
-#endif
+#endif /* TX_GAMEMANAGER_HPP */

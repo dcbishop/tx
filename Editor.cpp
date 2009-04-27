@@ -19,7 +19,7 @@ Editor::~Editor() {
 	// anything segfaults
 
 	//delete button_;
-	//delete window_;	
+	//delete window_;
 	//delete window2_;
 	//delete app_;
 }
@@ -125,7 +125,6 @@ void EditorWin::luaExecute_() {
 		return;
 	}
 
-	
 	if(!luaLineEdit_) {
 		return;
 	}

@@ -81,4 +81,4 @@ void errorit(const char* format, ...);
 void debugit(int level, const char* format, ...);
 void warnit(const char* format, ...);
 
-#endif
+#endif /* CONSOLE_H */
