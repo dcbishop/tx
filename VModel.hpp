@@ -8,17 +8,14 @@
  */
 class VModel : public Visual {
 	public:
-		VModel();
-		VModel(const string filename);
+		//VModel();
+		VModel(const string filename="");
 		virtual void draw(ResourceManager& rm);
 		virtual string getFilename();
 		virtual void setFilename(string filename);
 
-	protected:
-		string filename_;
-
 	private:
-		//Model* model_;
+		string filename_;
 };
 
 #endif /* TX_VMODEL_HPP */

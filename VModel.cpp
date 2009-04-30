@@ -1,17 +1,15 @@
 #include "VModel.hpp"
 #include <rcbc.h>
 
-VModel::VModel() {
+/*VModel::VModel() {
 	filename_ = "";
-	//model_ = NULL;
-}
+}*/
 
 /**
  * @param filename The filename of the COLLADA model to load.
  */
 VModel::VModel(const string filename) {
-	filename_ = filename;
-	//model_ = NULL;
+	setFilename(filename);
 }
 
 /**
@@ -20,13 +18,8 @@ VModel::VModel(const string filename) {
  * @param rm The ResourceManager to use to load the model
  */
 void VModel::draw(ResourceManager& rm) {
-	/*if(!model_); {
-		model_ = rm.loadModel(filename_);
-	}*/
 	Model* model = rm.loadModel(filename_);
 	RCBC_Render(model);
-	//rm.unloadModel(filename_);
-	//RCBC_Render(model_);
 }
 
 /**

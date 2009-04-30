@@ -22,12 +22,22 @@ const string Tagged::getTag() {
 }
 
 /**
- * Returns the tag of the object.
+ * Sets the tag of the object.
  * @see getTag()
  * @param tag The object's tag.
  */
 void Tagged::setTag(const string tag) {
+	GameManager* gm = getGameManager();
+	if(gm) {
+		gm->Deregister(*this);
+	}
+
 	tag_ = tag;
+
+#warning ['TODO']: Reregister self.
+	/*if(gm) {
+		gm->Register(*this);
+	}*/
 }
 
 /**
@@ -61,4 +71,3 @@ void Tagged::setTempory(const bool tempory) {
 bool Tagged::isTempory() {
 	return isTempory_;
 }
-	

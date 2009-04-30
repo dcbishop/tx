@@ -20,7 +20,7 @@ const int SCRIPT_ONUPDATE = 1;
  */
 class Object : public Tagged, public Updateable, public Contained, public Visual {
 	public:
-		Object(string TAG = DEFAULT_TAG, Visual* model = NULL);
+		Object(string tag = DEFAULT_TAG, Visual* model = NULL);
 		~Object();
 		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
 		virtual void draw(ResourceManager& rm);

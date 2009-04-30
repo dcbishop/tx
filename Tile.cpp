@@ -2,7 +2,7 @@
 #include "Area.hpp"
 
 Tile::Tile(const string filename) {
-	filename_ = filename;
+	setFilename(filename);
 	rotation_ = 0.0f;
 	clip_ = NULL;
 }
@@ -73,7 +73,7 @@ float Tile::getRotation() {
 }
 
 void Tile::draw(ResourceManager& rm) {
-	Model* model = rm.loadModel(filename_);
+	Model* model = rm.loadModel(getFilename());
 
 	// Debugging, draw solid tiles red...
 	/*if(getSolid()) {

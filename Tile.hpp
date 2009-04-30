@@ -6,6 +6,10 @@ class Area;
 #include "Container.hpp"
 #include "Physics.hpp"
 
+const string TILE_VOID = "data/models/void.dae";
+const string TILE_WALL = "data/models/Wall.dae";
+const string TILE_FLOOR = "data/models/floor.dae";
+const string TILE_INNERCORNER = "data/models/inner corner.dae";
 /**
  * A tile for use in an area.
  */

@@ -34,6 +34,7 @@ Object::~Object() {
 
 /**
  * Renders the object to screen using RCBC.
+ * @param rm The resource manager.
  */
 void Object::draw(ResourceManager& rm) {
 	if(!visual_) {
@@ -355,10 +356,8 @@ void Object::update(const int time) {
 				sc.loadLua(scripts_[SCRIPT_ONUPDATE-1]);
 				//luaL_dostring(sc.getLuaState(), "self.x = 1.0\nprint(self.x)\n");
 				/*luaL_dostring(sc.getLuaState(), "print self.getX(0.0)\n");
-				
 				luaL_dostring(sc.getLuaState(), "self.setY(0.0)\n");
 				luaL_dostring(sc.getLuaState(), "self.setZ(0.0)\n");*/
-				
 			}
 		}
 	}

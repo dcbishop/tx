@@ -47,17 +47,18 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	RigidBody* object = new RigidBody("Object_00", model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 	object->setMass(1.0f);
+	//Object* object = new Object("Object_00", model);
 	to_ = object;
 	ts_ = true;
 
-	edit_tiles_.push_back("data/models/void.dae");
-	edit_tiles_.push_back("data/models/floor.dae");
-	edit_tiles_.push_back("data/models/Wall.dae");
+	edit_tiles_.push_back(TILE_VOID);
+	edit_tiles_.push_back(TILE_FLOOR);
+	edit_tiles_.push_back(TILE_WALL);
 	edit_tiles_.push_back("data/models/outer corner.dae");
 	edit_tiles_.push_back("data/models/2 sided wall.dae");
 	edit_tiles_.push_back("data/models/3 sided wall.dae");
 	edit_tiles_.push_back("data/models/Pillar.dae");
-	edit_tiles_.push_back("data/models/inner corner.dae");
+	edit_tiles_.push_back(TILE_INNERCORNER);
 	edit_tiles_.push_back("data/models/combined wall + inner corner A.dae");
 	edit_tiles_.push_back("data/models/combined wall + inner corner B.dae");
 	edit_tiles_.push_back("data/models/two inner corners.dae");
@@ -108,7 +109,7 @@ void Interface::startEditor() {
  */
 void Interface::mainLoop() {
 	DEBUG_M("Entering function...");
-	
+
 	while(!finished_) {
 		int now = SDL_GetTicks();
 		camera_.update(now);
@@ -202,6 +203,7 @@ void Interface::draw() {
 		last_fps_time = current_time;
 		frame = 0;
 		LOG("FPS: %d,\tMPF: %d", fps_, mpf_);
+		editor_->updateWindow();
 	}
 	last_render_time = current_time;
 

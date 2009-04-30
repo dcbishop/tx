@@ -11,23 +11,23 @@ Scripting::Scripting() {
 		//ERROR("Failed to init Lua...");
 		throw "LUAFAILED";
 	}
-	
+
 	luaL_openlibs(myLuaState_);
-	
+
 	luabind::open(myLuaState_);
 	luabind::module(myLuaState_) [
 		luabind::def("ScriptLog", Scripting::ScriptLog_),
 		luabind::def("address", Scripting::ScriptAddress_)
 	];
-	
+
 	bindAll_();
-	
+
 	try {
 		luaL_dostring(myLuaState_, "ScriptLog(\"Lua successfully initilized...\")\n");
 		luaL_dostring(myLuaState_, "globals = {}\n");
 	} catch(const std::exception &TheError) {
 		//ERROR("LUA: %s", TheError.what());
-	}	
+	}
 }
 
 Scripting::~Scripting() {

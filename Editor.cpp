@@ -78,6 +78,16 @@ void Editor::processQtEvents() {
 		window_->hide();
 	} else {
 		app_->processEvents();
+		//window_->updateObjectList();
+	}
+}
+
+/**
+ * Updates information in the editor window.
+ */
+void Editor::updateWindow() {
+	if(!isHidden_) {
+		window_->updateWindow();
 	}
 }
 
@@ -90,8 +100,8 @@ EditorWin::EditorWin() {
 	//window_->show();
 	setWindowTitle(QObject::tr("Tilexor Editor"));
 
-	QHBoxLayout *luaLayout = new QHBoxLayout;
-
+	// Lua shell
+	QHBoxLayout *luaLayout = new QHBoxLayout();
 	QLabel *luaLabel = new QLabel(QObject::tr("Lua:"));
 	luaLabel->setMaximumWidth(40);
 	luaLayout->addWidget(luaLabel);
@@ -99,6 +109,10 @@ EditorWin::EditorWin() {
 	luaComboBox_ = new QComboBox;
 	luaComboBox_->setEditable(true);
 	luaComboBox_->setMinimumWidth(200);
+	luaComboBox_->addItem(tr("print('Hello World!')"));
+	luaComboBox_->addItem(tr("print('Clear area'); area = gm:getAreaByTag('TestArea'); area:fill(0, 0, area.width-1, area.height-1, 'data/models/floor.dae', false, 0.0)"));
+	luaComboBox_->addItem(tr("print('Resize area test'); area = gm:getAreaByTag('TestArea'); area.width = area.width + 1"));
+	luaComboBox_->addItem(tr("print('Big room'); area = gm:getAreaByTag('TestArea'); area:boxRoom(area.width*(1/4), area.height*(1/4), area.width*(3/4), area.height*(3/4))"));	
 	luaLayout->addWidget(luaComboBox_);
 
 	luaButton_ = new QPushButton(QObject::tr("Execute!"));
@@ -110,8 +124,36 @@ EditorWin::EditorWin() {
 	//QObject::connect(luaComboBox_, SIGNAL(activated(int)), this, SLOT(luaExecute_(int)));
 	luaLayout->addWidget(luaButton_);
 
+	// Area information
+	QHBoxLayout *areaLayout = new QHBoxLayout();
+	QLabel *areaLabel = new QLabel(QObject::tr("Area:"));
+	QLabel *heightLabel = new QLabel(QObject::tr("Height:"));
+	QLabel *WidthLabel = new QLabel(QObject::tr("Width:"));
+	areaTagLineEdit_ = new QLineEdit();
+	heightLineEdit_ = new QSpinBox();
+	widthLineEdit_ = new QSpinBox();
+	QPushButton* setSizeButton = new QPushButton(tr("Set Size"));
+	areaLayout->addWidget(areaLabel);
+	areaLayout->addWidget(areaTagLineEdit_);
+	areaLayout->addWidget(heightLabel);
+	areaLayout->addWidget(heightLineEdit_);
+	areaLayout->addWidget(WidthLabel);
+	areaLayout->addWidget(widthLineEdit_);
+	areaLayout->addWidget(setSizeButton);
+
+	// Object list
+	objectsListView_ = new QListWidget();
+	hideTemporyCheckBox_ = new QCheckBox(tr("Hide tempory"));
+	hideTemporyCheckBox_->setCheckState(Qt::Checked);
+	QVBoxLayout *objectsLayout = new QVBoxLayout();
+	objectsLayout->addWidget(objectsListView_);
+	objectsLayout->addWidget(hideTemporyCheckBox_);
+	QObject::connect(hideTemporyCheckBox_, SIGNAL(clicked()), this, SLOT(updateWindow()));
+
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	mainLayout->addLayout(luaLayout);
+	mainLayout->addLayout(areaLayout);
+	mainLayout->addLayout(objectsLayout);
 
 	setLayout(mainLayout);
 }
@@ -119,8 +161,45 @@ EditorWin::EditorWin() {
 /*EditorWin::~EditorWin() {
 }*/
 
+void EditorWin::updateWindow() {
+	updateObjectList_();
+
+	Area* area = interface_->getArea();
+	if(!area) {
+		return;
+	}
+	areaTagLineEdit_->setText(tr(area->getTag().c_str()));
+	widthLineEdit_->setValue(area->getWidth());
+	heightLineEdit_->setValue(area->getHeight());
+}
+
+/**
+ * Updates the list of Objects.
+ */
+void EditorWin::updateObjectList_() {
+	Area* area = interface_->getArea();
+	if(!area) {
+		return;
+	}
+
+	objectsListView_->clear();
+	for(ChildrenIterator iter = area->getFirstChild(); iter < area->getChildEnd(); iter++) {
+
+		Object* object = dynamic_cast<Object*>(*iter);
+		if(!object) {
+			continue;
+		}
+		if(hideTemporyCheckBox_->checkState() && object->isTempory()) {
+			continue;
+		}
+
+		objectsListView_->addItem(tr(object->getTag().c_str()));
+	}
+}
+
 void EditorWin::luaExecute_() {
 	DEBUG_M("Entering function...");
+	this->updateWindow();
 
 	if(!interface_) {
 		return;
@@ -147,6 +226,7 @@ void EditorWin::luaExecute_() {
 	string str = luaComboBox_->currentText().toStdString();
 	sc.doString(str);
 	luaComboBox_->clearEditText();
+	this->updateWindow();
 }
 
 /**
@@ -156,6 +236,7 @@ void EditorWin::luaExecute_() {
 void EditorWin::setEditObject(Object* object) {
 	DEBUG_M("Entering function...");
 	object_ = object;
+	this->updateWindow();
 }
 
 /**
@@ -173,4 +254,5 @@ void EditorWin::setEditTile(Tile* tile) {
  */
 void EditorWin::setInterface(Interface* interface) {
 	interface_ = interface;
+	this->updateWindow();
 }

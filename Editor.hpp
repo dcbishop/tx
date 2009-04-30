@@ -21,14 +21,22 @@ class EditorWin : public QWidget {
 
 	public slots:
 		virtual void luaExecute_();
+		void updateWindow();
 
 	private:
+		void updateObjectList_();
+
 		Object* object_;
 		Tile* tile_;
 		Interface* interface_;
 
 		QPushButton* luaButton_;
 		QComboBox* luaComboBox_;
+		QListWidget* objectsListView_;
+		QCheckBox* hideTemporyCheckBox_;
+		QLineEdit* areaTagLineEdit_;
+		QSpinBox* heightLineEdit_;
+		QSpinBox* widthLineEdit_;
 };
 
 /**
@@ -44,6 +52,7 @@ class Editor {
 		void setEditObject(Object* object);
 		void setEditTile(Tile* tile);
 		void setInterface(Interface* interface);
+		void updateWindow();
 
 	protected:
 		QApplication *app_;

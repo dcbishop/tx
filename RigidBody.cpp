@@ -114,6 +114,7 @@ void RigidBody::removeRigidBody_() {
  */
 btVector3& RigidBody::getPos() {
 	if(!body_) {
+		DEBUG_A("RigidBody: '%s' has no body", getTag().c_str());
 		throw "No body...";
 	}
 	btTransform trans = body_->getWorldTransform();
@@ -137,8 +138,11 @@ const float RigidBody::getY() {
 }
 
 const float RigidBody::getZ() {
-	btTransform trans = body_->getWorldTransform();
-	return -trans.getOrigin().getZ();
+	try {
+		return -getPos().getZ();
+	} catch(char const* str) {
+		return Object::getZ();
+	}
 }
 
 /**

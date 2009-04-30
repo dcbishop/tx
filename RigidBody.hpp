@@ -29,7 +29,7 @@ class RigidBody : public Object {
 
 		virtual void draw(ResourceManager& rm);
 		virtual btRigidBody& getBody();
-		
+
 		#warning ['TODO']: Make private
 		void removeRigidBody_();
 
