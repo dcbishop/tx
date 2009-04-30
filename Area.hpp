@@ -62,10 +62,11 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		void boxRoom(const int x1, const int y1, const int x2, const int y2);
 
 	private:
+		void*** regrowArray_(void*** array, int old_width, int old_height, int width, int height);
 		int height_;
 		int width_;
-		Tile **tiles_;
-		RigidBody **walkblockers_;
+		Tile ***tiles_;
+		RigidBody ***walkblockers_;
 		Physics* physics_;
 		btCollisionShape* clipbox_;
 };

@@ -64,12 +64,20 @@ int Area::getWidth() {
 	return width_;
 }
 
-void** regrowArray(void** array, int old_width, int old_height, int width, int height) {
-	int type_size = sizeof(void*);
-	array = (void**)realloc(array, width * type_size);
-	for(int x = 0; x < width; x++) {
-		array[x] = (void*)realloc(array[x], height * type_size);
+void*** Area::regrowArray_(void*** array, int old_width, int old_height, int width, int height) {
+	array = (void***)realloc(array, width * sizeof(void**));
+	for(int x = old_width; x < width; x++) {
+		array[x] = NULL;
 	}
+
+	for(int x = 0; x < width; x++) {
+		DEBUG_M("Allocation %d...", x);
+		array[x] = (void**)realloc(array[x], height * sizeof(void*));
+		for(int y = old_height; y < height; y++) {
+			array[x][y] = NULL;
+		}
+	}
+
 	return array;
 }
 
@@ -110,10 +118,13 @@ void Area::setSize(int width, int height) {
 	height_ = height;
 
 	DEBUG_H("\tReallocation tile space...");
-	// Realloc space for tiles
-	tiles_ = (Tile**)realloc(tiles_, width * height * sizeof(Tile*));
+	tiles_ = (Tile***)regrowArray_((void***)tiles_, old_width, old_height, width, height);
 	DEBUG_H("\tReallocation blocker space...");
-	walkblockers_ = (RigidBody**)realloc(walkblockers_, width * height * sizeof(RigidBody*));
+	walkblockers_ = (RigidBody***)regrowArray_((void***)walkblockers_, old_width, old_height, width, height);
+
+	// Realloc space for tiles
+	//tiles_ = (Tile**)realloc(tiles_, width * height * sizeof(Tile*));
+	//walkblockers_ = (RigidBody**)realloc(walkblockers_, width * height * sizeof(RigidBody*));
 	DEBUG_H("\tAllocated...");
 
 	// If we are freeing the Area
@@ -134,8 +145,10 @@ void Area::setSize(int width, int height) {
 			for(int x = old_width; x < width; x++) {
 				DEBUG_H("\t\tsetting %dx%d...", x, y);
 				//setTile(x, y, NULL);
-				*(tiles_+(y*width_)+x) = NULL;
-				*(walkblockers_+(y*width_)+x) = NULL;
+				/* *(tiles_+(y*width_)+x) = NULL;
+				*(walkblockers_+(y*width_)+x) = NULL; */
+				tiles_[x][y] = NULL;
+				walkblockers_[x][y] = NULL;
 			}
 		}
 	}
@@ -146,8 +159,10 @@ void Area::setSize(int width, int height) {
 				DEBUG_H("\t\tsetting %dx%d...", x, y);
 				//setTile(x, y, new Tile(TILE_VOID));
 				//setTile(x, y, NULL);
-				*(tiles_+(y*width_)+x) = NULL;
-				*(walkblockers_+(y*width_)+x) = NULL;
+				/* *(tiles_+(y*width_)+x) = NULL;
+				*(walkblockers_+(y*width_)+x) = NULL; */
+				tiles_[x][y] = NULL;
+				walkblockers_[x][y] = NULL;
 			}
 		}
 	}
@@ -183,7 +198,7 @@ void Area::fill(const int x1, const int y1, const int x2, const int y2, const st
  */
 void Area::boxRoom(const int x1, const int y1, const int x2, const int y2) {
 	// Floor
-	fill(x1+1, y1+1, x2-1, x2-1, TILE_FLOOR);
+	fill(x1+1, y1+1, x2-1, y2-1, TILE_FLOOR);
 
 	// Top side
 	fill(x1+1, y1, x2-1, y1, TILE_WALL, true, -90.0f);
@@ -244,7 +259,8 @@ Tile* Area::getTile(const int x, const int y) {
 	if(x >= getWidth() || y >= getHeight() || x < 0 || y < 0) {
 		return NULL;
 	} 
-	return *(tiles_+(y*width_)+x);
+	//return *(tiles_+(y*width_)+x);
+	return tiles_[x][y];
 }
 
 /**
@@ -260,7 +276,8 @@ void Area::setTile(const int x, const int y, Tile* tile) {
 
 	Tile* current = getTile(x, y);
 	delete current;
-	*(tiles_+(y*width_)+x) = tile;
+	//*(tiles_+(y*width_)+x) = tile;
+	tiles_[x][y] = tile;
 }
 
 /**
@@ -281,11 +298,13 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 	}
 
 	if(!solid) {
-		RigidBody* blocker = *(walkblockers_+(y*width_)+x);
+		//RigidBody* blocker = *(walkblockers_+(y*width_)+x);
+		RigidBody* blocker = walkblockers_[x][y];
 		if(blocker) {
 			blocker->removeRigidBody_();
 		}
-		*(walkblockers_+(y*width_)+x) = NULL;
+		//*(walkblockers_+(y*width_)+x) = NULL;
+		walkblockers_[x][y] = NULL;
 	}
 
 	if(solid) {
@@ -296,7 +315,8 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 		blocker->setShape(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)));
 		blocker->setMass(0.0f);
 		blocker->setPos(fx, 0.5f, fz);
-		*(walkblockers_+(y*width_)+x) = blocker;
+		//*(walkblockers_+(y*width_)+x) = blocker;
+		walkblockers_[x][y] = blocker;
 		addObject(*blocker);
 	}
 }
@@ -340,7 +360,8 @@ RigidBody* Area::getSolid(const int x, const int y) {
 	if(x >= getWidth() || y >= getHeight() || x < 0 || y < 0) {
 		return NULL;
 	}
-	return *(walkblockers_+(y*width_)+x);
+	//return *(walkblockers_+(y*width_)+x);
+	return walkblockers_[x][y];
 }
 
 /**
@@ -370,8 +391,6 @@ void Area::draw(ResourceManager& rm) {
 		for(int x = 0; x < width_; x++) {
 			Tile* tile = getTile(x, y);
 			if(tile) {
-				DEBUG_H("Tile: %dx%d", x, y);
-				DEBUG_H("    : %s", tile->getFilename().c_str());
 				tile->draw(rm);
 			}
 			glTranslatef(-TILEWIDTH, 0.0f, 0.0f);
