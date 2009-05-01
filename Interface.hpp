@@ -34,8 +34,8 @@ class Interface {
 		virtual GameManager* getGameManager();
 		virtual void windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z);
 		Area* getArea();
-		ResourceManager& getResourceManager();
-		void setResourceManager(ResourceManager& rm);
+		ResourceManager* getResourceManager();
+		void setResourceManager(ResourceManager* rm);
 		void startEditor();
 
 

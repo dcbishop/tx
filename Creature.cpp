@@ -65,8 +65,8 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 	delete(body_);
 	body_ = new btPairCachingGhostObject();
 	body_->setWorldTransform(transform);
-	body_->setCollisionShape (shape_);
-	body_->setCollisionFlags (btCollisionObject::CF_CHARACTER_OBJECT);
+	body_->setCollisionShape(shape_);
+	body_->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
 	
 	/*getBody().setSleepingThresholds (0.0, 0.0);
 	getBody().setAngularFactor (0.0);*/

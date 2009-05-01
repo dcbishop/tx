@@ -1,6 +1,10 @@
 #include "RigidBody.hpp"
+
 #include "Area.hpp"
+#include "Interface.hpp"
+
 #include "console.h"
+
 
 /**
  * Constructor.
@@ -226,7 +230,12 @@ void drawCube() {
 	glEnd();
 }
 
-void RigidBody::draw(ResourceManager& rm) {
+void RigidBody::draw(Interface* interface) {
+	ResourceManager* rm = interface->getResourceManager();
+	if(!rm || !isVisible()) {
+		return;
+	}
+
 	Visual& model = getVisual();
 	if(!&model || !body_) {
 		return;
@@ -243,7 +252,7 @@ void RigidBody::draw(ResourceManager& rm) {
 	drawCube();
 	glEnable(GL_LIGHTING);*/
 	//RCBC_Render(model);
-	model.draw(rm);
+	model.draw(interface);
 
 	glPopMatrix();
 }

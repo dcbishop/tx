@@ -1,5 +1,7 @@
 #include "Visual.hpp"
 
+#include "Interface.hpp"
+
 Visual::Visual() {
 	setVisible(true);
 }

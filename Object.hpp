@@ -23,7 +23,7 @@ class Object : public Tagged, public Updateable, public Contained, public Visual
 		Object(string tag = DEFAULT_TAG, Visual* model = NULL);
 		~Object();
 		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
-		virtual void draw(ResourceManager& rm);
+		virtual void draw(Interface* interface);
 		virtual void setPos(const float x, const float y, const float z);
 		virtual void setX(const float x);
 		virtual void setY(const float y);

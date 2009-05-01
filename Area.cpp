@@ -9,6 +9,7 @@
 #include "Object.hpp"
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
+#include "Interface.hpp"
 
 #include "console.h"
 
@@ -215,17 +216,21 @@ void Area::boxRoom(const int x1, const int y1, const int x2, const int y2) {
 	// TL
 	setTile(x1, y1, new Tile(TILE_INNERCORNER));
 	setRotation(x1, y1, -90.0f);
+	setSolid(x1, y1);
 
 	// BL
 	setTile(x1, y2, new Tile(TILE_INNERCORNER));
+	setSolid(x1, y2);
 
 	// TR
 	setTile(x2, y1, new Tile(TILE_INNERCORNER));
 	setRotation(x2, y1, -180.0f);
+	setSolid(x2, y1);
 
 	// BR
 	setTile(x2, y2, new Tile(TILE_INNERCORNER));
 	setRotation(x2, y2, 90.0f);
+	setSolid(x2, y2);
 }
 
 #warning ['TODO']: Actually load the area from a file (or remove this).
@@ -382,8 +387,13 @@ bool Area::isSolid(const int x, const int y) {
  * Renders the area and all its objects.
  * @param rm The resource manager to use to manage models and images.
  */
-void Area::draw(ResourceManager& rm) {
+void Area::draw(Interface* interface) {
 #warning ['TODO']: Delete me....
+	ResourceManager* rm = interface->getResourceManager();
+	if(!rm) {
+		return;
+	}
+
 	//glTranslatef( -TILEWIDTH * width_ / 2, 0.0f, -TILEWIDTH * height_ / 2 );
 	glPushMatrix();
 	for(int y = 0; y < height_; y++) {
@@ -391,7 +401,7 @@ void Area::draw(ResourceManager& rm) {
 		for(int x = 0; x < width_; x++) {
 			Tile* tile = getTile(x, y);
 			if(tile) {
-				tile->draw(rm);
+				tile->draw(interface);
 			}
 			glTranslatef(-TILEWIDTH, 0.0f, 0.0f);
 		}
@@ -404,7 +414,7 @@ void Area::draw(ResourceManager& rm) {
 	for(vector<Contained*>::iterator iter = children_.begin(); iter != children_.end(); iter++) {
 		Visual* object = dynamic_cast<Visual*>(*iter);
 		if(object) {
-			object->draw(rm);
+			object->draw(interface);
 		}
 	}
 }

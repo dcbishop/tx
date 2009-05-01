@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
 	Interface interface(800, 600);
 	DEBUG_A("Interface created 1...");
-	interface.setResourceManager(rm);
+	interface.setResourceManager(&rm);
 	DEBUG_A("Interface created 2...");
 
 

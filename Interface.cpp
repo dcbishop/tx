@@ -159,13 +159,6 @@ Area* Interface::getArea() {
  */
 void Interface::setEditTile_(const string filename) {
 	DEBUG_M("Entering function...");
-	ResourceManager& rm = getResourceManager();
-	if(!&rm) {
-		return;
-	}
-
-	/*rm->unloadModel(tm_);
-	tm_ = rm->loadModel(filename);*/
 	tm_ = new Tile(filename);
 }
 
@@ -218,16 +211,16 @@ void Interface::draw() {
 	glColor3f(1.0f, 1.0f, 1.0f);
 	//glEnable(GL_COLOR_MATERIAL);
 
-	ResourceManager& rm = getResourceManager();
+	/*ResourceManager& rm = getResourceManager();
 	if(!&rm) {
 		ERROR("No resource manager set.");
 		return;
-	}
+	}*/
 
 	if(creature_) {
 		Area* area = creature_->getArea();
 		if(area) {
-			area->draw(rm);
+			area->draw(this);
 
 			if(mode_ != MODE_NONE) {
 				windowToWorld(mx_, my_, tx_, ty_, tz_);
@@ -244,7 +237,7 @@ void Interface::draw() {
 					glPushMatrix();
 					glTranslatef(-fx , 0.01, -fz);
 					//RCBC_Render(tilem);
-					tilem.draw(rm);
+					tilem.draw(this);
 					glPopMatrix();
 					//area->getResourceManager()->unloadModel(tilem);
 				}
@@ -254,7 +247,7 @@ void Interface::draw() {
 				Object& object = getEditObject_();
 				glPushMatrix();
 				glTranslatef(tx_, ty_+0.125, tz_);
-				object.draw(rm);
+				object.draw(this);
 				//RCBC_Render(&object.getModel());
 				glPopMatrix();
 			}
@@ -598,15 +591,15 @@ GameManager* Interface::getGameManager() {
  * Sets the ResourceManager that the interface uses.
  * @param rm The ResourceManager
  */
-void Interface::setResourceManager(ResourceManager& rm) {
-	rm_ = &rm;
+void Interface::setResourceManager(ResourceManager* rm) {
+	rm_ = rm;
 }
 
 /**
  * Gets the resource manager.
  * @return The resource manager refrence or NULL
  */
-ResourceManager& Interface::getResourceManager() {
+ResourceManager* Interface::getResourceManager() {
 	/*DEBUG_M("Entering function...");
 	Area* area = getArea();
 	if(!area) {
@@ -616,5 +609,5 @@ ResourceManager& Interface::getResourceManager() {
 
 	DEBUG_V("done...");
 	return area->getResourceManager();*/
-	return *rm_;
+	return rm_;
 }

@@ -1,6 +1,9 @@
 #include "VModel.hpp"
 #include <rcbc.h>
 
+#include "Interface.hpp"
+
+
 /*VModel::VModel() {
 	filename_ = "";
 }*/
@@ -17,8 +20,16 @@ VModel::VModel(const string filename) {
  * Model to screen using RCBC.
  * @param rm The ResourceManager to use to load the model
  */
-void VModel::draw(ResourceManager& rm) {
-	Model* model = rm.loadModel(filename_);
+void VModel::draw(Interface* interface) {
+	if(!isVisible()) {
+		return;
+	}
+
+	ResourceManager* rm = interface->getResourceManager();
+	if(!rm) {
+		return;
+	}
+	Model* model = rm->loadModel(filename_);
 	RCBC_Render(model);
 }
 

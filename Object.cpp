@@ -4,6 +4,7 @@
 
 #include "console.h"
 #include "GameManager.hpp"
+#include "Interface.hpp"
 
 /**
  * The constructor. Sets cordinates to 0,0,0.
@@ -36,8 +37,9 @@ Object::~Object() {
  * Renders the object to screen using RCBC.
  * @param rm The resource manager.
  */
-void Object::draw(ResourceManager& rm) {
-	if(!visual_) {
+void Object::draw(Interface* interface) {
+	ResourceManager* rm = interface->getResourceManager();
+	if(!visual_ || !rm || !isVisible()) {
 		return;
 	}
 
@@ -47,7 +49,7 @@ void Object::draw(ResourceManager& rm) {
 	
 	//Model* model = getModel(rm);
 	//RCBC_Render(model);
-	visual_->draw(rm);
+	visual_->draw(interface);
 	
 	glPopMatrix();
 }

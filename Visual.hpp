@@ -1,7 +1,7 @@
 #ifndef TX_VISUAL_HPP
 #define TX_VISUAL_HPP
 
-#include "ResourceManager.hpp"
+class Interface;
 
 /**
  * An abstract class for visual objects that get drawn to the screen.
@@ -10,7 +10,7 @@
 class Visual {
 	public:
 		Visual();
-		virtual void draw(ResourceManager& rm) {}
+		virtual void draw(Interface* interface) {}
 		virtual void setVisible(const bool visible);
 		virtual bool isVisible();
 	private:

@@ -1,6 +1,8 @@
 #include "Tile.hpp"
 #include "Area.hpp"
 
+#include "Interface.hpp"
+
 Tile::Tile(const string filename) {
 	setFilename(filename);
 	rotation_ = 0.0f;
@@ -72,8 +74,17 @@ float Tile::getRotation() {
 	return rotation_;
 }
 
-void Tile::draw(ResourceManager& rm) {
-	Model* model = rm.loadModel(getFilename());
+void Tile::draw(Interface* interface) {
+	if(!isVisible()) {
+		return;
+	}
+
+	ResourceManager* rm = interface->getResourceManager();
+	if(!rm) {
+		return;
+	}
+
+	Model* model = rm->loadModel(getFilename());
 
 	// Debugging, draw solid tiles red...
 	/*if(getSolid()) {
