@@ -146,7 +146,7 @@ void Interface::perspectiveSet__() {
  * @return The area.
  */
 Area* Interface::getArea() {
-	DEBUG_M("Entering function...");
+	DEBUG_V("Entering function...");
 	if(!creature_) {
 		return NULL;
 	}

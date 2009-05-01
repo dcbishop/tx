@@ -73,6 +73,7 @@ long Scripting::ScriptAddress_(void *ptr) {
 void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
 		bindUpdateable_(),
+		bindContainer_(),
 		bindGameManager_(),
 		bindTagged_(),
 		bindVisual_(),
@@ -87,6 +88,14 @@ luabind::scope Scripting::bindUpdateable_() {
 		//.def(luabind::constructor<>())
 		//.def("update", &Updateable::update)
 		.property("last_update", &Updateable::getLastupdate)
+	;
+}
+
+luabind::scope Scripting::bindContainer_() {
+	return luabind::class_<Container>("Container")
+		.def("getAreaByTag", &Container::getAreaByTag)
+		.def("getObjectByTag", &Container::getObjectByTag)
+		.def("getCreatureByTag", &Container::getCreatureByTag)
 	;
 }
 
@@ -107,11 +116,8 @@ luabind::scope Scripting::bindVisual_() {
 
 luabind::scope Scripting::bindGameManager_() {
 	return
-		luabind::class_<GameManager, Updateable>("GameManager")
+		luabind::class_<GameManager, luabind::bases<Updateable, Container> >("GameManager")
 			//.def(luabind::constructor<>())
-			.def("getAreaByTag", &GameManager::getAreaByTag)
-			.def("getObjectByTag", &GameManager::getObjectByTag)
-			.def("getCreatureByTag", &GameManager::getCreatureByTag)
 		;
 }
 
@@ -129,6 +135,7 @@ luabind::scope Scripting::bindObject_() {
 			.property("angle", &Object::getRotAngle, &Object::setRotAngle)
 			.def("setScript", &Object::setScript)
 			.def("getScript", &Object::getScript)
+			.def("setPos", &Object::setPos)
 		;
 }
 
@@ -150,7 +157,7 @@ luabind::scope Scripting::bindRigidBody_() {
 
 luabind::scope Scripting::bindArea_() {
 	return
-		luabind::class_<Area, luabind::bases<Tagged, Updateable> >("Area")
+		luabind::class_<Area, luabind::bases<Tagged, Updateable, Container> >("Area")
 			.def(luabind::constructor<>())
 			.property("width", &Area::getWidth, &Area::setWidth)
 			.property("height", &Area::getHeight, &Area::setHeight)
