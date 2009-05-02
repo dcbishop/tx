@@ -39,6 +39,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	mode_ = MODE_NONE;
 	tm_ = NULL;
 	to_ = NULL;
+	selectedObject_ = NULL;
 	creature_ = NULL;
 	rm_ = NULL;
 	editor_ = NULL;
@@ -470,6 +471,7 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			object->setPos(-tx_, ty_+0.125f, -tz_);
 			getGameManager()->Register(*object);
 			area->addObject(*object);
+			setSelectedObject(object);
 			break;
 	}
 }
@@ -526,8 +528,7 @@ void Interface::checkEvents_() {
 			case SDL_MOUSEBUTTONDOWN:
 				DEBUG_M("Mouse button %d down at (%d, %d)",
 					event.button.button, event.button.x, event.button.y);
-				
-				//windowToWorld(event.button.x, event.button.y, tx_, ty_, tz_);
+
 				if(event.button.button == 3) {
 					cam_move_ = true;
 				}
@@ -567,15 +568,6 @@ void Interface::setCreature(Creature& creature) {
 	camera_.setTarget(creature);
 }
 
-#warning ['TODO']: The game manager shouldnt be driven by the interface. Either make a seperate thread or a class containing both...
-/**
- * Sets the GameManager that the interface controls.
- * @param gm The GameManager
- */
-/*void Interface::setGameManager(GameManager& gm) {
-	gm_ = &gm;
-}*/
-
 /**
  * Returns the GameManager of the currently controlled creature.
  * @return Pointer to the GameManager.
@@ -600,14 +592,21 @@ void Interface::setResourceManager(ResourceManager* rm) {
  * @return The resource manager refrence or NULL
  */
 ResourceManager* Interface::getResourceManager() {
-	/*DEBUG_M("Entering function...");
-	Area* area = getArea();
-	if(!area) {
-		DEBUG_V("No area...");
-		return NULL;
-	}
-
-	DEBUG_V("done...");
-	return area->getResourceManager();*/
 	return rm_;
+}
+
+/**
+ * Gets the currently selected Object.
+ * @return The selected object or NULL
+ */
+Object* Interface::getSelectedObject() {
+	return selectedObject_;
+}
+
+/**
+ * Sets the currently selected Object.
+ * @param object The Object to select.
+ */
+void Interface::setSelectedObject(Object* object) {
+	selectedObject_ = object;
 }

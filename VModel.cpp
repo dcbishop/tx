@@ -30,6 +30,17 @@ void VModel::draw(Interface* interface) {
 		return;
 	}
 	Model* model = rm->loadModel(filename_);
+
+	/*bool selected;
+	Object* object = interface->getSelectedObject();
+	if(object) {
+		Visual* visual = &object->getVisual();
+		selected = (this == visual);
+	}
+
+	if(!selected) {
+		
+	}*/
 	RCBC_Render(model);
 }
 

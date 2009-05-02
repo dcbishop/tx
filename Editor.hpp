@@ -22,6 +22,7 @@ class EditorWin : public QWidget {
 	public slots:
 		virtual void luaExecute_();
 		void updateWindow();
+		void objectSelected_(const QModelIndex &);
 
 	private:
 		void updateObjectList_();
@@ -59,5 +60,7 @@ class Editor {
 		EditorWin *window_;
 		bool isHidden_;
 };
+
+Q_DECLARE_METATYPE( Object* )
 
 #endif /* TX_EDITOR_HPP */

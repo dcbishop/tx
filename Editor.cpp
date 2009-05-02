@@ -149,6 +149,8 @@ EditorWin::EditorWin() {
 	objectsLayout->addWidget(objectsListView_);
 	objectsLayout->addWidget(hideTemporyCheckBox_);
 	QObject::connect(hideTemporyCheckBox_, SIGNAL(clicked()), this, SLOT(updateWindow()));
+	QObject::connect(objectsListView_, SIGNAL(clicked(const QModelIndex &)), this, SLOT(objectSelected_(const QModelIndex &)));
+
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	mainLayout->addLayout(luaLayout);
@@ -192,9 +194,29 @@ void EditorWin::updateObjectList_() {
 		if(hideTemporyCheckBox_->checkState() && object->isTempory()) {
 			continue;
 		}
+		//objectsListView_->addItem(tr(object->getTag().c_str()));
+		QListWidgetItem* item = new QListWidgetItem(tr(object->getTag().c_str()), objectsListView_);
+		//QPointer<void*> ptr = new QPointer(object);
+		//QPointer<void> ptr = (void*)object;
+		QVariant v;
+		v.setValue(object);
+		item->setData(Qt::UserRole, v);
+		objectsListView_->addItem(item);
 
-		objectsListView_->addItem(tr(object->getTag().c_str()));
+		if(object == interface_->getSelectedObject()) {
+			objectsListView_->setCurrentItem(item);
+		}
 	}
+}
+
+
+void EditorWin::objectSelected_(const QModelIndex&) {
+	DEBUG_A("Selected!");
+	QListWidgetItem* current = objectsListView_->currentItem();
+	//QVariant *v = current->data(Qt::UserRole);
+	//Object* object = v->value<Object*>();
+	Object* object = current->data(Qt::UserRole).value<Object*>();
+	interface_->setSelectedObject(object);
 }
 
 void EditorWin::luaExecute_() {
@@ -228,6 +250,7 @@ void EditorWin::luaExecute_() {
 	luaComboBox_->clearEditText();
 	this->updateWindow();
 }
+
 
 /**
  * Sets the object that the editor modifies.

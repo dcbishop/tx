@@ -38,6 +38,8 @@ class Interface {
 		void setResourceManager(ResourceManager* rm);
 		void startEditor();
 
+		Object* getSelectedObject();
+		void setSelectedObject(Object* object);
 
 	private:
 		void handleKeyDown_(const SDL_Event& event);
@@ -76,6 +78,7 @@ class Interface {
 		int mx_, my_;
 		Tile* tm_;
 		Object* to_;
+		Object* selectedObject_;
 		bool ts_;
 		vector<string> edit_tiles_;
 };
