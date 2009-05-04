@@ -40,6 +40,8 @@ class Interface {
 
 		Object* getSelectedObject();
 		void setSelectedObject(Object* object);
+		void setEditModeObject();
+
 
 	private:
 		void handleKeyDown_(const SDL_Event& event);

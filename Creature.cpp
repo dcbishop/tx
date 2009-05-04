@@ -261,7 +261,7 @@ void Creature::update(const int time) {
 
 	// update the position
 	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), turn_angle_));
-	((btPairCachingGhostObject*)body_)->setWorldTransform (xform);	
+	((btPairCachingGhostObject*)body_)->setWorldTransform (xform);
 	controller_->setWalkDirection(walkDirection * walkSpeed);
 
 	RigidBody::update(time);

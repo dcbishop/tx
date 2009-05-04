@@ -25,6 +25,9 @@ class RigidBody : public Object {
 		virtual void setX(const float x);
 		virtual void setY(const float y);
 		virtual void setZ(const float z);
+		virtual void setRotX(const float x);
+		virtual void setRotY(const float y);
+		virtual void setRotZ(const float z);
 		virtual void setRotAngle(const float angle);
 
 		virtual void draw(Interface* interface);
@@ -37,6 +40,8 @@ class RigidBody : public Object {
 		btCollisionShape* shape_; /**< The collision shape. */
 		btCollisionObject* body_; /**< The collision body. */
 		virtual void ProcessBody_();
+		virtual void setRot_();
+
 
 	private:
 		

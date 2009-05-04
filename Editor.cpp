@@ -1,4 +1,8 @@
 #include "Editor.hpp"
+
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "Interface.hpp"
 #include "console.h"
 
@@ -110,6 +114,7 @@ EditorWin::EditorWin() {
 	luaComboBox_->setEditable(true);
 	luaComboBox_->setMinimumWidth(200);
 	luaComboBox_->addItem(tr("print('Hello World!')"));
+	luaComboBox_->addItem(tr("player = gm:getObjectByTag('Player')"));
 	luaComboBox_->addItem(tr("print('Clear area'); area = gm:getAreaByTag('TestArea'); area:fill(0, 0, area.width-1, area.height-1, 'data/models/floor.dae', false, 0.0)"));
 	luaComboBox_->addItem(tr("print('Resize area test'); area = gm:getAreaByTag('TestArea'); area.width = area.width + 1"));
 	luaComboBox_->addItem(tr("print('Big room'); area = gm:getAreaByTag('TestArea'); area:boxRoom(area.width*(1/4), area.height*(1/4), area.width*(3/4), area.height*(3/4))"));	
@@ -132,7 +137,7 @@ EditorWin::EditorWin() {
 	areaTagLineEdit_ = new QLineEdit();
 	heightLineEdit_ = new QSpinBox();
 	widthLineEdit_ = new QSpinBox();
-	QPushButton* setSizeButton = new QPushButton(tr("Set Size"));
+	QPushButton* setSizeButton = new QPushButton(tr("Set Area"));
 	areaLayout->addWidget(areaLabel);
 	areaLayout->addWidget(areaTagLineEdit_);
 	areaLayout->addWidget(heightLabel);
@@ -140,22 +145,100 @@ EditorWin::EditorWin() {
 	areaLayout->addWidget(WidthLabel);
 	areaLayout->addWidget(widthLineEdit_);
 	areaLayout->addWidget(setSizeButton);
+	QObject::connect(setSizeButton, SIGNAL(clicked()), this, SLOT(setArea_()));
 
 	// Object list
 	objectsListView_ = new QListWidget();
 	hideTemporyCheckBox_ = new QCheckBox(tr("Hide tempory"));
 	hideTemporyCheckBox_->setCheckState(Qt::Checked);
-	QVBoxLayout *objectsLayout = new QVBoxLayout();
-	objectsLayout->addWidget(objectsListView_);
-	objectsLayout->addWidget(hideTemporyCheckBox_);
+	QLabel *newLabel = new QLabel(QObject::tr("New:"));
+	//QVBoxLayout *objectsLayout = new QVBoxLayout();
+	QPushButton* newObjectButton = new QPushButton(tr("Object"));
+	QPushButton* newRigidBodyButton = new QPushButton(tr("RigidBody"));
+	QPushButton* newCreatureButton = new QPushButton(tr("Creature"));
+	QObject::connect(newObjectButton, SIGNAL(clicked()), this, SLOT(newObject_()));
+	QObject::connect(newRigidBodyButton, SIGNAL(clicked()), this, SLOT(newRigidBody_()));
+	QObject::connect(newCreatureButton, SIGNAL(clicked()), this, SLOT(newCreature_()));
+
+	QGridLayout* objectsLayout = new QGridLayout();
+	objectsLayout->addWidget(objectsListView_,0,0,1,6);
+	objectsLayout->addWidget(hideTemporyCheckBox_,1,0);
+	objectsLayout->addWidget(newLabel, 1,1);
+	objectsLayout->addWidget(newObjectButton, 1,2);
+	objectsLayout->addWidget(newRigidBodyButton, 1,3);
+	objectsLayout->addWidget(newCreatureButton, 1,4);
+
+	//Object information
+	QGridLayout* objectLayout = new QGridLayout();
+
+	QLabel *objectTypeLabel = new QLabel(QObject::tr("Object"));
+	QLabel *tagLabel = new QLabel(QObject::tr("Tag:"));
+	QLabel *xLabel = new QLabel(QObject::tr("X:"));
+	QLabel *yLabel = new QLabel(QObject::tr("Y:"));
+	QLabel *zLabel = new QLabel(QObject::tr("Z:"));
+	QLabel *rxLabel = new QLabel(QObject::tr("RX:"));
+	QLabel *ryLabel = new QLabel(QObject::tr("RY:"));
+	QLabel *rzLabel = new QLabel(QObject::tr("RZ:"));
+	QLabel *raLabel = new QLabel(QObject::tr("RA:"));
+	QLabel *onUpdateLabel = new QLabel(QObject::tr("Update Script:"));
+
+	objTagLineEdit_ = new QLineEdit();
+	xSpinbox_ = new QDoubleSpinBox();
+	ySpinbox_ = new QDoubleSpinBox();
+	zSpinbox_ = new QDoubleSpinBox();
+	rxSpinbox_ = new QDoubleSpinBox();
+	rySpinbox_ = new QDoubleSpinBox();
+	rzSpinbox_ = new QDoubleSpinBox();
+	raSpinbox_ = new QDoubleSpinBox();
+	xSpinbox_->setRange(-9999.0, 9999.0);
+	ySpinbox_->setRange(-9999.0, 9999.0);
+	zSpinbox_->setRange(-9999.0, 9999.0);
+	rxSpinbox_->setRange(-9999.0, 9999.0);
+	rySpinbox_->setRange(-9999.0, 9999.0);
+	rzSpinbox_->setRange(-9999.0, 9999.0);
+	raSpinbox_->setRange(-9999.0, 9999.0);
+	objOnUpdateLineEdit_ = new QLineEdit();
+
+	objectLayout->addWidget(objectTypeLabel, 0, 0);
+	objectLayout->addWidget(tagLabel, 1, 0);
+	objectLayout->addWidget(objTagLineEdit_, 1, 1);
+	objectLayout->addWidget(xLabel, 2, 0);
+	objectLayout->addWidget(xSpinbox_, 2, 1);
+	objectLayout->addWidget(yLabel, 3, 0);
+	objectLayout->addWidget(ySpinbox_, 3, 1);
+	objectLayout->addWidget(zLabel, 4, 0);
+	objectLayout->addWidget(zSpinbox_, 4, 1);
+	objectLayout->addWidget(rxLabel, 5, 0);
+	objectLayout->addWidget(rxSpinbox_, 5, 1);
+	objectLayout->addWidget(ryLabel, 6, 0);
+	objectLayout->addWidget(rySpinbox_, 6, 1);
+	objectLayout->addWidget(rzLabel, 7, 0);
+	objectLayout->addWidget(rzSpinbox_, 7, 1);
+	objectLayout->addWidget(raLabel, 8, 0);
+	objectLayout->addWidget(raSpinbox_, 8, 1);
+	objectLayout->addWidget(onUpdateLabel, 9, 0);
+	objectLayout->addWidget(objOnUpdateLineEdit_, 9, 1);
+
 	QObject::connect(hideTemporyCheckBox_, SIGNAL(clicked()), this, SLOT(updateWindow()));
 	QObject::connect(objectsListView_, SIGNAL(clicked(const QModelIndex &)), this, SLOT(objectSelected_(const QModelIndex &)));
 
+	QObject::connect(objTagLineEdit_, SIGNAL(textChanged(const QString &)), this, SLOT(setObject_()));
+	QObject::connect(xSpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
+	QObject::connect(ySpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
+	QObject::connect(zSpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
+	QObject::connect(rxSpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
+	QObject::connect(rySpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
+	QObject::connect(rzSpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
+	QObject::connect(raSpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
+	QObject::connect(objOnUpdateLineEdit_, SIGNAL(textChanged(const QString &)), this, SLOT(setObject_()));
 
+	isUpdating_ = false;
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	mainLayout->addLayout(luaLayout);
 	mainLayout->addLayout(areaLayout);
 	mainLayout->addLayout(objectsLayout);
+	//mainLayout->addWidget(objectTypeLabel);
+	mainLayout->addLayout(objectLayout);
 
 	setLayout(mainLayout);
 }
@@ -163,16 +246,106 @@ EditorWin::EditorWin() {
 /*EditorWin::~EditorWin() {
 }*/
 
+void EditorWin::setArea_() {
+	DEBUG_M("Entering function...");
+	Area* area = interface_->getArea();
+	if(!area) {
+		return;
+	}
+
+	int x = widthLineEdit_->value();
+	int y = heightLineEdit_->value();
+	area->setSize(x, y);
+
+	string tag = areaTagLineEdit_->text().toStdString();
+	if(area->getTag() != tag) {
+		area->setTag(tag);
+	}
+}
+
+void EditorWin::newObject_() {
+	DEBUG_A("Entering function...");
+	//Object* selected = interface_->getSelectedObject();
+	//Object* object = selected.clone();
+
+	/*if(isPlaced_ == false) {
+		DELETE(selected);
+	}*/
+	static int objects = 0;
+	//char* tag = "UntaggedObject";
+	//snprintf(tag, 9, 
+	string tag = "Object_";
+	char num[6];
+	snprintf(num, 6, "%0d", objects++);
+	tag.append(num);
+
+	VModel* model = new VModel("data/models/cube.dae");
+	Object* object = new Object(tag, model);
+	interface_->setSelectedObject(object);
+	interface_->setEditModeObject();
+	updateWindow();
+}
+
+void EditorWin::setObject_() {
+	DEBUG_M("Entering function...");
+	if(isUpdating_ == true) {
+		return;
+	}
+
+	Object* object = interface_->getSelectedObject();
+	if(!object) {
+		return;
+	}
+
+	//LOG("%s", object->getTag());
+
+	object->setTag(objTagLineEdit_->text().toStdString());
+	object->setPos(xSpinbox_->value(), ySpinbox_->value(), zSpinbox_->value());
+	object->setRotX(rxSpinbox_->value());
+	object->setRotY(rySpinbox_->value());
+	object->setRotZ(rzSpinbox_->value());
+	object->setRotAngle(raSpinbox_->value());
+	object->setScript(SCRIPT_ONUPDATE, objOnUpdateLineEdit_->text().toStdString());
+
+	//object->setX(xSpinbox_->value());
+	//object->setY(ySpinbox_->value());
+	//object->setZ(zSpinbox_->value());
+}
+
 void EditorWin::updateWindow() {
+	isUpdating_ = true;
 	updateObjectList_();
+	updateObject_();
 
 	Area* area = interface_->getArea();
 	if(!area) {
+		isUpdating_ = false;
 		return;
 	}
 	areaTagLineEdit_->setText(tr(area->getTag().c_str()));
 	widthLineEdit_->setValue(area->getWidth());
 	heightLineEdit_->setValue(area->getHeight());
+	isUpdating_ = false;
+}
+
+/**
+ * Updates the information about the selected object.
+ */
+void EditorWin::updateObject_() {
+	Object* object = interface_->getSelectedObject();
+	if(!object) {
+		return;
+	}
+
+	objTagLineEdit_->setText(tr(object->getTag().c_str()));
+	xSpinbox_->setValue(object->getX());
+	ySpinbox_->setValue(object->getY());
+	zSpinbox_->setValue(object->getZ());
+	rxSpinbox_->setValue(object->getRotX());
+	rySpinbox_->setValue(object->getRotY());
+	rzSpinbox_->setValue(object->getRotZ());
+	raSpinbox_->setValue(object->getRotAngle());
+	objOnUpdateLineEdit_->setText(tr(object->getScript(SCRIPT_ONUPDATE).c_str()));
 }
 
 /**
@@ -217,11 +390,12 @@ void EditorWin::objectSelected_(const QModelIndex&) {
 	//Object* object = v->value<Object*>();
 	Object* object = current->data(Qt::UserRole).value<Object*>();
 	interface_->setSelectedObject(object);
+	updateWindow();
 }
 
 void EditorWin::luaExecute_() {
 	DEBUG_M("Entering function...");
-	this->updateWindow();
+	updateWindow();
 
 	if(!interface_) {
 		return;
@@ -248,7 +422,7 @@ void EditorWin::luaExecute_() {
 	string str = luaComboBox_->currentText().toStdString();
 	sc.doString(str);
 	luaComboBox_->clearEditText();
-	this->updateWindow();
+	updateWindow();
 }
 
 

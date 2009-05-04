@@ -23,13 +23,17 @@ class EditorWin : public QWidget {
 		virtual void luaExecute_();
 		void updateWindow();
 		void objectSelected_(const QModelIndex &);
+		void setArea_();
+		void updateObject_();
+		void setObject_();
+		void newObject_();
 
 	private:
 		void updateObjectList_();
-
 		Object* object_;
 		Tile* tile_;
 		Interface* interface_;
+		bool isUpdating_;
 
 		QPushButton* luaButton_;
 		QComboBox* luaComboBox_;
@@ -38,6 +42,16 @@ class EditorWin : public QWidget {
 		QLineEdit* areaTagLineEdit_;
 		QSpinBox* heightLineEdit_;
 		QSpinBox* widthLineEdit_;
+
+		QLineEdit* objTagLineEdit_;
+		QDoubleSpinBox* xSpinbox_;
+		QDoubleSpinBox* ySpinbox_;
+		QDoubleSpinBox* zSpinbox_;
+		QDoubleSpinBox* rxSpinbox_;
+		QDoubleSpinBox* rySpinbox_;
+		QDoubleSpinBox* rzSpinbox_;
+		QDoubleSpinBox* raSpinbox_;
+		QLineEdit* objOnUpdateLineEdit_;
 };
 
 /**

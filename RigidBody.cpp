@@ -175,22 +175,51 @@ void RigidBody::setPos(const float x, const float y, const float z) {
 }
 
 void RigidBody::setX(const float x) {
-	setPos(x, getY(), -getZ());
+	setPos(x, getY(), getZ());
 }
 
 void RigidBody::setY(const float y) {
-	setPos(getX(), y, -getZ());
+	setPos(getX(), y, getZ());
 }
 
 void RigidBody::setZ(const float z) {
-	setPos(getX(), getY(), -z);
+	setPos(getX(), getY(), z);
+}
+
+void RigidBody::setRot_() {
+	if(!body_) {
+		return;
+	}
+
+	btTransform xform;
+	xform = getBody().getWorldTransform();
+	xform.setRotation(btQuaternion (btVector3(getRotX(), getRotY(), getRotZ()), getRotAngle()*(PI/180)));
+	//((btPairCachingGhostObject*)body_)->setWorldTransform (xform);
+	body_->setWorldTransform (xform);
+}
+
+void RigidBody::setRotX(const float x) {
+	Object::setRotX(x);
+	setRot_();
+}
+
+void RigidBody::setRotY(const float y) {
+	Object::setRotY(y);
+	setRot_();
+}
+
+void RigidBody::setRotZ(const float z) {
+	Object::setRotZ(z);
+	setRot_();
 }
 
 void RigidBody::setRotAngle(const float angle) {
-	#warning ['TODO']: This shouldnt be only X axis like this... also need get...
+	/*#warning ['TODO']: This shouldnt be only X axis like this... also need get...
 	btTransform xform;
 	xform = getBody().getWorldTransform();
-	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), angle));
+	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), angle));*/
+	Object::setRotAngle(angle);
+	setRot_();
 }
 
 void drawCube() {

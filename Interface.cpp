@@ -46,6 +46,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 
 	VModel* model = new VModel("data/models/cube.dae");
 	RigidBody* object = new RigidBody("Object_00", model);
+	//Object* object = new Object("Object_00", model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 	object->setMass(1.0f);
 	//Object* object = new Object("Object_00", model);
@@ -95,14 +96,8 @@ void Interface::setTitle(const string title) {
  * Starts the Qt editor interface.
  */
 void Interface::startEditor() {
-	if(!editor_) {
-		editor_ = new Editor();
-		editor_->setInterface(this);
-		editor_->setEditObject(to_);
-		editor_->setEditTile(tm_);
-	} else {
-		editor_->show();
-	}
+	editor_->show();
+	editor_->updateWindow();
 }
 
 /**
@@ -176,6 +171,11 @@ void Interface::setEditObject_(Object& object) {
 	to_ = &object;
 }
 
+
+void Interface::setEditModeObject() {
+	mode_ = MODE_EDIT_OBJECTS;
+}
+
 /**
  * Renders the scene using OpenGL.
  */
@@ -245,12 +245,15 @@ void Interface::draw() {
 			}
 
 			if(mode_ == MODE_EDIT_OBJECTS) {
-				Object& object = getEditObject_();
-				glPushMatrix();
-				glTranslatef(tx_, ty_+0.125, tz_);
-				object.draw(this);
-				//RCBC_Render(&object.getModel());
-				glPopMatrix();
+				//Object& object = getEditObject_();
+				Object* object = getSelectedObject();
+				if(object) {
+					glPushMatrix();
+					glTranslatef(tx_, ty_+0.125, tz_);
+					object->draw(this);
+					//RCBC_Render(&object.getModel());
+					glPopMatrix();
+				}
 			}
 			
 		}
@@ -459,7 +462,7 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			//VModel* model = new VModel("data/models/cube.dae");
 			//Object* object = new Object("Object_00", model);
 			//RigidBody* object = new RigidBody("Object_00", model);
-			Object* object = getEditObject_().clone();
+			
 			//object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 			//object->setMass(0.2f);
 			/*object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
@@ -468,10 +471,17 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
 			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
 			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");*/
-			object->setPos(-tx_, ty_+0.125f, -tz_);
+
+			//Object* object = getEditObject_().clone();
+			/*object->setPos(-tx_, ty_+0.125f, -tz_);
 			getGameManager()->Register(*object);
 			area->addObject(*object);
-			setSelectedObject(object);
+			setSelectedObject(object);*/
+			getSelectedObject()->setPos(-tx_, ty_+0.125f, -tz_);
+			getGameManager()->Register(*getSelectedObject());
+			area->addObject(*getSelectedObject());
+			mode_ = MODE_NONE;
+			editor_->updateWindow();
 			break;
 	}
 }
@@ -556,6 +566,7 @@ void Interface::checkEvents_() {
 				DEBUG_M("Unknown event occured...");
 				break;
 		}
+		editor_->updateWindow();
 	}
 }
 
@@ -566,6 +577,7 @@ void Interface::checkEvents_() {
 void Interface::setCreature(Creature& creature) {
 	creature_ = &creature;
 	camera_.setTarget(creature);
+	editor_->updateWindow();
 }
 
 /**
@@ -609,4 +621,5 @@ Object* Interface::getSelectedObject() {
  */
 void Interface::setSelectedObject(Object* object) {
 	selectedObject_ = object;
+	editor_->updateWindow();
 }

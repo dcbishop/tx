@@ -74,7 +74,6 @@ void FileProcessor::saveArea(Area& area, string filename) {
 	mxml_node_t *xml = mxmlNewElement(NULL, "?xml version=\"1.0\" encoding=\"UTF-8\"?");
 
 	mxml_node_t *area_node = mxmlNewElement(xml, "area");
-	//mxmlElementSetAttr(area_node,"tag", area.getTag().c_str());
 	saveArea_Tag(area_node, &area);
 	mxmlElementSetAttrf(area_node,"width", "%d", area.getWidth());
 	mxmlElementSetAttrf(area_node,"height", "%d", area.getHeight());
@@ -300,7 +299,7 @@ void FileProcessor::loadArea_Object(mxml_node_t* obj_node, Object* object) {
 			if(strcasecmp(node->value.element.name, "position") == 0) {
 				loadArea_Position(node, object);
 			} else if(strcasecmp(node->value.element.name, "rotation") == 0) {
-				//loadArea_Rotation(node, object);
+				loadArea_Rotation(node, object);
 			} else if(strcasecmp(node->value.element.name, "script") == 0) {
 				loadArea_Script(node, object);
 			} else if(strcasecmp(node->value.element.name, "model") == 0) {

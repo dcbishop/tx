@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	DEBUG_A("Player created...");
 
 	VModel testobjvis("data/models/cube.dae");
-	Object testobj("TestObject1");
+	Object testobj("TestObject");
 	testobj.setTempory(true);
 	testobj.setVisual(testobjvis);
 	testobj.setPos(5.0f, 0.125f, 5.0f);
