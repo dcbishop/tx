@@ -31,6 +31,18 @@ Object::Object(string tag, Visual* model) {
 
 #warning ['TODO']: Use this function or kill it...
 Object::~Object() {
+	DEBUG_M("Entering function...");
+	Area* area = getArea();
+	if(area) {
+		DEBUG_H("calling area->removeChild...");
+		area->removeChild(this);
+	}
+	GameManager* gm = getGameManager();
+	if(gm) {
+		DEBUG_H("calling gm->removeChild...");
+		gm->removeChild(this);
+	}
+	DEBUG_H("Exiting function...");
 }
 
 /**

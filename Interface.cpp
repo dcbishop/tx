@@ -197,7 +197,7 @@ void Interface::draw() {
 		last_fps_time = current_time;
 		frame = 0;
 		LOG("FPS: %d,\tMPF: %d", fps_, mpf_);
-		editor_->updateWindow();
+		//editor_->updateWindow();
 	}
 	last_render_time = current_time;
 
@@ -456,7 +456,7 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			break;
 		case(MODE_EDIT_OBJECTS):
 			getSelectedObject()->setPos(-tx_, ty_+0.125f, -tz_);
-			getGameManager()->Register(*getSelectedObject());
+			//getGameManager()->registerObject(*getSelectedObject());
 			area->addObject(*getSelectedObject());
 			mode_ = MODE_NONE;
 			editor_->updateWindow();

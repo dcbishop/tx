@@ -17,10 +17,10 @@ void GameManager::update(const int time) {
 }
 
 /**
- * Register something to be manager by the game manager.
+ * registerObject something to be manager by the game manager.
  * @param thing The thing to be managed.
  */
-void GameManager::Register(Tagged& thing) {
+void GameManager::registerObject(Tagged& thing) {
 	// Add to the list of tagged Taggeds.
 	//tags_.insert(pair<string, Tagged*>(thing.getTag(), &thing));
 	//thing.setGameManager(this);
@@ -40,11 +40,15 @@ void GameManager::Register(Tagged& thing) {
 }
 
 /**
- * Removes a object from the GameManager registery.
+ * Removes a object from the GameManager registerObjecty.
  * @param thing The thing to remove.
  */
-void GameManager::Deregister(Tagged& thing) {
-	#warning ['TODO']: Deregister objects...
+void GameManager::deregisterObject(Tagged& thing) {
+	Contained* contained = dynamic_cast<Contained*>(&thing);
+	if(contained) {
+		removeChild(contained);
+	}
+	#warning ['TODO']: deregister objects, remove areas from list...
 }
 
 /** 

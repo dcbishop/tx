@@ -4,7 +4,7 @@
 #include "Object.hpp"
 #include "RigidBody.hpp"
 #include "Creature.hpp"
-
+#include "console.h"
 /**
  * Adds a thing to the container.
  * @param child The thing to be contained.
@@ -12,12 +12,22 @@
 void Container::addChild(Contained* child) {
 	DEBUG_M("Entering function addChild...");
 	if(!child) {
+		DEBUG_H("\tNo child...");
 		return;
 	}
 
+	// Stop adding the child more than once
+	ChildrenIterator found = find(getFirstChild(), getChildEnd(), child);
+	if(found != getChildEnd()) {
+		DEBUG_H("\tChild alread in list...");
+		return;
+	}
+
+	DEBUG_H("Child adding to list...");
 	child->setParent(this);
 	children_.push_back(child);
 
+	//DEBUG_H("Child adding to list...");
 	Tagged* tagged = dynamic_cast<Tagged*>(child);
 	if(!tagged) {
 		return;
@@ -32,9 +42,38 @@ void Container::addChild(Contained* child) {
  */
 void Container::removeChild(Contained* child) {
 	DEBUG_M("Entering function removeChild...");
-	if(child) {
-#warning ['TODO']: This...
+	if(!child) {
+		return;
 	}
+
+	DEBUG_H("\tRemoving object from container object vector.");
+	ChildrenIterator found = find(getFirstChild(), getChildEnd(), child);
+	//while((found = find(getFirstChild(), getChildEnd(), child)) != getChildEnd()) {
+		if(found != getChildEnd()) {
+			//Object* object = dynamic_cast<Object*>(*found);
+
+			if(*found && ((*found) == child)) {
+				//DEBUG_H("\t\tFound '%s'... Removing...", object->getTag().c_str());
+				children_.erase(found);
+			}
+		}
+	//}
+
+	DEBUG_H("\tRemoving object from container tag list.");
+	ChildrenTagIterator iter = tags_.begin();
+	while(iter != tags_.end()) {
+		Contained* contained = dynamic_cast<Object*>(iter->second);
+		if(contained  && contained == child) {
+			//DEBUG_H("\t\tFound '%s'... Removing...", object->getTag().c_str());
+			tags_.erase(iter);
+			iter = tags_.begin();
+		} else {
+			iter++;
+		}
+	}
+
+	DEBUG_H("\tExiting function...");
+	#warning ['TODO']: This...
 }
 
 /**

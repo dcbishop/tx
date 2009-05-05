@@ -27,6 +27,9 @@ class EditorWin : public QWidget {
 		void updateObject_();
 		void setObject_();
 		void newObject_();
+		void newRigidBody_();
+		void newCreature_();
+		void deleteObject_();
 		void setModel_(const QModelIndex &index);
 
 	private:

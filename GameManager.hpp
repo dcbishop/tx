@@ -22,8 +22,8 @@ using namespace std;
 class GameManager : public Updateable, public Container {
 	public:
 		void update(const int time);
-		void Register(Tagged& thing);
-		void Deregister(Tagged& thing);
+		void registerObject(Tagged& thing);
+		void deregisterObject(Tagged& thing);
 		
 		Physics& getPhysics();
 		Scripting& getScripting();

@@ -240,7 +240,7 @@ void Area::boxRoom(const int x1, const int y1, const int x2, const int y2) {
  */
 void Area::loadFile(const string filename) {
 	DEBUG_M("Entering function...");
-	setSize(20, 10);
+	setSize(20, 20);
 
 #warning ['TODO']: Do this...
 	boxRoom(3, 3, 13, 13);
@@ -452,7 +452,10 @@ void Area::setPhysics(Physics& physics) {
 void Area::addObject(Object& object) {
 	object.setArea(*this);
 	object.setGameManager(getGameManager());
-
+	GameManager* gm = getGameManager();
+	if(gm) {
+		gm->registerObject(object);
+	}
 	addChild(&object);
 }
 

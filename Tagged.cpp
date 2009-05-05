@@ -29,7 +29,7 @@ const string Tagged::getTag() {
 void Tagged::setTag(const string tag) {
 	GameManager* gm = getGameManager();
 	if(gm) {
-		gm->Deregister(*this);
+//		gm->deregisterObject(*this);
 	}
 
 	tag_ = tag;

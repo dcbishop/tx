@@ -28,7 +28,7 @@ Creature::Creature(const string tag, Visual* model) {
 }
 
 Creature::~Creature() {
-	#warning ['TODO']: Deregister me from physics engine, area list, delete shapes...
+	#warning ['TODO']: deregisterObject me from physics engine, area list, delete shapes...
 }
 
 /**

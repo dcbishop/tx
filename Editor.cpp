@@ -114,7 +114,7 @@ EditorWin::EditorWin() {
 	luaComboBox_->setEditable(true);
 	luaComboBox_->setMinimumWidth(200);
 	luaComboBox_->addItem(tr("print('Hello World!')"));
-	luaComboBox_->addItem(tr("player = gm:getObjectByTag('Player')"));
+	luaComboBox_->addItem(tr("player = getPlayer()"));
 	luaComboBox_->addItem(tr("print('Clear area'); area = gm:getAreaByTag('TestArea'); area:fill(0, 0, area.width-1, area.height-1, 'floor.dae', false, 0.0)"));
 	luaComboBox_->addItem(tr("print('Resize area test'); area = gm:getAreaByTag('TestArea'); area.width = area.width + 1"));
 	luaComboBox_->addItem(tr("print('Big room'); area = gm:getAreaByTag('TestArea'); area:boxRoom(area.width*(1/4), area.height*(1/4), area.width*(3/4), area.height*(3/4))"));	
@@ -147,26 +147,34 @@ EditorWin::EditorWin() {
 	areaLayout->addWidget(setSizeButton);
 	QObject::connect(setSizeButton, SIGNAL(clicked()), this, SLOT(setArea_()));
 
-	// Object list
+	// Objects list
 	objectsListView_ = new QListWidget();
 	hideTemporyCheckBox_ = new QCheckBox(tr("Hide tempory"));
 	hideTemporyCheckBox_->setCheckState(Qt::Checked);
+	QPushButton* deleteObjectButton = new QPushButton(tr("Delete"));
 	QLabel *newLabel = new QLabel(QObject::tr("New:"));
-	//QVBoxLayout *objectsLayout = new QVBoxLayout();
+
 	QPushButton* newObjectButton = new QPushButton(tr("Object"));
 	QPushButton* newRigidBodyButton = new QPushButton(tr("RigidBody"));
 	QPushButton* newCreatureButton = new QPushButton(tr("Creature"));
+	QPushButton* newTiles = new QPushButton(tr("Tiles"));
+
+	QObject::connect(deleteObjectButton, SIGNAL(clicked()), this, SLOT(deleteObject_()));
 	QObject::connect(newObjectButton, SIGNAL(clicked()), this, SLOT(newObject_()));
 	QObject::connect(newRigidBodyButton, SIGNAL(clicked()), this, SLOT(newRigidBody_()));
 	QObject::connect(newCreatureButton, SIGNAL(clicked()), this, SLOT(newCreature_()));
+	QObject::connect(newTiles, SIGNAL(clicked()), this, SLOT(newTiles_()));
+
 
 	QGridLayout* objectsLayout = new QGridLayout();
-	objectsLayout->addWidget(objectsListView_,0,0,1,6);
-	objectsLayout->addWidget(hideTemporyCheckBox_,1,0);
-	objectsLayout->addWidget(newLabel, 1,1);
-	objectsLayout->addWidget(newObjectButton, 1,2);
-	objectsLayout->addWidget(newRigidBodyButton, 1,3);
-	objectsLayout->addWidget(newCreatureButton, 1,4);
+	objectsLayout->addWidget(objectsListView_,0,0,7,1);
+	objectsLayout->addWidget(hideTemporyCheckBox_,0,1);
+	objectsLayout->addWidget(deleteObjectButton, 1,1);
+	objectsLayout->addWidget(newLabel, 2,1);
+	objectsLayout->addWidget(newObjectButton, 3,1);
+	objectsLayout->addWidget(newRigidBodyButton, 4,1);
+	objectsLayout->addWidget(newCreatureButton, 5,1);
+	objectsLayout->addWidget(newTiles, 6,1);
 
 	//Object information
 	QGridLayout* objectLayout = new QGridLayout();
@@ -273,19 +281,13 @@ void EditorWin::setArea_() {
 	if(area->getTag() != tag) {
 		area->setTag(tag);
 	}
+	updateWindow();
 }
 
 void EditorWin::newObject_() {
-	DEBUG_A("Entering function...");
-	//Object* selected = interface_->getSelectedObject();
-	//Object* object = selected.clone();
-
-	/*if(isPlaced_ == false) {
-		DELETE(selected);
-	}*/
+	DEBUG_M("Entering function...");
 	static int objects = 0;
-	//char* tag = "UntaggedObject";
-	//snprintf(tag, 9, 
+
 	string tag = "Object_";
 	char num[6];
 	snprintf(num, 6, "%0d", objects++);
@@ -295,6 +297,27 @@ void EditorWin::newObject_() {
 	Object* object = new Object(tag, model);
 	interface_->setSelectedObject(object);
 	interface_->setEditModeObject();
+	updateWindow();
+	updateObjectList_();
+}
+
+void EditorWin::newRigidBody_() {
+	DEBUG_M("Entering function...");
+}
+
+void EditorWin::newCreature_() {
+	DEBUG_M("Entering function...");
+}
+
+void EditorWin::deleteObject_() {
+	DEBUG_M("Entering function...");
+	Object* object = interface_->getSelectedObject();
+	if(!object) {
+		return;
+	}
+
+	interface_->setSelectedObject(NULL);
+	delete object;
 	updateWindow();
 }
 
@@ -309,8 +332,6 @@ void EditorWin::setObject_() {
 		return;
 	}
 
-	//LOG("%s", object->getTag());
-
 	object->setTag(objTagLineEdit_->text().toStdString());
 	object->setPos(xSpinbox_->value(), ySpinbox_->value(), zSpinbox_->value());
 	object->setRotX(rxSpinbox_->value());
@@ -319,13 +340,14 @@ void EditorWin::setObject_() {
 	object->setRotAngle(raSpinbox_->value());
 	object->setScript(SCRIPT_ONUPDATE, objOnUpdateLineEdit_->text().toStdString());
 	object->setVisible(hideTemporyCheckBox_->checkState());
-
-	//object->setX(xSpinbox_->value());
-	//object->setY(ySpinbox_->value());
-	//object->setZ(zSpinbox_->value());
+	updateWindow();
 }
 
+/**
+ * Updates the information in the editor window.
+ */
 void EditorWin::updateWindow() {
+	DEBUG_V("Entering function...");
 	isUpdating_ = true;
 	updateObjectList_();
 	updateObject_();
@@ -345,6 +367,7 @@ void EditorWin::updateWindow() {
  * Updates the information about the selected object.
  */
 void EditorWin::updateObject_() {
+	DEBUG_V("Entering function...");
 	Object* object = interface_->getSelectedObject();
 	if(!object) {
 		return;
@@ -380,12 +403,14 @@ void EditorWin::setModel_(const QModelIndex &index) {
 	}
 	VModel* model = new VModel(modelsDirModel_->fileName(index).toStdString());
 	object->setVisual(*model);
+	updateWindow();
 }
 
 /**
  * Updates the list of Objects.
  */
 void EditorWin::updateObjectList_() {
+	DEBUG_V("Entering function...");
 	Area* area = interface_->getArea();
 	if(!area) {
 		return;
@@ -420,8 +445,6 @@ void EditorWin::updateObjectList_() {
 void EditorWin::objectSelected_(const QModelIndex&) {
 	DEBUG_A("Selected!");
 	QListWidgetItem* current = objectsListView_->currentItem();
-	//QVariant *v = current->data(Qt::UserRole);
-	//Object* object = v->value<Object*>();
 	Object* object = current->data(Qt::UserRole).value<Object*>();
 	interface_->setSelectedObject(object);
 	updateWindow();
@@ -467,7 +490,7 @@ void EditorWin::luaExecute_() {
 void EditorWin::setEditObject(Object* object) {
 	DEBUG_M("Entering function...");
 	object_ = object;
-	this->updateWindow();
+	updateWindow();
 }
 
 /**
@@ -477,6 +500,7 @@ void EditorWin::setEditObject(Object* object) {
 void EditorWin::setEditTile(Tile* tile) {
 	DEBUG_M("Entering function...");
 	tile_ = tile;
+	updateWindow();
 }
 
 /**
@@ -484,6 +508,7 @@ void EditorWin::setEditTile(Tile* tile) {
  * @param The interface
  */
 void EditorWin::setInterface(Interface* interface) {
+	DEBUG_M("Entering function...");
 	interface_ = interface;
-	this->updateWindow();
+	updateWindow();
 }

@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 	DEBUG_A("GameManager created...");
 
 	Area area("TestArea");
-	gm.Register(area);
+	gm.registerObject(area);
 	DEBUG_A("Area created...");
 
 	Interface interface(800, 600);
@@ -45,16 +45,17 @@ int main(int argc, char* argv[]) {
 	VModel playervis("monkey-robot.dae");
 	player.setVisual(playervis);
 	player.setPos(7.0f, 2.5f, 7.0f);
-	gm.Register(player);
+	gm.registerObject(player);
 	DEBUG_A("Player created...");
 
 	VModel testobjvis("cube.dae");
-	Object testobj("TestObject");
-	testobj.setTempory(true);
-	testobj.setVisual(testobjvis);
-	testobj.setPos(5.0f, 0.125f, 5.0f);
-	testobj.setScript(SCRIPT_ONUPDATE, "test.lua");
-	gm.Register(testobj);
+	Object* testobj = new Object("TestObject");
+	//testobj.setTempory(true);
+	testobj->setVisual(testobjvis);
+	testobj->setPos(5.0f, 0.125f, 5.0f);
+	testobj->setScript(SCRIPT_ONUPDATE, "test.lua");
+	//gm.registerObject(testobj);
+	//area.addObject(testobj);
 
 	//VModel grassvis("mayagrass.dae");
 	RigidBody ground("TestGround");
@@ -65,7 +66,7 @@ int main(int argc, char* argv[]) {
 	//ground.setVisual(grassvis);
 	ground.setPos(1.0f, 0.0f, 1.0f);
 	//ground.setScript(SCRIPT_ONUPDATE, "test.lua");
-	gm.Register(ground);
+	//gm.registerObject(ground);
 
 #warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area
 	area.setPhysics(gm.getPhysics());
@@ -74,10 +75,21 @@ int main(int argc, char* argv[]) {
 	FileProcessor::loadArea("data/areas/test-area.xml", &area);
 	area.addObject(player);
 	area.addObject(ground);
-	area.addObject(testobj);
+	area.addObject(*testobj);
+
+	//area.removeObject(testobj);
+
+	//delete(testobj);
 
 	interface.setCreature(player);
 	interface.mainLoop();
+
+	/*Object* object = gm.getObjectByTag("TestObject");
+	if(object) {
+		DEBUG_A("Object: '%s'", object->getTag().c_str());
+	}
+	BREAK();*/
+
 	FileProcessor::saveArea(area, "data/areas/test-area.xml");
 
 	LOG("TX finished...");

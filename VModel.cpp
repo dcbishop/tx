@@ -2,7 +2,7 @@
 #include <rcbc.h>
 
 #include "Interface.hpp"
-
+#include <GL/gl.h>
 
 /*VModel::VModel() {
 	filename_ = "";
@@ -31,16 +31,22 @@ void VModel::draw(Interface* interface) {
 	}
 	Model* model = rm->loadModel(filename_);
 
-	/*bool selected;
+	bool selected;
 	Object* object = interface->getSelectedObject();
 	if(object) {
 		Visual* visual = &object->getVisual();
 		selected = (this == visual);
+		glEnable(GL_COLOR_MATERIAL);
+		glColor3f(1.0f, 0.2f, 0.2f);
+		//DEBUG_H("Drawing selected. %s", object->getTag().c_str());
+		//glEnable
 	}
 
 	if(!selected) {
-		
-	}*/
+		//DEBUG_H("Drawing selected. %s", object->getTag().c_str());
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glDisable(GL_COLOR_MATERIAL);
+	}
 	RCBC_Render(model);
 }
 
