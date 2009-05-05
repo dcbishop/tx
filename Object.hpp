@@ -49,6 +49,7 @@ class Object : public Tagged, public Updateable, public Contained, public Visual
 		void update(const int time);
 
 	private:
+		virtual void setRot_();
 		float x_;
 		float y_;
 		float z_;

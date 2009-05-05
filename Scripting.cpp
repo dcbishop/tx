@@ -25,6 +25,7 @@ Scripting::Scripting() {
 	try {
 		luaL_dostring(myLuaState_, "ScriptLog(\"Lua successfully initilized...\")\n");
 		luaL_dostring(myLuaState_, "globals = {}\n");
+		loadLua("functions.lua");
 	} catch(const std::exception &TheError) {
 		//ERROR("LUA: %s", TheError.what());
 	}
@@ -39,7 +40,8 @@ Scripting::~Scripting() {
  * @param filename The name of the file to execute.
  */
 void Scripting::loadLua(const string filename) {
-	int result = luaL_dofile(myLuaState_, filename.c_str());
+	string fullname = DIRECTORY_SCRIPTS + filename;
+	int result = luaL_dofile(myLuaState_, fullname.c_str());
 	if(result) {
 		//ERROR("LUA error loading '%s'", filename);
 		luaL_dostring(myLuaState_, "ScriptLog(\"Error loading script.\")\n");
@@ -79,6 +81,7 @@ void Scripting::bindAll_() {
 		bindVisual_(),
 		bindObject_(),
 		bindRigidBody_(),
+		bindCreature_(),
 		bindArea_()
 	];
 }
@@ -141,7 +144,7 @@ luabind::scope Scripting::bindObject_() {
 
 luabind::scope Scripting::bindRigidBody_() {
 	return
-		luabind::class_<RigidBody, luabind::bases<Object, Tagged> >("RigidBody")
+		luabind::class_<RigidBody, luabind::bases<Updateable, Tagged, Object> >("RigidBody")
 			.def(luabind::constructor<>())
 			/*.property("area", &RigidBody::getArea, &RigidBody::setArea)
 			.property("x", &RigidBody::getX, &RigidBody::setX)
@@ -152,7 +155,21 @@ luabind::scope Scripting::bindRigidBody_() {
 			.property("rz", &RigidBody::getRotZ, &RigidBody::setRotZ)
 			.property("angle", &RigidBody::getRotAngle, &RigidBody::setRotAngle)*/
 	;
+}
 
+luabind::scope Scripting::bindCreature_() {
+	return
+		luabind::class_<Creature, luabind::bases<Updateable, Tagged, Object, RigidBody> >("Creature")
+			.def(luabind::constructor<>())
+			/*.property("area", &RigidBody::getArea, &RigidBody::setArea)
+			.property("x", &RigidBody::getX, &RigidBody::setX)
+			.property("y", &RigidBody::getY, &RigidBody::setY)
+			.property("z", &RigidBody::getZ, &RigidBody::setZ)
+			.property("rx", &RigidBody::getRotX, &RigidBody::setRotX)
+			.property("ry", &RigidBody::getRotY, &RigidBody::setRotY)
+			.property("rz", &RigidBody::getRotZ, &RigidBody::setRotZ)
+			.property("angle", &RigidBody::getRotAngle, &RigidBody::setRotAngle)*/
+	;
 }
 
 luabind::scope Scripting::bindArea_() {

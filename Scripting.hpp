@@ -36,6 +36,7 @@ class Scripting {
 		luabind::scope bindVisual_();
 		luabind::scope bindObject_();
 		luabind::scope bindRigidBody_();
+		luabind::scope bindCreature_();
 		luabind::scope bindArea_();
 
 

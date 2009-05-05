@@ -7,6 +7,9 @@ using namespace std;
 
 #include <rcbc.h>
 
+static string DIRECTORY_MOD = "data/models/";
+static string DIRECTORY_SCRIPTS = "data/scripts/";
+
 /**
  * Contains a list of game resources that are in memory such as textures.
  */

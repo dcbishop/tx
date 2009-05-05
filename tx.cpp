@@ -42,21 +42,21 @@ int main(int argc, char* argv[]) {
 
 	Creature player("Player");
 	player.setTempory(true);
-	VModel playervis("data/models/monkey-robot.dae");
+	VModel playervis("monkey-robot.dae");
 	player.setVisual(playervis);
 	player.setPos(7.0f, 2.5f, 7.0f);
 	gm.Register(player);
 	DEBUG_A("Player created...");
 
-	VModel testobjvis("data/models/cube.dae");
+	VModel testobjvis("cube.dae");
 	Object testobj("TestObject");
 	testobj.setTempory(true);
 	testobj.setVisual(testobjvis);
 	testobj.setPos(5.0f, 0.125f, 5.0f);
-	testobj.setScript(SCRIPT_ONUPDATE, "data/scripts/test.lua");
+	testobj.setScript(SCRIPT_ONUPDATE, "test.lua");
 	gm.Register(testobj);
 
-	//VModel grassvis("data/models/mayagrass.dae");
+	//VModel grassvis("mayagrass.dae");
 	RigidBody ground("TestGround");
 	ground.setTempory(true);
 	ground.setMass(0);
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
 	//ground.setVisual(grassvis);
 	ground.setPos(1.0f, 0.0f, 1.0f);
-	//ground.setScript(SCRIPT_ONUPDATE, "data/scripts/test.lua");
+	//ground.setScript(SCRIPT_ONUPDATE, "test.lua");
 	gm.Register(ground);
 
 #warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area

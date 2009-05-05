@@ -352,7 +352,7 @@ float Area::getRotation(const int x, const int y) {
 	if(!tile) {
 		return 0.0f;
 	}
-	tile->getRotation();
+	return tile->getRotation();
 }
 
 /**

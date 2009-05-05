@@ -44,7 +44,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	rm_ = NULL;
 	editor_ = NULL;
 
-	VModel* model = new VModel("data/models/cube.dae");
+	VModel* model = new VModel("cube.dae");
 	RigidBody* object = new RigidBody("Object_00", model);
 	//Object* object = new Object("Object_00", model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
@@ -56,15 +56,15 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	edit_tiles_.push_back(TILE_VOID);
 	edit_tiles_.push_back(TILE_FLOOR);
 	edit_tiles_.push_back(TILE_WALL);
-	edit_tiles_.push_back("data/models/outer corner.dae");
-	edit_tiles_.push_back("data/models/2 sided wall.dae");
-	edit_tiles_.push_back("data/models/3 sided wall.dae");
-	edit_tiles_.push_back("data/models/Pillar.dae");
+	edit_tiles_.push_back("outer corner.dae");
+	edit_tiles_.push_back("2 sided wall.dae");
+	edit_tiles_.push_back("3 sided wall.dae");
+	edit_tiles_.push_back("Pillar.dae");
 	edit_tiles_.push_back(TILE_INNERCORNER);
-	edit_tiles_.push_back("data/models/combined wall + inner corner A.dae");
-	edit_tiles_.push_back("data/models/combined wall + inner corner B.dae");
-	edit_tiles_.push_back("data/models/two inner corners.dae");
-	edit_tiles_.push_back("data/models/opposite inner corners.dae");
+	edit_tiles_.push_back("combined wall + inner corner A.dae");
+	edit_tiles_.push_back("combined wall + inner corner B.dae");
+	edit_tiles_.push_back("two inner corners.dae");
+	edit_tiles_.push_back("opposite inner corners.dae");
 
 	setTitle("Tilxor...");
 
@@ -455,28 +455,6 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			area->setSolid(gx, gy, ts_);
 			break;
 		case(MODE_EDIT_OBJECTS):
-			/*RigidBody* object;
-			object->setVisual(getEditObject_().getVisual());
-			object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
-			object->setPos(-tx_, ty_+0.125f, -tz_);*/
-			//VModel* model = new VModel("data/models/cube.dae");
-			//Object* object = new Object("Object_00", model);
-			//RigidBody* object = new RigidBody("Object_00", model);
-			
-			//object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
-			//object->setMass(0.2f);
-			/*object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");
-			object->setScript(SCRIPT_ONupdate, "data/scripts/runaway.lua");*/
-
-			//Object* object = getEditObject_().clone();
-			/*object->setPos(-tx_, ty_+0.125f, -tz_);
-			getGameManager()->Register(*object);
-			area->addObject(*object);
-			setSelectedObject(object);*/
 			getSelectedObject()->setPos(-tx_, ty_+0.125f, -tz_);
 			getGameManager()->Register(*getSelectedObject());
 			area->addObject(*getSelectedObject());
@@ -500,9 +478,9 @@ void Interface::handleMouse3_(const SDL_Event& event) {
 
 	Area* area = creature_->getArea();
 
-	//Model* model = area->getResourceManager()->loadModel("data/models/unmaptest.dae");
+	//Model* model = area->getResourceManager()->loadModel("unmaptest.dae");
 
-	VModel* model = new VModel("data/models/unmaptest.dae");
+	VModel* model = new VModel("unmaptest.dae");
 	RigidBody* newobj = new RigidBody;
 	newobj->setVisual(*model);
 	newobj->setShape(new btSphereShape(1));

@@ -176,6 +176,7 @@ const float Object::getZ() {
  */
 void Object::setRotX(const float rx) {
 	rx_ = rx;
+	setRot_();
 }
 
 /**
@@ -191,6 +192,7 @@ void Object::setRotX(const float rx) {
  */
 void Object::setRotY(const float ry) {
 	ry_ = ry;
+	setRot_();
 }
 
 /**
@@ -206,6 +208,7 @@ void Object::setRotY(const float ry) {
  */
 void Object::setRotZ(const float rz) {
 	rz_ = rz;
+	setRot_();
 }
 
 /**
@@ -221,6 +224,13 @@ void Object::setRotZ(const float rz) {
  */
 void Object::setRotAngle(const float angle) {
 	angle_ = angle;
+	setRot_();
+}
+
+void Object::setRot_() {
+	if(angle_ > 360.0f || angle_ < -360.0f) {
+		angle_ = fmodf(angle_, 360.0f);
+	}
 }
 
 /**

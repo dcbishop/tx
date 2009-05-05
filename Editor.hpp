@@ -27,6 +27,7 @@ class EditorWin : public QWidget {
 		void updateObject_();
 		void setObject_();
 		void newObject_();
+		void setModel_(const QModelIndex &index);
 
 	private:
 		void updateObjectList_();
@@ -42,7 +43,10 @@ class EditorWin : public QWidget {
 		QLineEdit* areaTagLineEdit_;
 		QSpinBox* heightLineEdit_;
 		QSpinBox* widthLineEdit_;
+		QDirModel* modelsDirModel_;
+		QListView* modelsListView_;
 
+		QCheckBox* invisibleCheckBox_;
 		QLineEdit* objTagLineEdit_;
 		QDoubleSpinBox* xSpinbox_;
 		QDoubleSpinBox* ySpinbox_;

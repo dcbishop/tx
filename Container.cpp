@@ -57,7 +57,7 @@ ChildrenIterator Container::getChildEnd() {
  * @return The Tagged object if found or NULL.
  */
 Tagged* Container::getTaggedByTag_(const string tag) {
-	DEBUG_M("Entering function getTaggedByTag_...");
+	DEBUG_V("Entering function getTaggedByTag_...");
 	ChildrenTagIterator iter = tags_.find(tag);
 	if(iter != tags_.end()) {
 		return iter->second;
@@ -72,7 +72,7 @@ Tagged* Container::getTaggedByTag_(const string tag) {
  */
 Area* Container::getAreaByTag(const string tag) {
 	#warning ['TODO']: Probabbly faster to get this from Area list...
-	DEBUG_M("Entering function getAreaByTag...");
+	DEBUG_V("Entering function getAreaByTag...");
 	return dynamic_cast<Area*>(getTaggedByTag_(tag));
 }
 
@@ -82,7 +82,7 @@ Area* Container::getAreaByTag(const string tag) {
  * @return The Object pointer if found, otherwise NULL
  */
 Object* Container::getObjectByTag(const string tag) {
-	DEBUG_M("Entering function getObjectByTag...");
+	DEBUG_V("Entering function getObjectByTag...");
 	return dynamic_cast<Object*>(getTaggedByTag_(tag));
 }
 
@@ -92,7 +92,7 @@ Object* Container::getObjectByTag(const string tag) {
  * @return The Object pointer if found, otherwise NULL
  */
 Creature* Container::getCreatureByTag(const string tag) {
-	DEBUG_M("Entering function getCreatureByTag...");
+	DEBUG_V("Entering function getCreatureByTag...");
 	return dynamic_cast<Creature*>(getTaggedByTag_(tag));
 }
 

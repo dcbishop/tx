@@ -115,7 +115,7 @@ EditorWin::EditorWin() {
 	luaComboBox_->setMinimumWidth(200);
 	luaComboBox_->addItem(tr("print('Hello World!')"));
 	luaComboBox_->addItem(tr("player = gm:getObjectByTag('Player')"));
-	luaComboBox_->addItem(tr("print('Clear area'); area = gm:getAreaByTag('TestArea'); area:fill(0, 0, area.width-1, area.height-1, 'data/models/floor.dae', false, 0.0)"));
+	luaComboBox_->addItem(tr("print('Clear area'); area = gm:getAreaByTag('TestArea'); area:fill(0, 0, area.width-1, area.height-1, 'floor.dae', false, 0.0)"));
 	luaComboBox_->addItem(tr("print('Resize area test'); area = gm:getAreaByTag('TestArea'); area.width = area.width + 1"));
 	luaComboBox_->addItem(tr("print('Big room'); area = gm:getAreaByTag('TestArea'); area:boxRoom(area.width*(1/4), area.height*(1/4), area.width*(3/4), area.height*(3/4))"));	
 	luaLayout->addWidget(luaComboBox_);
@@ -182,6 +182,8 @@ EditorWin::EditorWin() {
 	QLabel *raLabel = new QLabel(QObject::tr("RA:"));
 	QLabel *onUpdateLabel = new QLabel(QObject::tr("Update Script:"));
 
+	invisibleCheckBox_ = new QCheckBox(tr("Visible?"));
+	invisibleCheckBox_->setCheckState(Qt::Checked);
 	objTagLineEdit_ = new QLineEdit();
 	xSpinbox_ = new QDoubleSpinBox();
 	ySpinbox_ = new QDoubleSpinBox();
@@ -200,6 +202,7 @@ EditorWin::EditorWin() {
 	objOnUpdateLineEdit_ = new QLineEdit();
 
 	objectLayout->addWidget(objectTypeLabel, 0, 0);
+	objectLayout->addWidget(invisibleCheckBox_, 0, 1);
 	objectLayout->addWidget(tagLabel, 1, 0);
 	objectLayout->addWidget(objTagLineEdit_, 1, 1);
 	objectLayout->addWidget(xLabel, 2, 0);
@@ -219,8 +222,16 @@ EditorWin::EditorWin() {
 	objectLayout->addWidget(onUpdateLabel, 9, 0);
 	objectLayout->addWidget(objOnUpdateLineEdit_, 9, 1);
 
+	modelsDirModel_ = new QDirModel();
+	modelsListView_ = new QListView();
+	modelsListView_->setModel(modelsDirModel_);
+	modelsListView_->setRootIndex(modelsDirModel_->index(DIRECTORY_MOD.c_str()));
+
 	QObject::connect(hideTemporyCheckBox_, SIGNAL(clicked()), this, SLOT(updateWindow()));
+	QObject::connect(invisibleCheckBox_, SIGNAL(clicked()), this, SLOT(setObject_()));
 	QObject::connect(objectsListView_, SIGNAL(clicked(const QModelIndex &)), this, SLOT(objectSelected_(const QModelIndex &)));
+	//QObject::connect(modelsListView_, SIGNAL(clicked(const QModelIndex &)), this, SLOT(setModel_()));
+	QObject::connect(modelsListView_, SIGNAL(clicked(const QModelIndex & )), this, SLOT(setModel_(const QModelIndex &)));
 
 	QObject::connect(objTagLineEdit_, SIGNAL(textChanged(const QString &)), this, SLOT(setObject_()));
 	QObject::connect(xSpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
@@ -239,6 +250,7 @@ EditorWin::EditorWin() {
 	mainLayout->addLayout(objectsLayout);
 	//mainLayout->addWidget(objectTypeLabel);
 	mainLayout->addLayout(objectLayout);
+	mainLayout->addWidget(modelsListView_);
 
 	setLayout(mainLayout);
 }
@@ -279,7 +291,7 @@ void EditorWin::newObject_() {
 	snprintf(num, 6, "%0d", objects++);
 	tag.append(num);
 
-	VModel* model = new VModel("data/models/cube.dae");
+	VModel* model = new VModel("cube.dae");
 	Object* object = new Object(tag, model);
 	interface_->setSelectedObject(object);
 	interface_->setEditModeObject();
@@ -306,6 +318,7 @@ void EditorWin::setObject_() {
 	object->setRotZ(rzSpinbox_->value());
 	object->setRotAngle(raSpinbox_->value());
 	object->setScript(SCRIPT_ONUPDATE, objOnUpdateLineEdit_->text().toStdString());
+	object->setVisible(hideTemporyCheckBox_->checkState());
 
 	//object->setX(xSpinbox_->value());
 	//object->setY(ySpinbox_->value());
@@ -346,6 +359,27 @@ void EditorWin::updateObject_() {
 	rzSpinbox_->setValue(object->getRotZ());
 	raSpinbox_->setValue(object->getRotAngle());
 	objOnUpdateLineEdit_->setText(tr(object->getScript(SCRIPT_ONUPDATE).c_str()));
+
+	if(object->isVisible()) {
+		invisibleCheckBox_->setCheckState(Qt::Checked);
+	} else {
+		invisibleCheckBox_->setCheckState(Qt::Unchecked);
+	}
+
+	//QListWidgetItem* current = modelsListView_->currentItem();
+	//DEBUG_A("Modelfile: %s", current->text().toStdString().c_str());
+	QModelIndex sel_index = modelsListView_->currentIndex();
+}
+
+void EditorWin::setModel_(const QModelIndex &index) {
+	//VModel* = new VModel(
+	DEBUG_A("Model changed... '%s'",  modelsDirModel_->fileName(index).toStdString().c_str());
+	Object* object = interface_->getSelectedObject();
+	if(!object) {
+		return;
+	}
+	VModel* model = new VModel(modelsDirModel_->fileName(index).toStdString());
+	object->setVisual(*model);
 }
 
 /**

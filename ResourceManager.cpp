@@ -46,10 +46,15 @@ Model* ResourceManager::loadModel(const string filename) {
 		model = modref.first;
 		modref.second++;
 	} else {
-		model = RCBC_LoadFile(filename.c_str(), getImages());
-		DEBUG_L("Loading model '%s'", filename.c_str());
+		//int fullpath_size = strlen(DIRECTORY_MODELS) + strlen(filename) +1;
+		//char* fullpath = malloc(fullpath_size);
+		//snprintf(fullpath, fullpath_size, "%s%s", DIRECTORY_MODELS, filename);
+		string fullpath = DIRECTORY_MOD + filename;
+		model = RCBC_LoadFile(fullpath.c_str(), getImages());
+		DEBUG_L("Loading model '%s'", fullpath.c_str());
 		pair<Model*, int> modref(model, 1);
 		models_.insert(pair<string, pair<Model*, int> >(filename, modref));
+		//free(fullpath);
 	}
 
 	return model;
