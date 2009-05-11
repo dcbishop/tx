@@ -33,7 +33,6 @@ class Creature : public RigidBody, public Container {
 		virtual void setTurnRate(const float turn_rate);
 		virtual void setShape(btCollisionShape* shape);
 		virtual void setArea(Area& area);
-		virtual void setXYZ(const float x, const float y, const float z);
 		virtual btVector3& getPos();
 
 	private:

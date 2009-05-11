@@ -272,13 +272,11 @@ void RigidBody::draw(Interface* interface) {
 	btTransform &transform = body_->getWorldTransform();
 	transform.getOpenGLMatrix(m);
 
-	//m[12] = -m[12]; // Need to reverse this to position correctly o_O
 	glMultMatrixf(m);
 
-	glDisable(GL_LIGHTING);
+	/*glDisable(GL_LIGHTING);
 	drawCube();
-	glEnable(GL_LIGHTING);
-	//RCBC_Render(model);
+	glEnable(GL_LIGHTING);*/
 	model.draw(interface);
 
 	glPopMatrix();

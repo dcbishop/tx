@@ -303,7 +303,6 @@ void EditorWin::newObject_() {
 
 void EditorWin::newRigidBody_() {
 	DEBUG_M("Entering function...");
-	DEBUG_M("Entering function...");
 	static int objects = 0;
 
 	string tag = "RigidBody_";
@@ -320,8 +319,28 @@ void EditorWin::newRigidBody_() {
 	updateObjectList_();
 }
 
+
 void EditorWin::newCreature_() {
 	DEBUG_M("Entering function...");
+	static int objects = 0;
+
+	string tag = "RigidBody_";
+	char num[6];
+	snprintf(num, 6, "%0d", objects++);
+	tag.append(num);
+
+	VModel* model = new VModel("monkey-robot.dae");
+	Creature* object = new Creature(tag, model);
+	//object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+	interface_->setSelectedObject(object);
+	interface_->setEditModeObject();
+	updateWindow();
+	updateObjectList_();
+}
+
+
+void EditorWin::newTiles_() {
+	interface_->setEditModeTiles();
 }
 
 void EditorWin::deleteObject_() {

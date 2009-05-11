@@ -41,6 +41,7 @@ class Interface {
 		Object* getSelectedObject();
 		void setSelectedObject(Object* object);
 		void setEditModeObject();
+		void setEditModeTiles();
 
 
 	private:

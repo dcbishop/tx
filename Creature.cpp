@@ -83,12 +83,6 @@ btVector3& Creature::getPos() {
 	return body_->getWorldTransform().getOrigin();
 }
 
-void Creature::setXYZ(const float x, const float y, const float z) {
-	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(x, y, -z) );
-	}
-}
-
 void Creature::setArea(Area& area) {
 	Area* old_area = getArea();
 	if(old_area) { /* If its already in an area */

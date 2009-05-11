@@ -44,8 +44,8 @@ int main(int argc, char* argv[]) {
 	player.setTempory(true);
 	VModel playervis("monkey-robot.dae");
 	player.setVisual(playervis);
-	player.setXYZ(0.0f, 2.5f, 0.0f);
-	gm.registerObject(player);
+	//player.setXYZ(0.0f, 2.5f, 0.0f);
+	//gm.registerObject(player);
 	DEBUG_A("Player created...");
 
 	VModel testobjvis("cube.dae");
@@ -77,6 +77,24 @@ int main(int argc, char* argv[]) {
 	area.addObject(ground);
 	area.addObject(*testobj);
 
+	// If the area doesn't have a player spawn, make one in the middle
+	VModel playerSpawnModel("cube.dae");
+	Object* playerSpawn = area.getObjectByTag("PlayerSpawn");
+	if(!playerSpawn) {
+		float fx, fz;
+		area.getWorldCord((area.getWidth()/2), area.getHeight()/2, fx, fz);
+		playerSpawn = new Object("PlayerSpawn");
+		playerSpawn->setXYZ(fx, 0.5, fz);
+		//DEBUG_M("POINT: %d %f, %f, %f", area.getWidth()/2, fx, 1, fz);
+		//BREAK();
+		playerSpawn->setVisual(playerSpawnModel);
+		area.addObject(*playerSpawn);
+	}
+	Location spawnLocation = playerSpawn->getLocation();
+	player.setLocation(spawnLocation);
+	testobj->setLocation(spawnLocation);
+
+	//player.setXYZ(1.0f, 2.5f, 1.0f);
 	//area.removeObject(testobj);
 
 	//delete(testobj);

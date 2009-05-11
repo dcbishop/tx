@@ -22,6 +22,8 @@ class EditorWin : public QWidget {
 	public slots:
 		virtual void luaExecute_();
 		void updateWindow();
+
+	private slots:
 		void objectSelected_(const QModelIndex &);
 		void setArea_();
 		void updateObject_();
@@ -29,6 +31,7 @@ class EditorWin : public QWidget {
 		void newObject_();
 		void newRigidBody_();
 		void newCreature_();
+		void newTiles_();
 		void deleteObject_();
 		void setModel_(const QModelIndex &index);
 

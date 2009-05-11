@@ -176,6 +176,11 @@ void Interface::setEditModeObject() {
 	mode_ = MODE_EDIT_OBJECTS;
 }
 
+void Interface::setEditModeTiles() {
+	mode_ = MODE_EDIT_TILES;
+}
+
+
 /**
  * Renders the scene using OpenGL.
  */
@@ -236,7 +241,7 @@ void Interface::draw() {
 				Tile& tilem = getEditTile_();
 				if(&tilem) {
 					glPushMatrix();
-					glTranslatef(-fx , 0.01, -fz);
+					glTranslatef(fx , 0.01, fz);
 					//RCBC_Render(tilem);
 					tilem.draw(this);
 					glPopMatrix();
