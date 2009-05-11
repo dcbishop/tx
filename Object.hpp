@@ -5,32 +5,34 @@
 #include <rcbc.h>
 
 class Object;
+class Location;
 #include "Area.hpp"
 #include "Tagged.hpp"
 #include "Updateable.hpp"
 #include "Container.hpp"
 #include "Visual.hpp"
+#include "Location.hpp"
 
 const int NUM_SCRIPTS = 1;
 const int SCRIPT_ONUPDATE = 1;
 
 /**
- * An ingame object. Has a visual model, cordinates, rotation and
+ * An ingame object. Has a visual model, coordinates, rotation and
  * attached area.
  */
-class Object : public Tagged, public Updateable, public Contained, public Visual {
+class Object : public Location, public Tagged, public Updateable, public Contained, public Visual {
 	public:
 		Object(string tag = DEFAULT_TAG, Visual* model = NULL);
 		~Object();
 		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
 		virtual void draw(Interface* interface);
-		virtual void setPos(const float x, const float y, const float z);
+		/*virtual void setXYZ(const float x, const float y, const float z);
 		virtual void setX(const float x);
 		virtual void setY(const float y);
 		virtual void setZ(const float z);
 		virtual const float getX();
 		virtual const float getY();
-		virtual const float getZ();
+		virtual const float getZ();*/
 		virtual void setRotX(const float rx);
 		virtual void setRotY(const float ry);
 		virtual void setRotZ(const float rz);
@@ -50,9 +52,9 @@ class Object : public Tagged, public Updateable, public Contained, public Visual
 
 	private:
 		virtual void setRot_();
-		float x_;
+		/*float x_;
 		float y_;
-		float z_;
+		float z_;*/
 
 		float rx_;
 		float ry_;

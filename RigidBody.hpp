@@ -21,7 +21,7 @@ class RigidBody : public Object {
 		virtual const float getZ();
 		virtual void setMass(const btScalar mass);
 		virtual void setFriction(const btScalar friction);
-		virtual void setPos(const float x, const float y, const float z);
+		virtual void setXYZ(const float x, const float y, const float z);
 		virtual void setX(const float x);
 		virtual void setY(const float y);
 		virtual void setZ(const float z);

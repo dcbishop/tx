@@ -379,7 +379,7 @@ void FileProcessor::loadArea_Position(mxml_node_t* node, Object* object) {
 	const char* sX = mxmlElementGetAttr(node, "x");
 	const char* sY = mxmlElementGetAttr(node, "y");
 	const char* sZ = mxmlElementGetAttr(node, "z");
-	object->setPos(atof(sX), atof(sY), atof(sZ));
+	object->setXYZ(atof(sX), atof(sY), atof(sZ));
 }
 
 /**

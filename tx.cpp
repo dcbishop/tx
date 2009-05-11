@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 	player.setTempory(true);
 	VModel playervis("monkey-robot.dae");
 	player.setVisual(playervis);
-	player.setPos(7.0f, 2.5f, 7.0f);
+	player.setXYZ(0.0f, 2.5f, 0.0f);
 	gm.registerObject(player);
 	DEBUG_A("Player created...");
 
@@ -52,8 +52,8 @@ int main(int argc, char* argv[]) {
 	Object* testobj = new Object("TestObject");
 	//testobj.setTempory(true);
 	testobj->setVisual(testobjvis);
-	testobj->setPos(5.0f, 0.125f, 5.0f);
-	testobj->setScript(SCRIPT_ONUPDATE, "test.lua");
+	testobj->setXYZ(5.0f, 0.125f, 5.0f);
+	//testobj->setScript(SCRIPT_ONUPDATE, "test.lua");
 	//gm.registerObject(testobj);
 	//area.addObject(testobj);
 
@@ -64,8 +64,8 @@ int main(int argc, char* argv[]) {
 	//ground.setFriction(0.0f);
 	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
 	//ground.setVisual(grassvis);
-	ground.setPos(1.0f, 0.0f, 1.0f);
-	//ground.setScript(SCRIPT_ONUPDATE, "test.lua");
+	ground.setXYZ(1.0f, 0.0f, 1.0f);
+	//ground.setScript(SCRIPT_ONUPDATE, "");
 	//gm.registerObject(ground);
 
 #warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area

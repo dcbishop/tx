@@ -3,7 +3,7 @@
 #include <math.h>
 
 /**
- * The constructor. Sets cordinates to 0,0,0.
+ * The constructor. Sets coordinates to 0,0,0.
  * @param tag The Objects tag.
  * @param model The Objects RCBC model pointer.
  */
@@ -83,7 +83,7 @@ btVector3& Creature::getPos() {
 	return body_->getWorldTransform().getOrigin();
 }
 
-void Creature::setPos(const float x, const float y, const float z) {
+void Creature::setXYZ(const float x, const float y, const float z) {
 	if(body_) {
 		body_->getWorldTransform().setOrigin( btVector3(x, y, -z) );
 	}
@@ -236,6 +236,7 @@ void Creature::update(const int time) {
 	btVector3 walkDirection = btVector3(0.0f, 0.0f, 0.0f);
 	btScalar walkSpeed = walk_velocity_ * dt;
 
+	forwardDir[0] = -forwardDir[0];
 	// Get any movement flags
 	if(running_) {
 		walkSpeed *= running_multiplier_;

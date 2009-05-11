@@ -1,6 +1,7 @@
 #include "Scripting.hpp"
 
 #include "console.h"
+#include "Location.hpp"
 #include "Object.hpp"
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
@@ -76,6 +77,7 @@ void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
 		bindUpdateable_(),
 		bindContainer_(),
+		bindLocation_(),
 		bindGameManager_(),
 		bindTagged_(),
 		bindVisual_(),
@@ -99,6 +101,21 @@ luabind::scope Scripting::bindContainer_() {
 		.def("getAreaByTag", &Container::getAreaByTag)
 		.def("getObjectByTag", &Container::getObjectByTag)
 		.def("getCreatureByTag", &Container::getCreatureByTag)
+	;
+}
+
+luabind::scope Scripting::bindLocation_() {
+	return luabind::class_<Location>("Location")
+		//.def(luabind::constructor<>())
+		//.def("update", &Updateable::update)
+		//.property("last_update", &Updateable::getLastupdate)
+			.property("x", &Location::getX, &Location::setX)
+			.property("y", &Location::getY, &Location::setY)
+			.property("z", &Location::getZ, &Location::setZ)
+			.def("setXYZ", &Location::setXYZ)
+			.def("setLocation", &Location::setLocation)
+			.def("getLocation", &Location::getLocation)
+			.property("location", &Location::setLocation, &Location::getLocation)
 	;
 }
 
@@ -126,34 +143,22 @@ luabind::scope Scripting::bindGameManager_() {
 
 luabind::scope Scripting::bindObject_() {
 	return
-		luabind::class_<Object, luabind::bases<Updateable, Tagged, Visual> >("Object")
+		luabind::class_<Object, luabind::bases<Location, Updateable, Tagged, Visual> >("Object")
 			.def(luabind::constructor<>())
 			.property("area", &Object::getArea, &Object::setArea)
-			.property("x", &Object::getX, &Object::setX)
-			.property("y", &Object::getY, &Object::setY)
-			.property("z", &Object::getZ, &Object::setZ)
 			.property("rx", &Object::getRotX, &Object::setRotX)
 			.property("ry", &Object::getRotY, &Object::setRotY)
 			.property("rz", &Object::getRotZ, &Object::setRotZ)
 			.property("angle", &Object::getRotAngle, &Object::setRotAngle)
 			.def("setScript", &Object::setScript)
 			.def("getScript", &Object::getScript)
-			.def("setPos", &Object::setPos)
 		;
 }
 
 luabind::scope Scripting::bindRigidBody_() {
 	return
-		luabind::class_<RigidBody, luabind::bases<Updateable, Tagged, Object> >("RigidBody")
+		luabind::class_<RigidBody, luabind::bases<Location, Updateable, Tagged, Object> >("RigidBody")
 			.def(luabind::constructor<>())
-			/*.property("area", &RigidBody::getArea, &RigidBody::setArea)
-			.property("x", &RigidBody::getX, &RigidBody::setX)
-			.property("y", &RigidBody::getY, &RigidBody::setY)
-			.property("z", &RigidBody::getZ, &RigidBody::setZ)
-			.property("rx", &RigidBody::getRotX, &RigidBody::setRotX)
-			.property("ry", &RigidBody::getRotY, &RigidBody::setRotY)
-			.property("rz", &RigidBody::getRotZ, &RigidBody::setRotZ)
-			.property("angle", &RigidBody::getRotAngle, &RigidBody::setRotAngle)*/
 	;
 }
 
@@ -161,14 +166,6 @@ luabind::scope Scripting::bindCreature_() {
 	return
 		luabind::class_<Creature, luabind::bases<Updateable, Tagged, Object, RigidBody> >("Creature")
 			.def(luabind::constructor<>())
-			/*.property("area", &RigidBody::getArea, &RigidBody::setArea)
-			.property("x", &RigidBody::getX, &RigidBody::setX)
-			.property("y", &RigidBody::getY, &RigidBody::setY)
-			.property("z", &RigidBody::getZ, &RigidBody::setZ)
-			.property("rx", &RigidBody::getRotX, &RigidBody::setRotX)
-			.property("ry", &RigidBody::getRotY, &RigidBody::setRotY)
-			.property("rz", &RigidBody::getRotZ, &RigidBody::setRotZ)
-			.property("angle", &RigidBody::getRotAngle, &RigidBody::setRotAngle)*/
 	;
 }
 

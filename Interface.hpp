@@ -73,10 +73,10 @@ class Interface {
 		ResourceManager *rm_;
 		Editor *editor_;
 
-		// For the cordinates the mouse is targeting
+		// For the coordinates the mouse is targeting
 		GLdouble tx_, ty_, tz_;
 
-		// Mouse window cordinates
+		// Mouse window coordinates
 		int mx_, my_;
 		Tile* tm_;
 		Object* to_;

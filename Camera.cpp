@@ -78,7 +78,7 @@ void Camera::Position() {
 		cz = target_->getZ();
 	}
 	
-	gluLookAt( getX()-cx, getY()+cy, getZ()-cz, -cx, cy, -cz, 0.0f, 10.0f, 0.0f );
+	gluLookAt( getX()+cx, getY()+cy, getZ()+cz, cx, cy, cz, 0.0f, 10.0f, 0.0f );
 }
 
 /**

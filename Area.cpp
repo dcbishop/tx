@@ -258,7 +258,7 @@ void Area::loadFile(const string filename) {
  * @see setTile()
  * @param x The X grid coordinate.
  * @param y The X grid coordinate.
- * @return The Tile at the x, y grid cordinates
+ * @return The Tile at the x, y grid coordinates
  */
 Tile* Area::getTile(const int x, const int y) {
 	if(x >= getWidth() || y >= getHeight() || x < 0 || y < 0) {
@@ -319,7 +319,7 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 		blocker->setTempory(true);
 		blocker->setShape(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)));
 		blocker->setMass(0.0f);
-		blocker->setPos(fx, 0.5f, fz);
+		blocker->setXYZ(fx, 0.5f, fz);
 		//*(walkblockers_+(y*width_)+x) = blocker;
 		walkblockers_[x][y] = blocker;
 		addObject(*blocker);
@@ -394,8 +394,8 @@ void Area::draw(Interface* interface) {
 		return;
 	}
 
-	//glTranslatef( -TILEWIDTH * width_ / 2, 0.0f, -TILEWIDTH * height_ / 2 );
 	glPushMatrix();
+	glTranslatef( TILEWIDTH * width_ / 2, 0.0f, TILEWIDTH * height_ / 2 );
 	for(int y = 0; y < height_; y++) {
 		glPushMatrix();
 		for(int x = 0; x < width_; x++) {
@@ -478,25 +478,25 @@ void Area::update(const int time) {
 }
 
 /**
- * Gets the x, y Area grid cordinates from OpenGL world cordinates.
- * @param fx The world X cordinate to be converted.
- * @param fz The world Z (depth) cordinate to be converted.
+ * Gets the x, y Area grid coordinates from OpenGL world coordinates.
+ * @param fx The world X coordinate to be converted.
+ * @param fz The world Z (depth) coordinate to be converted.
  * @param gx The value to store the X grid cord in.
  * @param gy The value to store the Y grid cord in.
  */
 void Area::getGridCord(const float fx, const float fz, int &gx, int &gy) {
-	gx = -(fx-(TILEWIDTH/2))/TILEWIDTH;
-	gy = -(fz-(TILEWIDTH/2))/TILEWIDTH;
+	gx = -((fx-(TILEWIDTH/2))/TILEWIDTH)+(width_/2);
+	gy = -((fz-(TILEWIDTH/2))/TILEWIDTH)+(height_/2);
 }
 
 /**
- * Gets the x, y world cordinates from Area grid world cordinates.
- * @param gx The Area grid X cordinate to be converted.
- * @param gy The Area grid Y cordinate to be converted.
+ * Gets the x, y world coordinates from Area grid world coordinates.
+ * @param gx The Area grid X coordinate to be converted.
+ * @param gy The Area grid Y coordinate to be converted.
  * @param fx The value to store the X world cord in.
  * @param fz The value to store the Z (depth) world cord in.
  */
 void Area::getWorldCord(const int gx, const int gy, float &fx, float &fz) {
-	fx = gx * TILEWIDTH;
-	fz = gy * TILEWIDTH;
+	fx = -gx * TILEWIDTH+(width_*TILEWIDTH/2);
+	fz = -gy * TILEWIDTH+(height_*TILEWIDTH/2);;
 }

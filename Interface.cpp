@@ -406,7 +406,7 @@ void Interface::resizeEvent(const SDL_Event& event) {
 }
 
 /**
- * Converts 2D Window x, y cordinates into 3D OpenGL world cordinates
+ * Converts 2D Window x, y coordinates into 3D OpenGL world coordinates
  * @param mx Window X cord.
  * @param my Window Y cord.
  * @param x X cord to set.
@@ -453,9 +453,10 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			area->getGridCord(tx_, tz_, gx, gy);
 			area->setTile(gx, gy, tile);
 			area->setSolid(gx, gy, ts_);
+			DEBUG_A("Clicked: %f, %f, %f, gx:%d, gy:%d", tx_, ty_, tz_, gx, gy);
 			break;
 		case(MODE_EDIT_OBJECTS):
-			getSelectedObject()->setPos(-tx_, ty_+0.125f, -tz_);
+			getSelectedObject()->setXYZ(tx_, ty_+0.125f, tz_);
 			//getGameManager()->registerObject(*getSelectedObject());
 			area->addObject(*getSelectedObject());
 			mode_ = MODE_NONE;
@@ -484,7 +485,7 @@ void Interface::handleMouse3_(const SDL_Event& event) {
 	RigidBody* newobj = new RigidBody;
 	newobj->setVisual(*model);
 	newobj->setShape(new btSphereShape(1));
-	newobj->setPos(-tx_, ty_+1.0f, -tz_);
+	newobj->setXYZ(-tx_, ty_+1.0f, -tz_);
 	
 	area->addObject(*newobj);
 }

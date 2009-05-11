@@ -303,6 +303,21 @@ void EditorWin::newObject_() {
 
 void EditorWin::newRigidBody_() {
 	DEBUG_M("Entering function...");
+	DEBUG_M("Entering function...");
+	static int objects = 0;
+
+	string tag = "RigidBody_";
+	char num[6];
+	snprintf(num, 6, "%0d", objects++);
+	tag.append(num);
+
+	VModel* model = new VModel("cube.dae");
+	RigidBody* object = new RigidBody(tag, model);
+	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+	interface_->setSelectedObject(object);
+	interface_->setEditModeObject();
+	updateWindow();
+	updateObjectList_();
 }
 
 void EditorWin::newCreature_() {
@@ -333,13 +348,13 @@ void EditorWin::setObject_() {
 	}
 
 	object->setTag(objTagLineEdit_->text().toStdString());
-	object->setPos(xSpinbox_->value(), ySpinbox_->value(), zSpinbox_->value());
+	object->setXYZ(xSpinbox_->value(), ySpinbox_->value(), zSpinbox_->value());
 	object->setRotX(rxSpinbox_->value());
 	object->setRotY(rySpinbox_->value());
 	object->setRotZ(rzSpinbox_->value());
 	object->setRotAngle(raSpinbox_->value());
 	object->setScript(SCRIPT_ONUPDATE, objOnUpdateLineEdit_->text().toStdString());
-	object->setVisible(hideTemporyCheckBox_->checkState());
+	//object->setVisible(hideTemporyCheckBox_->checkState());
 	updateWindow();
 }
 

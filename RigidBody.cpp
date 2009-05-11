@@ -114,7 +114,7 @@ void RigidBody::removeRigidBody_() {
 
 #warning ['TODO']: Might be best as a generic struct of float and in Object class
 /**
- * @return a vector containing the -x, y, z cordinates.
+ * @return a vector containing the -x, y, z coordinates.
  */
 btVector3& RigidBody::getPos() {
 	if(!body_) {
@@ -143,7 +143,7 @@ const float RigidBody::getY() {
 
 const float RigidBody::getZ() {
 	try {
-		return -getPos().getZ();
+		return getPos().getZ();
 	} catch(char const* str) {
 		return Object::getZ();
 	}
@@ -167,23 +167,23 @@ void RigidBody::setFriction(const btScalar friction) {
 	ProcessBody_();
 }
 
-void RigidBody::setPos(const float x, const float y, const float z) {
+void RigidBody::setXYZ(const float x, const float y, const float z) {
 	if(body_) {
-		body_->getWorldTransform().setOrigin( btVector3(x, y, -z) );
+		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
 	}
-	Object::setPos(x, y, z);
+	Object::setXYZ(x, y, z);
 }
 
 void RigidBody::setX(const float x) {
-	setPos(x, getY(), getZ());
+	setXYZ(x, getY(), getZ());
 }
 
 void RigidBody::setY(const float y) {
-	setPos(getX(), y, getZ());
+	setXYZ(getX(), y, getZ());
 }
 
 void RigidBody::setZ(const float z) {
-	setPos(getX(), getY(), z);
+	setXYZ(getX(), getY(), z);
 }
 
 void RigidBody::setRot_() {
@@ -214,10 +214,6 @@ void RigidBody::setRotZ(const float z) {
 }
 
 void RigidBody::setRotAngle(const float angle) {
-	/*#warning ['TODO']: This shouldnt be only X axis like this... also need get...
-	btTransform xform;
-	xform = getBody().getWorldTransform();
-	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), angle));*/
 	Object::setRotAngle(angle);
 	setRot_();
 }
@@ -273,13 +269,15 @@ void RigidBody::draw(Interface* interface) {
 	glPushMatrix();
 
 	btScalar m[16];
-	body_->getWorldTransform().getOpenGLMatrix(m);
-	m[12] = -m[12]; // Need to reverse this to rotate correctly o_O
+	btTransform &transform = body_->getWorldTransform();
+	transform.getOpenGLMatrix(m);
+
+	//m[12] = -m[12]; // Need to reverse this to position correctly o_O
 	glMultMatrixf(m);
 
-	/*glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHTING);
 	drawCube();
-	glEnable(GL_LIGHTING);*/
+	glEnable(GL_LIGHTING);
 	//RCBC_Render(model);
 	model.draw(interface);
 

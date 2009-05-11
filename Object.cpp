@@ -7,7 +7,7 @@
 #include "Interface.hpp"
 
 /**
- * The constructor. Sets cordinates to 0,0,0.
+ * The constructor. Sets coordinates to 0,0,0.
  * @param tag The Objects tag.
  * @param model The Objects RCBC model pointer.
  */
@@ -56,7 +56,7 @@ void Object::draw(Interface* interface) {
 	}
 
 	glPushMatrix();
-	glTranslatef(-getX(), getY(), -getZ());
+	glTranslatef(getX(), getY(), getZ());
 	glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
 	
 	//Model* model = getModel(rm);
@@ -71,7 +71,7 @@ void Object::draw(Interface* interface) {
  * @param x OpenGL style X cord.
  * @param y OpenGL style Y cord.
  * @param z OpenGL style Y cord.
- * @see setPos()
+ * @see setXYZ()
  * @see setX()
  * @see setY()
  * @see setZ()
@@ -79,16 +79,16 @@ void Object::draw(Interface* interface) {
  * @see getY()
  * @see getZ()
  */
-void Object::setPos(const float x, const float y, const float z) {
+/*void Object::setXYZ(const float x, const float y, const float z) {
 	Object::setX(x);
 	Object::setY(y);
 	Object::setZ(z);
-}
+}*/
 
 /**
  * Sets the objects X coordinate.
- * @param x OpenGL style X cordinate.
- * @see setPos()
+ * @param x OpenGL style X coordinate.
+ * @see setXYZ()
  * @see setX()
  * @see setY()
  * @see setZ()
@@ -96,14 +96,14 @@ void Object::setPos(const float x, const float y, const float z) {
  * @see getY()
  * @see getZ()
  */
-void Object::setX(const float x) {
+/*void Object::setX(const float x) {
 	x_ = -x;
-}
+}*/
 
 /**
  * Sets the objects Y coordinate.
- * @param y OpenGL style Y cordinate.
- * @see setPos()
+ * @param y OpenGL style Y coordinate.
+ * @see setXYZ()
  * @see setX()
  * @see setY()
  * @see setZ()
@@ -111,14 +111,14 @@ void Object::setX(const float x) {
  * @see getY()
  * @see getZ()
  */
-void Object::setY(const float y) {
+/*void Object::setY(const float y) {
 	y_ = y;
-}
+}*/
 
 /**
  * Sets the objects Z coordinate.
- * @param z OpenGL style Z cordinate.
- * @see setPos()
+ * @param z OpenGL style Z coordinate.
+ * @see setXYZ()
  * @see setX()
  * @see setY()
  * @see setZ()
@@ -126,54 +126,44 @@ void Object::setY(const float y) {
  * @see getY()
  * @see getZ()
  */
-void Object::setZ(const float z) {
+/*void Object::setZ(const float z) {
 	z_ = -z;
-}
+}*/
 
 /**
- * Returns the current X cordinate.
- * @see setPos()
+ * Returns the current X coordinate.
+ * @see setXYZ()
  * @see setX()
  * @see setY()
  * @see setZ()
  * @see getX()
  * @see getY()
  * @see getZ()
- * @return The X cordinate in OpenGL style.
+ * @return The X coordinate in OpenGL style.
  */
-const float Object::getX() {
+/*const float Object::getX() {
 	return -x_;
-}
+}*/
 
-/**
- * Returns the current Y cordinate.
- * @see setPos()
- * @see setX()
- * @see setY()
- * @see setZ()
- * @see getX()
- * @see getY()
- * @see getZ()
- * @return The Y cordinate in OpenGL style.
- */
-const float Object::getY() {
+
+/*const float Object::getY() {
 	return y_;
-}
+}*/
 
 /**
- * Returns the current Z cordinate.
- * @see setPos()
+ * Returns the current Z coordinate.
+ * @see setXYZ()
  * @see setX()
  * @see setY()
  * @see setZ()
  * @see getX()
  * @see getY()
  * @see getZ()
- * @return The Z cordinate in OpenGL style.
+ * @return The Z coordinate in OpenGL style.
  */
-const float Object::getZ() {
+/*const float Object::getZ() {
 	return -z_;
-}
+}*/
 
 /**
  * @see getRotX()
@@ -184,7 +174,7 @@ const float Object::getZ() {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @param rx the X rotation in OpenGL cordinates.
+ * @param rx the X rotation in OpenGL coordinates.
  */
 void Object::setRotX(const float rx) {
 	rx_ = rx;
@@ -200,7 +190,7 @@ void Object::setRotX(const float rx) {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @param ry the Y rotation in OpenGL cordinates.
+ * @param ry the Y rotation in OpenGL coordinates.
  */
 void Object::setRotY(const float ry) {
 	ry_ = ry;
@@ -216,7 +206,7 @@ void Object::setRotY(const float ry) {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @param rz the Z rotation in OpenGL cordinates.
+ * @param rz the Z rotation in OpenGL coordinates.
  */
 void Object::setRotZ(const float rz) {
 	rz_ = rz;
@@ -232,7 +222,7 @@ void Object::setRotZ(const float rz) {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @param angle the angle of rotation in OpenGL cordinates.
+ * @param angle the angle of rotation in OpenGL coordinates.
  */
 void Object::setRotAngle(const float angle) {
 	angle_ = angle;
@@ -254,7 +244,7 @@ void Object::setRot_() {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @return the X rotation in OpenGL cordinates.
+ * @return the X rotation in OpenGL coordinates.
  */
 const float Object::getRotX() {
 	return rx_;
@@ -268,7 +258,7 @@ const float Object::getRotX() {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @return the Y rotation in OpenGL cordinates.
+ * @return the Y rotation in OpenGL coordinates.
  */
 const float Object::getRotY() {
 	return ry_;
@@ -283,7 +273,7 @@ const float Object::getRotY() {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @return the Z rotation in OpenGL cordinates.
+ * @return the Z rotation in OpenGL coordinates.
  */
 const float Object::getRotZ() {
 	return rz_;
@@ -298,7 +288,7 @@ const float Object::getRotZ() {
  * @see setRotY()
  * @see setRotZ()
  * @see setRotAngle()
- * @return the angle of rotation in OpenGL cordinates.
+ * @return the angle of rotation in OpenGL coordinates.
  */
 const float Object::getRotAngle() {
 	return angle_;
