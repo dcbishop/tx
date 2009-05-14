@@ -2,7 +2,7 @@
 #define TX_POSITION_HPP
 
 /**
- * A abstract class for objects with x, y, z coordinates.
+ * An abstract class for objects with x, y, z coordinates.
  */
 class Position {
 	public:

@@ -84,23 +84,7 @@ Visual& Object::getVisual() {
 	return *visual_;
 }
 
-/**
- * Puts the object in an area.
- * @see getArea()
- */
-void Object::setArea(Area& area) {
-	DEBUG_M("Entering function...");
-	setParent(&area);
-}
 
-/**
- * Returns the object's area.
- * @see setArea()
- * @return The area contining the object.
- */
-Area* Object::getArea() {
-	return dynamic_cast<Area*>(getParent());
-}
 
 /**
  * Sets the LUA script.

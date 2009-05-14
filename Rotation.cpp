@@ -3,6 +3,17 @@
 //#include <stdlib.h>
 #include <math.h> // For fmodf
 
+Rotation& Rotation::getRotation() {
+	return *this;
+}
+
+void Rotation::setRotation(Rotation& rotation) {
+	setRotX(rotation.getRotX());
+	setRotY(rotation.getRotY());
+	setRotZ(rotation.getRotZ());
+	setRotAngle(rotation.getRotAngle());
+}
+
 /**
  * @see getRotX()
  * @see getRotY()

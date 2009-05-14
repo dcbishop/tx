@@ -248,14 +248,17 @@ void Creature::update(const int time) {
 		walkDirection -= strafeDir;
 	}
 	if(turn_left_) {
-		turn_angle_ -= turn_rate_ * dt;
+		//turn_angle_ -= turn_rate_ * dt;
+		setRotAngle(getRotAngle() - turn_rate_ * dt);
 	}
 	if(turn_right_) {
-		turn_angle_ += turn_rate_ * dt;
+		//turn_angle_ += turn_rate_ * dt;
+		setRotAngle(getRotAngle() + turn_rate_ * dt);
 	}
 
 	// update the position
-	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), turn_angle_));
+	//xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), turn_angle_));
+	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), getRotAngle()*(PI/180)));
 	((btPairCachingGhostObject*)body_)->setWorldTransform (xform);
 	controller_->setWalkDirection(walkDirection * walkSpeed);
 

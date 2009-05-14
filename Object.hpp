@@ -4,14 +4,14 @@
 #include <rcbc.h>
 
 class Object;
-class Position;
+//class Position;
 #include "Area.hpp"
 #include "Tagged.hpp"
 #include "Updateable.hpp"
-#include "Rotation.hpp"
+#include "Location.hpp"
 #include "Container.hpp"
 #include "Visual.hpp"
-#include "Position.hpp"
+//#include "Position.hpp"
 
 const int NUM_SCRIPTS = 1;
 const int SCRIPT_ONUPDATE = 1;
@@ -20,7 +20,7 @@ const int SCRIPT_ONUPDATE = 1;
  * An ingame object. Has a visual model, coordinates, rotation and
  * attached area.
  */
-class Object : public Position, public Tagged, public Updateable, public Contained, public Visual, public Rotation {
+class Object : public Tagged, public Updateable, public Visual, public Location {
 	public:
 		Object(string tag = DEFAULT_TAG, Visual* model = NULL);
 		~Object();
@@ -35,8 +35,6 @@ class Object : public Position, public Tagged, public Updateable, public Contain
 		virtual const float getZ();*/
 		void setVisual(Visual& visual);
 		Visual& getVisual();
-		virtual void setArea(Area& area);
-		virtual Area* getArea();
 		virtual void setScript(const int type, const string filename);
 		virtual string getScript(const int type);
 		void update(const int time);

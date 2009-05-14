@@ -80,7 +80,6 @@ int main(int argc, char* argv[]) {
 	area.addObject(player);
 	area.addObject(*testobj);
 	area.addObject(ground);
-	
 
 	// If the area doesn't have a player spawn, make one in the middle
 	VModel playerSpawnModel("cube.dae");
@@ -95,8 +94,10 @@ int main(int argc, char* argv[]) {
 		playerSpawn->setVisual(playerSpawnModel);
 		area.addObject(*playerSpawn);
 	}
-	Position spawnPosition = playerSpawn->getPosition();
-	player.setPosition(spawnPosition);
+	//Position spawnPosition = playerSpawn->getPosition();
+	//player.setPosition(spawnPosition);
+	Location spawnLocation = playerSpawn->getLocation();
+	player.setLocation(spawnLocation);
 
 	//player.setXYZ(1.0f, 2.5f, 1.0f);
 	//area.removeObject(testobj);
@@ -105,12 +106,6 @@ int main(int argc, char* argv[]) {
 
 	interface.setCreature(player);
 	interface.mainLoop();
-
-	/*Object* object = gm.getObjectByTag("TestObject");
-	if(object) {
-		DEBUG_A("Object: '%s'", object->getTag().c_str());
-	}
-	BREAK();*/
 
 	FileProcessor::saveArea(area, "data/areas/test-area.xml");
 
