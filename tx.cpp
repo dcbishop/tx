@@ -49,22 +49,26 @@ int main(int argc, char* argv[]) {
 	DEBUG_A("Player created...");
 
 	VModel testobjvis("cube.dae");
-	Object* testobj = new Object("TestObject");
-	//testobj.setTempory(true);
+	//Object* testobj = new Object("TestRigid");
+	RigidBody* testobj = new RigidBody("TestRigid");
+	testobj->setTempory(true);
 	testobj->setVisual(testobjvis);
-	testobj->setXYZ(5.0f, 0.125f, 5.0f);
+	testobj->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+	testobj->setXYZ(2.0f, 2.0f, 2.0f);
+	//testobj.setTempory(true);
+	//testobj->setXYZ(7.0f, 5.125f, 7.0f);
 	//testobj->setScript(SCRIPT_ONUPDATE, "test.lua");
-	//gm.registerObject(testobj);
-	//area.addObject(testobj);
+	//gm.registerObject(*testobj);
+	//area.addObject(*testobj);
 
-	//VModel grassvis("mayagrass.dae");
+	VModel grassvis("mayagrass.dae");
 	RigidBody ground("TestGround");
 	ground.setTempory(true);
 	ground.setMass(0);
 	//ground.setFriction(0.0f);
 	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
-	//ground.setVisual(grassvis);
-	ground.setXYZ(1.0f, 0.0f, 1.0f);
+	ground.setVisual(grassvis);
+	ground.setXYZ(1.0f, 1.0f, 1.0f);
 	//ground.setScript(SCRIPT_ONUPDATE, "");
 	//gm.registerObject(ground);
 
@@ -74,8 +78,9 @@ int main(int argc, char* argv[]) {
 	area.loadFile("data/areas/test-area.xml");
 	FileProcessor::loadArea("data/areas/test-area.xml", &area);
 	area.addObject(player);
-	area.addObject(ground);
 	area.addObject(*testobj);
+	area.addObject(ground);
+	
 
 	// If the area doesn't have a player spawn, make one in the middle
 	VModel playerSpawnModel("cube.dae");
@@ -92,7 +97,6 @@ int main(int argc, char* argv[]) {
 	}
 	Location spawnLocation = playerSpawn->getLocation();
 	player.setLocation(spawnLocation);
-	testobj->setLocation(spawnLocation);
 
 	//player.setXYZ(1.0f, 2.5f, 1.0f);
 	//area.removeObject(testobj);

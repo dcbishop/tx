@@ -7,6 +7,12 @@ using namespace std;
 
 #include <rcbc.h>
 
+//#include "Visual.hpp"
+class Visual;
+class RigidBody;
+#include <btBulletDynamicsCommon.h>
+
+
 static string DIRECTORY_MOD = "data/models/";
 static string DIRECTORY_SCRIPTS = "data/scripts/";
 
@@ -22,6 +28,10 @@ class ResourceManager {
 		virtual Model* loadModel(const string filename);
 		//void unloadModel(Model* model);
 		void unloadModel(const string model);
+		btCollisionShape* loadShapeFromModel(RigidBody* body);
+		btCollisionShape* loadShapeFromModel_ProcessNodes(SceneNode* node, btCompoundShape* shape);
+		void loadShapeFromModel_ProcessNode(SceneNode* node, btCompoundShape* combined);
+
 
 	private:
 		List* images_;

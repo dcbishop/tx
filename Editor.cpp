@@ -313,6 +313,8 @@ void EditorWin::newRigidBody_() {
 	VModel* model = new VModel("cube.dae");
 	RigidBody* object = new RigidBody(tag, model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
+	ResourceManager* rm = interface_->getResourceManager();
+	object->setShape(rm->loadShapeFromModel(object));
 	interface_->setSelectedObject(object);
 	interface_->setEditModeObject();
 	updateWindow();
