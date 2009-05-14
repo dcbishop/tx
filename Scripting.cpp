@@ -1,7 +1,7 @@
 #include "Scripting.hpp"
 
 #include "console.h"
-#include "Location.hpp"
+#include "Position.hpp"
 #include "Object.hpp"
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
@@ -77,7 +77,7 @@ void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
 		bindUpdateable_(),
 		bindContainer_(),
-		bindLocation_(),
+		bindPosition_(),
 		bindGameManager_(),
 		bindTagged_(),
 		bindVisual_(),
@@ -104,18 +104,18 @@ luabind::scope Scripting::bindContainer_() {
 	;
 }
 
-luabind::scope Scripting::bindLocation_() {
-	return luabind::class_<Location>("Location")
+luabind::scope Scripting::bindPosition_() {
+	return luabind::class_<Position>("Position")
 		//.def(luabind::constructor<>())
 		//.def("update", &Updateable::update)
 		//.property("last_update", &Updateable::getLastupdate)
-			.property("x", &Location::getX, &Location::setX)
-			.property("y", &Location::getY, &Location::setY)
-			.property("z", &Location::getZ, &Location::setZ)
-			.def("setXYZ", &Location::setXYZ)
-			.def("setLocation", &Location::setLocation)
-			.def("getLocation", &Location::getLocation)
-			.property("location", &Location::setLocation, &Location::getLocation)
+			.property("x", &Position::getX, &Position::setX)
+			.property("y", &Position::getY, &Position::setY)
+			.property("z", &Position::getZ, &Position::setZ)
+			.def("setXYZ", &Position::setXYZ)
+			.def("setPosition", &Position::setPosition)
+			.def("getPosition", &Position::getPosition)
+			.property("Position", &Position::setPosition, &Position::getPosition)
 	;
 }
 
@@ -143,7 +143,7 @@ luabind::scope Scripting::bindGameManager_() {
 
 luabind::scope Scripting::bindObject_() {
 	return
-		luabind::class_<Object, luabind::bases<Location, Updateable, Tagged, Visual> >("Object")
+		luabind::class_<Object, luabind::bases<Position, Updateable, Tagged, Visual> >("Object")
 			.def(luabind::constructor<>())
 			.property("area", &Object::getArea, &Object::setArea)
 			.property("rx", &Object::getRotX, &Object::setRotX)
@@ -157,7 +157,7 @@ luabind::scope Scripting::bindObject_() {
 
 luabind::scope Scripting::bindRigidBody_() {
 	return
-		luabind::class_<RigidBody, luabind::bases<Location, Updateable, Tagged, Object> >("RigidBody")
+		luabind::class_<RigidBody, luabind::bases<Position, Updateable, Tagged, Object> >("RigidBody")
 			.def(luabind::constructor<>())
 	;
 }

@@ -95,8 +95,8 @@ int main(int argc, char* argv[]) {
 		playerSpawn->setVisual(playerSpawnModel);
 		area.addObject(*playerSpawn);
 	}
-	Location spawnLocation = playerSpawn->getLocation();
-	player.setLocation(spawnLocation);
+	Position spawnPosition = playerSpawn->getPosition();
+	player.setPosition(spawnPosition);
 
 	//player.setXYZ(1.0f, 2.5f, 1.0f);
 	//area.removeObject(testobj);

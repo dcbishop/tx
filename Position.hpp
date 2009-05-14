@@ -1,13 +1,13 @@
-#ifndef TX_LOCATABLE_HPP
-#define TX_LOCATABLE_HPP
+#ifndef TX_POSITION_HPP
+#define TX_POSITION_HPP
 
 /**
  * A abstract class for objects with x, y, z coordinates.
  */
-class Location {
+class Position {
 	public:
-		virtual Location& getLocation();
-		virtual void setLocation(Location& location);
+		virtual Position& getPosition();
+		virtual void setPosition(Position& Position);
 		virtual void setXYZ(const float x, const float y, const float z);
 		virtual const float getX();
 		virtual const float getY();
@@ -22,4 +22,4 @@ class Location {
 		float z_;
 };
 
-#endif /* TX_LOCATABLE_HPP */
+#endif /* TX_POSITION_HPP */

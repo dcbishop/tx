@@ -35,7 +35,7 @@ PROJECT_NUMBER         =
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
-# If a relative path is entered, it will be relative to the location 
+# If a relative path is entered, it will be relative to the Position 
 # where doxygen was started. If left blank the current directory will be used.
 
 OUTPUT_DIRECTORY       = doc
@@ -846,12 +846,12 @@ GENERATE_HTMLHELP      = NO
 
 CHM_FILE               = 
 
-# If the GENERATE_HTMLHELP tag is set to YES, the HHC_LOCATION tag can 
-# be used to specify the location (absolute path including file name) of 
+# If the GENERATE_HTMLHELP tag is set to YES, the HHC_Position tag can 
+# be used to specify the Position (absolute path including file name) of 
 # the HTML help compiler (hhc.exe). If non-empty doxygen will try to run 
 # the HTML help compiler on the generated index.hhp.
 
-HHC_LOCATION           = 
+HHC_Position           = 
 
 # If the GENERATE_HTMLHELP tag is set to YES, the GENERATE_CHI flag 
 # controls if a separate .chi index file is generated (YES) or that 
@@ -883,7 +883,7 @@ TOC_EXPAND             = NO
 
 GENERATE_QHP           = NO
 
-# If the QHG_LOCATION tag is specified, the QCH_FILE tag can 
+# If the QHG_Position tag is specified, the QCH_FILE tag can 
 # be used to specify the file name of the resulting .qch file. 
 # The path specified is relative to the HTML output folder.
 
@@ -918,12 +918,12 @@ QHP_CUST_FILTER_ATTRS  =
 
 QHP_SECT_FILTER_ATTRS  = 
 
-# If the GENERATE_QHP tag is set to YES, the QHG_LOCATION tag can 
-# be used to specify the location of Qt's qhelpgenerator. 
+# If the GENERATE_QHP tag is set to YES, the QHG_Position tag can 
+# be used to specify the Position of Qt's qhelpgenerator. 
 # If non-empty doxygen will try to run qhelpgenerator on the generated 
 # .qhp file.
 
-QHG_LOCATION           = 
+QHG_Position           = 
 
 # The DISABLE_INDEX tag can be used to turn on/off the condensed index at 
 # top of each HTML page. The value NO (the default) enables the index and 
@@ -1266,16 +1266,16 @@ SKIP_FUNCTION_MACROS   = YES
 #---------------------------------------------------------------------------
 
 # The TAGFILES option can be used to specify one or more tagfiles. 
-# Optionally an initial location of the external documentation 
+# Optionally an initial Position of the external documentation 
 # can be added for each tagfile. The format of a tag file without 
-# this location is as follows: 
+# this Position is as follows: 
 #  
 # TAGFILES = file1 file2 ... 
-# Adding location for the tag files is done as follows: 
+# Adding Position for the tag files is done as follows: 
 #  
 # TAGFILES = file1=loc1 "file2 = loc2" ... 
 # where "loc1" and "loc2" can be relative or absolute paths or 
-# URLs. If a location is present for each tag, the installdox tool 
+# URLs. If a Position is present for each tag, the installdox tool 
 # does not have to be run to correct the links. 
 # Note that each tag file must have a unique name 
 # (where the name does NOT include the path) 
@@ -1346,7 +1346,7 @@ HAVE_DOT               = YES
 # font does not include all possible unicode characters however, so when you need 
 # these (or just want a differently looking font) you can specify the font name 
 # using DOT_FONTNAME. You need need to make sure dot is able to find the font, 
-# which can be done by putting it in a standard location or by setting the 
+# which can be done by putting it in a standard Position or by setting the 
 # DOTFONTPATH environment variable or by setting DOT_FONTPATH to the directory 
 # containing the font.
 

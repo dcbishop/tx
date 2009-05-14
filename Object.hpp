@@ -1,17 +1,17 @@
 #ifndef TX_OBJECT_HPP
 #define TX_OBJECT_HPP
 
-#include <stdlib.h>
 #include <rcbc.h>
 
 class Object;
-class Location;
+class Position;
 #include "Area.hpp"
 #include "Tagged.hpp"
 #include "Updateable.hpp"
+#include "Rotation.hpp"
 #include "Container.hpp"
 #include "Visual.hpp"
-#include "Location.hpp"
+#include "Position.hpp"
 
 const int NUM_SCRIPTS = 1;
 const int SCRIPT_ONUPDATE = 1;
@@ -20,7 +20,7 @@ const int SCRIPT_ONUPDATE = 1;
  * An ingame object. Has a visual model, coordinates, rotation and
  * attached area.
  */
-class Object : public Location, public Tagged, public Updateable, public Contained, public Visual {
+class Object : public Position, public Tagged, public Updateable, public Contained, public Visual, public Rotation {
 	public:
 		Object(string tag = DEFAULT_TAG, Visual* model = NULL);
 		~Object();
@@ -33,33 +33,19 @@ class Object : public Location, public Tagged, public Updateable, public Contain
 		virtual const float getX();
 		virtual const float getY();
 		virtual const float getZ();*/
-		virtual void setRotX(const float rx);
-		virtual void setRotY(const float ry);
-		virtual void setRotZ(const float rz);
-		virtual void setRotAngle(const float z);
-		virtual const float getRotX();
-		virtual const float getRotY();
-		virtual const float getRotZ();
-		virtual const float getRotAngle();
 		void setVisual(Visual& visual);
 		Visual& getVisual();
 		virtual void setArea(Area& area);
 		virtual Area* getArea();
 		virtual void setScript(const int type, const string filename);
 		virtual string getScript(const int type);
-
 		void update(const int time);
 
 	private:
-		virtual void setRot_();
 		/*float x_;
 		float y_;
 		float z_;*/
 
-		float rx_;
-		float ry_;
-		float rz_;
-		float angle_;
 		string scripts_[NUM_SCRIPTS];
 
 		Visual* visual_;

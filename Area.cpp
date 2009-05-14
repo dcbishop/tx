@@ -72,7 +72,7 @@ void*** Area::regrowArray_(void*** array, int old_width, int old_height, int wid
 	}
 
 	for(int x = 0; x < width; x++) {
-		DEBUG_M("Allocation %d...", x);
+		DEBUG_M("AlPosition %d...", x);
 		array[x] = (void**)realloc(array[x], height * sizeof(void*));
 		for(int y = old_height; y < height; y++) {
 			array[x][y] = NULL;
@@ -118,9 +118,9 @@ void Area::setSize(int width, int height) {
 	width_ = width;
 	height_ = height;
 
-	DEBUG_H("\tReallocation tile space...");
+	DEBUG_H("\tRealPosition tile space...");
 	tiles_ = (Tile***)regrowArray_((void***)tiles_, old_width, old_height, width, height);
-	DEBUG_H("\tReallocation blocker space...");
+	DEBUG_H("\tRealPosition blocker space...");
 	walkblockers_ = (RigidBody***)regrowArray_((void***)walkblockers_, old_width, old_height, width, height);
 
 	// Realloc space for tiles

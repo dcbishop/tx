@@ -33,7 +33,7 @@ class Scripting {
 		luabind::scope bindTagged_();
 		luabind::scope bindContainer_();
 		luabind::scope bindUpdateable_();
-		luabind::scope bindLocation_();
+		luabind::scope bindPosition_();
 		luabind::scope bindVisual_();
 		luabind::scope bindObject_();
 		luabind::scope bindRigidBody_();

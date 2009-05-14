@@ -1,19 +1,19 @@
-#include "Location.hpp"
+#include "Position.hpp"
 
 /**
- * Returns the location.
- * @return Refrence to the Location.
+ * Returns the Position.
+ * @return Refrence to the Position.
  */
-Location& Location::getLocation() {
+Position& Position::getPosition() {
 	return *this;
 }
 
 /**
- * Sets the location.
+ * Sets the Position.
  * @param
  */
-void Location::setLocation(Location& location) {
-	setXYZ(location.getX(), location.getY(), location.getZ());
+void Position::setPosition(Position& Position) {
+	setXYZ(Position.getX(), Position.getY(), Position.getZ());
 }
 
 /**
@@ -29,10 +29,10 @@ void Location::setLocation(Location& location) {
  * @see getY()
  * @see getZ()
  */
-void Location::setXYZ(const float x, const float y, const float z) {
-	Location::setX(x);
-	Location::setY(y);
-	Location::setZ(z);
+void Position::setXYZ(const float x, const float y, const float z) {
+	Position::setX(x);
+	Position::setY(y);
+	Position::setZ(z);
 }
 
 /**
@@ -46,7 +46,7 @@ void Location::setXYZ(const float x, const float y, const float z) {
  * @see getZ()
  * @return The X coordinate.
  */
-const float Location::getX() {
+const float Position::getX() {
 	return x_;
 }
 
@@ -61,7 +61,7 @@ const float Location::getX() {
  * @see getZ()
  * @return The Y coordinate.
  */
-const float Location::getY() {
+const float Position::getY() {
 	return y_;
 }
 
@@ -76,7 +76,7 @@ const float Location::getY() {
  * @see getZ()
  * @return The Z coordinate.
  */
-const float Location::getZ() {
+const float Position::getZ() {
 	return z_;
 }
 
@@ -91,7 +91,7 @@ const float Location::getZ() {
  * @see getZ()
  * @param x the X coordinate
  */
-void Location::setX(const float x) {
+void Position::setX(const float x) {
 	x_ = x;
 }
 
@@ -106,7 +106,7 @@ void Location::setX(const float x) {
  * @see getZ()
  * @param x the Y coordinate
  */
-void Location::setY(const float y) {
+void Position::setY(const float y) {
 	y_ = y;
 }
 
@@ -121,6 +121,6 @@ void Location::setY(const float y) {
  * @see getZ()
  * @param x the Z coordinate
  */
-void Location::setZ(const float z) {
+void Position::setZ(const float z) {
 	z_ = z;
 }
