@@ -67,8 +67,8 @@ int main(int argc, char* argv[]) {
 	ground.setMass(0);
 	//ground.setFriction(0.0f);
 	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
-	ground.setVisual(grassvis);
-	ground.setXYZ(1.0f, 1.0f, 1.0f);
+	//ground.setVisual(grassvis);
+	ground.setXYZ(1.0f, 0.0f, 1.0f);
 	//ground.setScript(SCRIPT_ONUPDATE, "");
 	//gm.registerObject(ground);
 
@@ -97,6 +97,7 @@ int main(int argc, char* argv[]) {
 	//Position spawnPosition = playerSpawn->getPosition();
 	//player.setPosition(spawnPosition);
 	Location spawnLocation = playerSpawn->getLocation();
+	spawnLocation.setY(spawnLocation.getY() + 1.0f);
 	player.setLocation(spawnLocation);
 
 	//player.setXYZ(1.0f, 2.5f, 1.0f);

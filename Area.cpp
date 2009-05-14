@@ -242,6 +242,7 @@ void Area::loadFile(const string filename) {
 	DEBUG_M("Entering function...");
 	setSize(20, 20);
 
+	fill(0, 0, width_-1, height_-1, TILE_VOID);
 #warning ['TODO']: Do this...
 	boxRoom(3, 3, 13, 13);
 

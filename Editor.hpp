@@ -16,7 +16,7 @@ class EditorWin : public QWidget {
 	public:
 		EditorWin();
 		void setEditObject(Object* object);
-		void setEditTile(Tile* tile);
+		//void setEditTile(Tile* tile);
 		void setInterface(Interface* interface);
 
 	public slots:
@@ -46,6 +46,7 @@ class EditorWin : public QWidget {
 		QComboBox* luaComboBox_;
 		QListWidget* objectsListView_;
 		QCheckBox* hideTemporyCheckBox_;
+		QCheckBox* solidCheckBox_;
 		QLineEdit* areaTagLineEdit_;
 		QSpinBox* heightLineEdit_;
 		QSpinBox* widthLineEdit_;
@@ -75,7 +76,7 @@ class Editor {
 		void hide();
 		void processQtEvents();
 		void setEditObject(Object* object);
-		void setEditTile(Tile* tile);
+		//void setEditTile(Tile* tile);
 		void setInterface(Interface* interface);
 		void updateWindow();
 

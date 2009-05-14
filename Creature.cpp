@@ -249,11 +249,11 @@ void Creature::update(const int time) {
 	}
 	if(turn_left_) {
 		//turn_angle_ -= turn_rate_ * dt;
-		setRotAngle(getRotAngle() - turn_rate_ * dt);
+		setRotAngle(getRotAngle() - turn_rate_ * dt * (180/PI));
 	}
 	if(turn_right_) {
 		//turn_angle_ += turn_rate_ * dt;
-		setRotAngle(getRotAngle() + turn_rate_ * dt);
+		setRotAngle(getRotAngle() + turn_rate_ * dt * (180/PI));
 	}
 
 	// update the position

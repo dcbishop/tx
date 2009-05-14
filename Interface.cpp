@@ -71,7 +71,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	editor_ = new Editor();
 	editor_->setInterface(this);
 	editor_->setEditObject(to_);
-	editor_->setEditTile(tm_);
+	//editor_->setEditTile(tm_);
 	editor_->show();
 	//editor_->processQtEvents();
 	//editor_->hide();
@@ -153,7 +153,7 @@ Area* Interface::getArea() {
  * Sets the tile currently selected for edit mode.
  * @param filename Filename of model.
  */
-void Interface::setEditTile_(const string filename) {
+void Interface::setEditTile(const string filename) {
 	DEBUG_M("Entering function...");
 	tm_ = new Tile(filename);
 }
@@ -360,10 +360,10 @@ void Interface::handleKeyUp_(const SDL_Event& event) {
 		case SDLK_d:
 			creature_->StrafeRight(false);
 			break;
-		case SDLK_p:
+		/*case SDLK_p:
 			ts_ = !ts_;
 			LOG("Tile solid: %d", ts_);
-			break;
+			break;*/
 		case SDLK_r:
 			tm_->setRotation(tm_->getRotation() + 90.0f);
 			break;
@@ -377,7 +377,7 @@ void Interface::handleKeyUp_(const SDL_Event& event) {
 		case SDLK_F2:
 			LOG("Setting tiles edit mode.");
 			startEditor();
-			setEditTile_(*iter);
+			setEditTile(*iter);
 			iter++;
 			if(iter == edit_tiles_.end()) {
 				iter = edit_tiles_.begin();
@@ -606,4 +606,19 @@ Object* Interface::getSelectedObject() {
 void Interface::setSelectedObject(Object* object) {
 	selectedObject_ = object;
 	editor_->updateWindow();
+}
+
+/**
+ * Sets if new places tiles will be solid or not.
+ */
+void Interface::setEditTileSolid(bool solid) {
+	ts_ = solid;
+}
+
+/**
+ * Returns the current edit mode the Interface is in.
+ * @return MODE_EDIT_OBJECTS, MODE_EDIT_TILES or MODE_NONE
+ */
+int Interface::getEditMode() {
+	return mode_;
 }

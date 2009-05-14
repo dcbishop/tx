@@ -60,10 +60,10 @@ void Editor::setEditObject(Object* object) {
  * Sets the tile that the editor modifies.
  * @param tile Pointer to the Tile to modify.
  */
-void Editor::setEditTile(Tile* tile) {
+/*void Editor::setEditTile(Tile* tile) {
 	DEBUG_M("Entering function...");
 	window_->setEditTile(tile);
-}
+}*/
 
 /**
  * Sets the interface the Editor is bound to.
@@ -158,6 +158,7 @@ EditorWin::EditorWin() {
 	QPushButton* newRigidBodyButton = new QPushButton(tr("RigidBody"));
 	QPushButton* newCreatureButton = new QPushButton(tr("Creature"));
 	QPushButton* newTiles = new QPushButton(tr("Tiles"));
+	solidCheckBox_ = new QCheckBox(tr("Tile Solid?"));
 
 	QObject::connect(deleteObjectButton, SIGNAL(clicked()), this, SLOT(deleteObject_()));
 	QObject::connect(newObjectButton, SIGNAL(clicked()), this, SLOT(newObject_()));
@@ -167,7 +168,7 @@ EditorWin::EditorWin() {
 
 
 	QGridLayout* objectsLayout = new QGridLayout();
-	objectsLayout->addWidget(objectsListView_,0,0,7,1);
+	objectsLayout->addWidget(objectsListView_,0,0,8,1);
 	objectsLayout->addWidget(hideTemporyCheckBox_,0,1);
 	objectsLayout->addWidget(deleteObjectButton, 1,1);
 	objectsLayout->addWidget(newLabel, 2,1);
@@ -175,6 +176,7 @@ EditorWin::EditorWin() {
 	objectsLayout->addWidget(newRigidBodyButton, 4,1);
 	objectsLayout->addWidget(newCreatureButton, 5,1);
 	objectsLayout->addWidget(newTiles, 6,1);
+	objectsLayout->addWidget(solidCheckBox_, 7,1);
 
 	//Object information
 	QGridLayout* objectLayout = new QGridLayout();
@@ -342,7 +344,9 @@ void EditorWin::newCreature_() {
 
 
 void EditorWin::newTiles_() {
+	interface_->setEditTile(TILE_FLOOR);
 	interface_->setEditModeTiles();
+	interface_->setEditTileSolid(solidCheckBox_->checkState());
 }
 
 void EditorWin::deleteObject_() {
@@ -375,7 +379,14 @@ void EditorWin::setObject_() {
 	object->setRotZ(rzSpinbox_->value());
 	object->setRotAngle(raSpinbox_->value());
 	object->setScript(SCRIPT_ONUPDATE, objOnUpdateLineEdit_->text().toStdString());
-	//object->setVisible(hideTemporyCheckBox_->checkState());
+	
+	object->setVisible(invisibleCheckBox_->checkState());
+	if(invisibleCheckBox_->checkState()) {
+		DEBUG_A("Visible true");
+	} else {
+		DEBUG_A("Visible false");
+	}
+
 	updateWindow();
 }
 
@@ -433,12 +444,25 @@ void EditorWin::updateObject_() {
 void EditorWin::setModel_(const QModelIndex &index) {
 	//VModel* = new VModel(
 	DEBUG_A("Model changed... '%s'",  modelsDirModel_->fileName(index).toStdString().c_str());
-	Object* object = interface_->getSelectedObject();
-	if(!object) {
-		return;
+
+	string filename = modelsDirModel_->fileName(index).toStdString();
+
+	if(interface_->getEditMode() == MODE_EDIT_TILES) {
+		/*Tile* tile = interface_->getEditTile();
+		if(!tile) {
+			return;
+		}*/
+		interface_->setEditTile(filename);
+	} 
+
+	if(interface_->getEditMode() == MODE_EDIT_OBJECTS) {
+		Object* object = interface_->getSelectedObject();
+		if(object) {
+			VModel* model = new VModel();
+			object->setVisual(*model);
+		}
 	}
-	VModel* model = new VModel(modelsDirModel_->fileName(index).toStdString());
-	object->setVisual(*model);
+
 	updateWindow();
 }
 
@@ -533,11 +557,11 @@ void EditorWin::setEditObject(Object* object) {
  * Sets the tile that the editor modifies.
  * @param tile Pointer to the Tile to modify.
  */
-void EditorWin::setEditTile(Tile* tile) {
+/*void EditorWin::setEditTile(Tile* tile) {
 	DEBUG_M("Entering function...");
 	tile_ = tile;
 	updateWindow();
-}
+}*/
 
 /**
  * Sets the interface the Editor is bound to.

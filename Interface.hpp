@@ -42,7 +42,9 @@ class Interface {
 		void setSelectedObject(Object* object);
 		void setEditModeObject();
 		void setEditModeTiles();
-
+		void setEditTileSolid(bool solid);
+		int getEditMode();
+		void setEditTile(const string filename);
 
 	private:
 		void handleKeyDown_(const SDL_Event& event);
@@ -50,7 +52,6 @@ class Interface {
 		void handleMouse1_(const SDL_Event& event);
 		void handleMouse3_(const SDL_Event& event);
 		Tile& getEditTile_();
-		void setEditTile_(const string filename);
 		Object& getEditObject_();
 		void setEditObject_(Object& object);
 
