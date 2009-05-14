@@ -1,5 +1,9 @@
 #include "GameManager.hpp"
 
+GameManager::GameManager() {
+	luabind::globals(scripting_.getLuaState())["gm"] = this;
+}
+
 /**
  * update physics, everything with a tag (Areas, Objects).
  */

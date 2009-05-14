@@ -21,6 +21,7 @@ using namespace std;
  */
 class GameManager : public Updateable, public Container {
 	public:
+		GameManager();
 		void update(const int time);
 		void registerObject(Tagged& thing);
 		void deregisterObject(Tagged& thing);

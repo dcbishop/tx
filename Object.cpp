@@ -366,7 +366,6 @@ void Object::update(const int time) {
 				luabind::globals(sc.getLuaState())["self"] = this;
 				luabind::globals(sc.getLuaState())["time"] = time;
 				luabind::globals(sc.getLuaState())["addr"] = (long)this;
-				luabind::globals(sc.getLuaState())["gm"] = getGameManager();
 				sc.loadLua(scripts_[SCRIPT_ONUPDATE-1]);
 				//luaL_dostring(sc.getLuaState(), "self.x = 1.0\nprint(self.x)\n");
 				/*luaL_dostring(sc.getLuaState(), "print self.getX(0.0)\n");
