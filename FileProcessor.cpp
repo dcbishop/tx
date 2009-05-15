@@ -92,7 +92,7 @@ void FileProcessor::saveArea(Area& area, string filename) {
  */
 void FileProcessor::saveArea_Objects(mxml_node_t* area_node, Area& area) {
 
-	for(ChildrenIterator iter = area.getFirstChild(); iter < area.getChildEnd(); iter++) {
+	for(ChildrenIterator iter = area.getChildBegin(); iter < area.getChildEnd(); iter++) {
 		Tagged* tagged = dynamic_cast<Tagged*>(*iter);
 
 		if(!tagged || tagged->isTempory()) {

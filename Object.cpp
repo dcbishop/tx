@@ -58,11 +58,11 @@ void Object::draw(Interface* interface) {
 	glPushMatrix();
 	glTranslatef(getX(), getY(), getZ());
 	glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
-	
-	//Model* model = getModel(rm);
-	//RCBC_Render(model);
+
+	//visual_->preDraw(interface);
 	visual_->draw(interface);
-	
+	//visual_->postDraw(interface);
+
 	glPopMatrix();
 }
 
@@ -123,12 +123,15 @@ void Object::update(const int time) {
 				luabind::globals(sc.getLuaState())["time"] = time;
 				luabind::globals(sc.getLuaState())["addr"] = (long)this;
 				sc.loadLua(scripts_[SCRIPT_ONUPDATE-1]);
-				//luaL_dostring(sc.getLuaState(), "self.x = 1.0\nprint(self.x)\n");
-				/*luaL_dostring(sc.getLuaState(), "print self.getX(0.0)\n");
-				luaL_dostring(sc.getLuaState(), "self.setY(0.0)\n");
-				luaL_dostring(sc.getLuaState(), "self.setZ(0.0)\n");*/
 			}
 		}
 	}
 	Updateable::update(time);
+}
+
+void Object::addVfx(Vfx* vfx) {
+	Visual& visual = getVisual();
+	if(&visual) {
+		visual.addVfx(vfx);
+	}
 }

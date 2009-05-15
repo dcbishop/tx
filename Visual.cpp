@@ -25,3 +25,29 @@ void Visual::setVisible(const bool visible) {
 bool Visual::isVisible() {
 	return isVisible_;
 }
+
+void Visual::preDraw(Interface* interface) {
+	DEBUG_A("Flag1");
+	for(vector<Vfx*>::iterator itr = effects_.begin(); itr != effects_.end(); itr++) {
+		DEBUG_A("Flag loop");
+		(*itr)->preDraw(interface);
+	}
+}
+
+void Visual::postDraw(Interface* interface) {
+	for(vector<Vfx*>::reverse_iterator itr = effects_.rbegin(); itr != effects_.rend(); itr++) {
+		(*itr)->postDraw(interface);
+	}
+}
+
+void Visual::addVfx(Vfx* vfx) {
+	effects_.push_back(vfx);
+}
+
+void Visual::removeVfx(Vfx* vfx) {
+	#warning ['TODO']: Remove effects...
+}
+
+void Visual::clearVfx() {
+	#warning ['TODO']: Clear all effects...
+}

@@ -34,6 +34,7 @@ class EditorWin : public QWidget {
 		void newTiles_();
 		void deleteObject_();
 		void setModel_(const QModelIndex &index);
+		void setTileSolid_();
 
 	private:
 		void updateObjectList_();

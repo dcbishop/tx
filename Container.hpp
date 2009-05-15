@@ -29,7 +29,7 @@ class Container {
 		virtual void removeChild(Contained* child);
 		//virtual vector<Contained*>* getChildren();
 
-		virtual ChildrenIterator getFirstChild();
+		virtual ChildrenIterator getChildBegin();
 		virtual ChildrenIterator getChildEnd();
 
 		Object* getObjectByTag(const string tag);

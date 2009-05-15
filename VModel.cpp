@@ -47,7 +47,10 @@ void VModel::draw(Interface* interface) {
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glDisable(GL_COLOR_MATERIAL);
 	}
+	preDraw(interface);
+
 	RCBC_Render(model);
+	postDraw(interface);
 }
 
 /**

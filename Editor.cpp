@@ -253,6 +253,8 @@ EditorWin::EditorWin() {
 	QObject::connect(raSpinbox_, SIGNAL(valueChanged(double)), this, SLOT(setObject_()));
 	QObject::connect(objOnUpdateLineEdit_, SIGNAL(textChanged(const QString &)), this, SLOT(setObject_()));
 
+	QObject::connect(solidCheckBox_, SIGNAL(clicked()), this, SLOT(setTileSolid_()));
+
 	isUpdating_ = false;
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	mainLayout->addLayout(luaLayout);
@@ -344,9 +346,9 @@ void EditorWin::newCreature_() {
 
 
 void EditorWin::newTiles_() {
+	setTileSolid_();
 	interface_->setEditTile(TILE_FLOOR);
 	interface_->setEditModeTiles();
-	interface_->setEditTileSolid(solidCheckBox_->checkState());
 }
 
 void EditorWin::deleteObject_() {
@@ -359,6 +361,10 @@ void EditorWin::deleteObject_() {
 	interface_->setSelectedObject(NULL);
 	delete object;
 	updateWindow();
+}
+
+void EditorWin::setTileSolid_() {
+	interface_->setEditTileSolid(solidCheckBox_->checkState());
 }
 
 void EditorWin::setObject_() {
@@ -477,7 +483,7 @@ void EditorWin::updateObjectList_() {
 	}
 
 	objectsListView_->clear();
-	for(ChildrenIterator iter = area->getFirstChild(); iter < area->getChildEnd(); iter++) {
+	for(ChildrenIterator iter = area->getChildBegin(); iter < area->getChildEnd(); iter++) {
 
 		Object* object = dynamic_cast<Object*>(*iter);
 		if(!object) {

@@ -360,10 +360,10 @@ void Interface::handleKeyUp_(const SDL_Event& event) {
 		case SDLK_d:
 			creature_->StrafeRight(false);
 			break;
-		/*case SDLK_p:
+		case SDLK_p:
 			ts_ = !ts_;
 			LOG("Tile solid: %d", ts_);
-			break;*/
+			break;
 		case SDLK_r:
 			tm_->setRotation(tm_->getRotation() + 90.0f);
 			break;

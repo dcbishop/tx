@@ -15,6 +15,7 @@ using std::string;
 #include "RigidBody.hpp"
 #include "Scripting.hpp"
 #include "FileProcessor.hpp"
+#include "VfxColour.hpp"
 #include "console.h"
 
 
@@ -99,6 +100,7 @@ int main(int argc, char* argv[]) {
 	Location spawnLocation = playerSpawn->getLocation();
 	spawnLocation.setY(spawnLocation.getY() + 1.0f);
 	player.setLocation(spawnLocation);
+	player.addVfx(new VfxColour(0.0f, 1.0f, 0.0f, 1.0f));
 
 	//player.setXYZ(1.0f, 2.5f, 1.0f);
 	//area.removeObject(testobj);

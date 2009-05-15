@@ -17,7 +17,7 @@ void Container::addChild(Contained* child) {
 	}
 
 	// Stop adding the child more than once
-	ChildrenIterator found = find(getFirstChild(), getChildEnd(), child);
+	ChildrenIterator found = find(getChildBegin(), getChildEnd(), child);
 	if(found != getChildEnd()) {
 		DEBUG_H("\tChild alread in list...");
 		return;
@@ -47,8 +47,8 @@ void Container::removeChild(Contained* child) {
 	}
 
 	DEBUG_H("\tRemoving object from container object vector.");
-	ChildrenIterator found = find(getFirstChild(), getChildEnd(), child);
-	//while((found = find(getFirstChild(), getChildEnd(), child)) != getChildEnd()) {
+	ChildrenIterator found = find(getChildBegin(), getChildEnd(), child);
+	//while((found = find(getChildBegin(), getChildEnd(), child)) != getChildEnd()) {
 		if(found != getChildEnd()) {
 			//Object* object = dynamic_cast<Object*>(*found);
 
@@ -79,7 +79,7 @@ void Container::removeChild(Contained* child) {
 /**
  * Returns a pointer to the vector containing the children.
  */
-ChildrenIterator Container::getFirstChild() {
+ChildrenIterator Container::getChildBegin() {
 	return children_.begin();
 }
 
