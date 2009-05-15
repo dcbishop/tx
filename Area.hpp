@@ -39,7 +39,7 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		int getWidth();
 		void setWidth(float width);
 		void setSize(int width, int height);
-		void loadFile(const string filename);
+		void setDefaultArea();
 		Tile* getTile(const int x, const int y);
 		void setTile(const int x, const int y, Tile* tile);
 		void setSolid(const int x, const int y, const bool isSolid=true);

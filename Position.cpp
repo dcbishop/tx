@@ -1,5 +1,7 @@
 #include "Position.hpp"
 
+#include <math.h>
+
 /**
  * Returns the Position.
  * @return Refrence to the Position.
@@ -123,4 +125,27 @@ void Position::setY(const float y) {
  */
 void Position::setZ(const float z) {
 	z_ = z;
+}
+
+/**
+ * Gets the distance from this Position to another.
+ * @param position The other position
+ * @return The distance to the other position.
+ */
+float Position::getDistanceTo(Position* position) {
+	return sqrt(getX() * position->getX() + 
+				getY() * position->getY() + 
+				getZ() * position->getZ());
+}
+
+
+/**
+ * Gets the angle around Y axis towards another Position.
+ * @param position The other position.
+ * @return The angle.
+ */
+const float Position::getDirectionTo2D(Position* position) {
+	float diff_x = position->getX() - getX();
+	float diff_z = position->getZ() - getZ();
+	return atan2(diff_x, diff_x);
 }

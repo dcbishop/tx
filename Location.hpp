@@ -14,6 +14,7 @@ class Location : public Position, public Rotation, public Contained {
 		void setLocation(Location& location);
 		virtual void setArea(Area& area);
 		virtual Area* getArea();
+		virtual float getDistanceTo(Location* location);
 
 	private:
 		Area* area_;

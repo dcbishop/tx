@@ -15,6 +15,8 @@ class Position {
 		virtual void setX(const float x);
 		virtual void setY(const float y);
 		virtual void setZ(const float z);
+		virtual float getDistanceTo(Position* position);
+		const float getDirectionTo2D(Position* position);
 
 	private:
 		float x_;

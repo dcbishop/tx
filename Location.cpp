@@ -1,5 +1,7 @@
 #include "Location.hpp"
 
+#include <limits>
+
 /**
  * Gets the current location.
  * @return The Location.
@@ -35,4 +37,19 @@ void Location::setArea(Area& area) {
  */
 Area* Location::getArea() {
 	return dynamic_cast<Area*>(getParent());
+}
+
+/**
+ * Gets the distance from this Location to another, if in different
+ * Area's a large number is returned.
+ * @param position The other position
+ * @return The distance to the other position.
+ */
+float Location::getDistanceTo(Location* location) {
+	// If they are in 2 different area, return a really large distance...
+	if(location->getArea() != getArea()) {
+		return std::numeric_limits<float>::max();
+	} else {
+		return Position::getDistanceTo(location);
+	}
 }

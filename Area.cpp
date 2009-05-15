@@ -21,6 +21,7 @@ Area::Area(const string tag) {
 	clipbox_ = NULL;
 	//clipbox_ = new btBoxShape(btVector3(1.0f, 1.0f, 1.0f));
 	walkblockers_ = NULL;
+	//setDefaultArea();
 }
 
 /**
@@ -122,10 +123,6 @@ void Area::setSize(int width, int height) {
 	tiles_ = (Tile***)regrowArray_((void***)tiles_, old_width, old_height, width, height);
 	DEBUG_H("\tRealPosition blocker space...");
 	walkblockers_ = (RigidBody***)regrowArray_((void***)walkblockers_, old_width, old_height, width, height);
-
-	// Realloc space for tiles
-	//tiles_ = (Tile**)realloc(tiles_, width * height * sizeof(Tile*));
-	//walkblockers_ = (RigidBody**)realloc(walkblockers_, width * height * sizeof(RigidBody*));
 	DEBUG_H("\tAllocated...");
 
 	// If we are freeing the Area
@@ -145,9 +142,6 @@ void Area::setSize(int width, int height) {
 		for(int y = 0; y < height; y++) {
 			for(int x = old_width; x < width; x++) {
 				DEBUG_H("\t\tsetting %dx%d...", x, y);
-				//setTile(x, y, NULL);
-				/* *(tiles_+(y*width_)+x) = NULL;
-				*(walkblockers_+(y*width_)+x) = NULL; */
 				tiles_[x][y] = NULL;
 				walkblockers_[x][y] = NULL;
 			}
@@ -158,10 +152,6 @@ void Area::setSize(int width, int height) {
 		for(int y = old_height; y < height; y++) {
 			for(int x = 0; x < width; x++) {
 				DEBUG_H("\t\tsetting %dx%d...", x, y);
-				//setTile(x, y, new Tile(TILE_VOID));
-				//setTile(x, y, NULL);
-				/* *(tiles_+(y*width_)+x) = NULL;
-				*(walkblockers_+(y*width_)+x) = NULL; */
 				tiles_[x][y] = NULL;
 				walkblockers_[x][y] = NULL;
 			}
@@ -178,7 +168,7 @@ void Area::setSize(int width, int height) {
 		object->setX(object->getX() - x_offset);
 		object->setZ(object->getZ() - z_offset);
 	}
-	
+
 	DEBUG_H("\tFunction finished, area now %d, %d...", getWidth(), getHeight());
 }
 
@@ -250,7 +240,7 @@ void Area::boxRoom(const int x1, const int y1, const int x2, const int y2) {
  * Load the area from a file.
  * @param filename
  */
-void Area::loadFile(const string filename) {
+void Area::setDefaultArea() {
 	DEBUG_M("Entering function...");
 	setSize(20, 20);
 

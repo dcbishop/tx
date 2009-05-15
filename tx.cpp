@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
 #warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area
 	area.setPhysics(gm.getPhysics());
 
-	area.loadFile("data/areas/test-area.xml");
+	area.setDefaultArea();
 	FileProcessor::loadArea("data/areas/test-area.xml", &area);
 	area.addObject(player);
 	area.addObject(*testobj);
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
 	//player.addVfx(new VfxColour(0.0f, 1.0f, 0.0f, 1.0f));
 	VfxVisual* vfxTest = new VfxVisual(new VModel("cube.dae"));
 	vfxTest->setY(1.0f);
-	
+
 	player.addVfx(vfxTest);
 
 	interface.setCreature(player);

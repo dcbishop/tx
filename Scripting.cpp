@@ -122,6 +122,7 @@ luabind::scope Scripting::bindPosition_() {
 			.def("setXYZ", &Position::setXYZ)
 			.def("setPosition", &Position::setPosition)
 			.def("getPosition", &Position::getPosition)
+			.def("getDistanceTo", &Position::getDistanceTo)
 			.property("Position", &Position::setPosition, &Position::getPosition)
 	;
 }
@@ -217,7 +218,7 @@ luabind::scope Scripting::bindArea_() {
 			.property("width", &Area::getWidth, &Area::setWidth)
 			.property("height", &Area::getHeight, &Area::setHeight)
 			.def("setSize", &Area::setSize)
-			.def("loadFile", &Area::loadFile)
+			.def("setDefaultArea", &Area::setDefaultArea)
 			.def("fill", &Area::fill)
 			.def("boxRoom", &Area::boxRoom)
 			.def("addObject", &Area::addObject)
