@@ -12,7 +12,6 @@ VfxColour::VfxColour(float red, float green, float blue, float alpha) {
 void VfxColour::preDraw(Interface* interface) {
 	glEnable(GL_COLOR_MATERIAL);
 	glColor4f(red_, green_, blue_, alpha_);
-	DEBUG_A("Doings...");
 }
 
 void VfxColour::postDraw(Interface* interface) {

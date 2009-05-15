@@ -24,7 +24,7 @@ class Object : public Tagged, public Updateable, public Visual, public Location 
 		~Object();
 		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
 		virtual void draw(Interface* interface);
-		void setVisual(Visual& visual);
+		void setVisual(Visual* visual);
 		Visual& getVisual();
 		virtual void setScript(const int type, const string filename);
 		virtual string getScript(const int type);

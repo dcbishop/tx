@@ -9,7 +9,7 @@
  */
 Creature::Creature(const string tag, Visual* model) {
 	setTag(tag);
-	setVisual(*model);
+	setVisual(model);
 	setMass(1.0f);
 	turn_angle_ = 0.0;
 	walk_velocity_ = 2.0f;

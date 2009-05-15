@@ -34,7 +34,12 @@ class Scripting {
 		luabind::scope bindContainer_();
 		luabind::scope bindUpdateable_();
 		luabind::scope bindPosition_();
+		luabind::scope bindRotation_();
+		luabind::scope bindLocation_();
 		luabind::scope bindVisual_();
+		luabind::scope bindVModel_();
+		luabind::scope bindVfx_();
+		luabind::scope bindVfxColour_();
 		luabind::scope bindObject_();
 		luabind::scope bindRigidBody_();
 		luabind::scope bindCreature_();

@@ -71,8 +71,8 @@ void Object::draw(Interface* interface) {
  * @param visual The visual information.
  * @see getVisual()
  */
-void Object::setVisual(Visual& visual) {
-	visual_ = &visual;
+void Object::setVisual(Visual* visual) {
+	visual_ = visual;
 }
 
 /**

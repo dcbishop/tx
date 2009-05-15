@@ -1,10 +1,12 @@
 #include "Scripting.hpp"
 
 #include "console.h"
+#include "Location.hpp"
 #include "Position.hpp"
 #include "Object.hpp"
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
+#include "VfxColour.hpp"
 
 Scripting::Scripting() {
 	myLuaState_ = lua_open();
@@ -78,9 +80,14 @@ void Scripting::bindAll_() {
 		bindUpdateable_(),
 		bindContainer_(),
 		bindPosition_(),
+		bindRotation_(),
+		bindLocation_(),
 		bindGameManager_(),
 		bindTagged_(),
 		bindVisual_(),
+		bindVModel_(),
+		bindVfx_(),
+		bindVfxColour_(),
 		bindObject_(),
 		bindRigidBody_(),
 		bindCreature_(),
@@ -119,6 +126,23 @@ luabind::scope Scripting::bindPosition_() {
 	;
 }
 
+luabind::scope Scripting::bindRotation_() {
+	return luabind::class_<Rotation>("Rotation")
+		.property("rx", &Rotation::getRotX, &Rotation::setRotX)
+		.property("ry", &Rotation::getRotY, &Rotation::setRotY)
+		.property("rz", &Rotation::getRotZ, &Rotation::setRotZ)
+		.property("angle", &Rotation::getRotAngle, &Rotation::setRotAngle)
+	;
+}
+
+luabind::scope Scripting::bindLocation_() {
+	return luabind::class_<Location, luabind::bases<Position, Rotation> >("Location")
+		/*.def(luabind::constructor<>())
+		.property("area", &Location::getArea, &Location::setArea)
+		.property("location", &Location::getLocation, &Location::setLocation)*/
+	;
+}
+
 luabind::scope Scripting::bindTagged_() {
 	return luabind::class_<Tagged>("Tagged")
 		//.def(luabind::constructor<>())
@@ -127,10 +151,31 @@ luabind::scope Scripting::bindTagged_() {
 		.property("isTempory", &Tagged::isTempory, &Tagged::setTempory)
 	;
 }
-	
+
 luabind::scope Scripting::bindVisual_() {
 	return luabind::class_<Visual>("Visual")
 		.property("isVisible", &Visual::isVisible, &Visual::setVisible)
+		.def("addVfx", &Visual::addVfx)
+		.def("removeVfx", &Visual::removeVfx)
+	;
+}
+
+luabind::scope Scripting::bindVModel_() {
+	return luabind::class_<VModel, Visual>("VModel")
+		.def(luabind::constructor<string>())
+	;
+}
+
+luabind::scope Scripting::bindVfx_() {
+	return luabind::class_<Vfx>("Vfx")
+		//.def(luabind::constructor<>())
+	;
+}
+
+luabind::scope Scripting::bindVfxColour_() {
+	return luabind::class_<VfxColour, Vfx>("VfxColour")
+		.def(luabind::constructor<float, float, float, float>())
+		.def("setColour", &VfxColour::setColour)
 	;
 }
 
@@ -143,28 +188,24 @@ luabind::scope Scripting::bindGameManager_() {
 
 luabind::scope Scripting::bindObject_() {
 	return
-		luabind::class_<Object, luabind::bases<Position, Updateable, Tagged, Visual> >("Object")
+		luabind::class_<Object, luabind::bases<Tagged, Location, Updateable, Visual> >("Object")
 			.def(luabind::constructor<>())
-			.property("area", &Object::getArea, &Object::setArea)
-			.property("rx", &Object::getRotX, &Object::setRotX)
-			.property("ry", &Object::getRotY, &Object::setRotY)
-			.property("rz", &Object::getRotZ, &Object::setRotZ)
-			.property("angle", &Object::getRotAngle, &Object::setRotAngle)
 			.def("setScript", &Object::setScript)
 			.def("getScript", &Object::getScript)
+			.def("setVisual", &Object::setVisual)
 		;
 }
 
 luabind::scope Scripting::bindRigidBody_() {
 	return
-		luabind::class_<RigidBody, luabind::bases<Position, Updateable, Tagged, Object> >("RigidBody")
+		luabind::class_<RigidBody, luabind::bases<Object> >("RigidBody")
 			.def(luabind::constructor<>())
 	;
 }
 
 luabind::scope Scripting::bindCreature_() {
 	return
-		luabind::class_<Creature, luabind::bases<Updateable, Tagged, Object, RigidBody> >("Creature")
+		luabind::class_<Creature, luabind::bases<Object, RigidBody> >("Creature")
 			.def(luabind::constructor<>())
 	;
 }

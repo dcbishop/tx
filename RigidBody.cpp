@@ -14,7 +14,7 @@
 RigidBody::RigidBody(const string tag, Visual* model) {
 	setTag(tag);
 
-	setVisual(*model);
+	setVisual(model);
 	shape_ = NULL;
 	body_ = NULL;
 	mass_ = 1.0f;

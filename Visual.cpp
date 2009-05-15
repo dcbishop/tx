@@ -27,9 +27,7 @@ bool Visual::isVisible() {
 }
 
 void Visual::preDraw(Interface* interface) {
-	DEBUG_A("Flag1");
 	for(vector<Vfx*>::iterator itr = effects_.begin(); itr != effects_.end(); itr++) {
-		DEBUG_A("Flag loop");
 		(*itr)->preDraw(interface);
 	}
 }

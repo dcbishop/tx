@@ -16,6 +16,7 @@ using std::string;
 #include "Scripting.hpp"
 #include "FileProcessor.hpp"
 #include "VfxColour.hpp"
+#include "VfxVisual.hpp"
 #include "console.h"
 
 
@@ -43,17 +44,16 @@ int main(int argc, char* argv[]) {
 
 	Creature player("Player");
 	player.setTempory(true);
-	VModel playervis("monkey-robot.dae");
-	player.setVisual(playervis);
+
+	player.setVisual(new VModel("monkey-robot.dae"));
 	//player.setXYZ(0.0f, 2.5f, 0.0f);
 	//gm.registerObject(player);
 	DEBUG_A("Player created...");
 
-	VModel testobjvis("cube.dae");
 	//Object* testobj = new Object("TestRigid");
 	RigidBody* testobj = new RigidBody("TestRigid");
 	testobj->setTempory(true);
-	testobj->setVisual(testobjvis);
+	testobj->setVisual(new VModel("cube.dae"));
 	testobj->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 	testobj->setXYZ(2.0f, 2.0f, 2.0f);
 	//testobj.setTempory(true);
@@ -62,16 +62,15 @@ int main(int argc, char* argv[]) {
 	//gm.registerObject(*testobj);
 	//area.addObject(*testobj);
 
-	VModel grassvis("mayagrass.dae");
 	RigidBody ground("TestGround");
 	ground.setTempory(true);
 	ground.setMass(0);
 	//ground.setFriction(0.0f);
 	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
-	//ground.setVisual(grassvis);
+	//ground.setVisual(new VModel("mayagrass.dae"));
+	ground.setVisible(false);
 	ground.setXYZ(1.0f, 0.0f, 1.0f);
-	//ground.setScript(SCRIPT_ONUPDATE, "");
-	//gm.registerObject(ground);
+
 
 #warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area
 	area.setPhysics(gm.getPhysics());
@@ -83,29 +82,24 @@ int main(int argc, char* argv[]) {
 	area.addObject(ground);
 
 	// If the area doesn't have a player spawn, make one in the middle
-	VModel playerSpawnModel("cube.dae");
 	Object* playerSpawn = area.getObjectByTag("PlayerSpawn");
 	if(!playerSpawn) {
 		float fx, fz;
 		area.getWorldCord((area.getWidth()/2), area.getHeight()/2, fx, fz);
 		playerSpawn = new Object("PlayerSpawn");
 		playerSpawn->setXYZ(fx, 0.5, fz);
-		//DEBUG_M("POINT: %d %f, %f, %f", area.getWidth()/2, fx, 1, fz);
-		//BREAK();
-		playerSpawn->setVisual(playerSpawnModel);
+		playerSpawn->setVisual(new VModel("cube.dae"));
 		area.addObject(*playerSpawn);
 	}
-	//Position spawnPosition = playerSpawn->getPosition();
-	//player.setPosition(spawnPosition);
+
 	Location spawnLocation = playerSpawn->getLocation();
 	spawnLocation.setY(spawnLocation.getY() + 1.0f);
 	player.setLocation(spawnLocation);
-	player.addVfx(new VfxColour(0.0f, 1.0f, 0.0f, 1.0f));
-
-	//player.setXYZ(1.0f, 2.5f, 1.0f);
-	//area.removeObject(testobj);
-
-	//delete(testobj);
+	//player.addVfx(new VfxColour(0.0f, 1.0f, 0.0f, 1.0f));
+	VfxVisual* vfxTest = new VfxVisual(new VModel("cube.dae"));
+	vfxTest->setY(1.0f);
+	
+	player.addVfx(vfxTest);
 
 	interface.setCreature(player);
 	interface.mainLoop();

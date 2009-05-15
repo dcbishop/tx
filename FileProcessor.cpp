@@ -305,7 +305,7 @@ void FileProcessor::loadArea_Object(mxml_node_t* obj_node, Object* object) {
 			} else if(strcasecmp(node->value.element.name, "model") == 0) {
 				VModel* model = new VModel();
 				loadArea_Model(node, model);
-				object->setVisual(*model);
+				object->setVisual(model);
 			}
 		}
 	}

@@ -167,6 +167,18 @@ void Area::setSize(int width, int height) {
 			}
 		}
 	}
+
+	float x_offset = (old_width - width_) * (TILEWIDTH / 2.0f);
+	float z_offset = (old_height - height_) * (TILEWIDTH / 2.0f);
+	for(ChildrenIterator iter = getChildBegin(); iter != getChildEnd(); iter++) {
+		Object* object = dynamic_cast<Object*>(*iter);
+		if(!object) {
+			continue;
+		}
+		object->setX(object->getX() - x_offset);
+		object->setZ(object->getZ() - z_offset);
+	}
+	
 	DEBUG_H("\tFunction finished, area now %d, %d...", getWidth(), getHeight());
 }
 

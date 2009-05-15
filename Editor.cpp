@@ -459,13 +459,12 @@ void EditorWin::setModel_(const QModelIndex &index) {
 			return;
 		}*/
 		interface_->setEditTile(filename);
-	} 
+	} else {
 
-	if(interface_->getEditMode() == MODE_EDIT_OBJECTS) {
+	//if(interface_->getEditMode() == MODE_EDIT_OBJECTS) {
 		Object* object = interface_->getSelectedObject();
 		if(object) {
-			VModel* model = new VModel();
-			object->setVisual(*model);
+			object->setVisual(new VModel(filename));
 		}
 	}
 

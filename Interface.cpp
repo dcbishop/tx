@@ -486,9 +486,8 @@ void Interface::handleMouse3_(const SDL_Event& event) {
 
 	//Model* model = area->getResourceManager()->loadModel("unmaptest.dae");
 
-	VModel* model = new VModel("unmaptest.dae");
 	RigidBody* newobj = new RigidBody;
-	newobj->setVisual(*model);
+	newobj->setVisual(new VModel("unmaptest.dae"));
 	newobj->setShape(new btSphereShape(1));
 	newobj->setXYZ(-tx_, ty_+1.0f, -tz_);
 	
