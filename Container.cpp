@@ -135,6 +135,30 @@ Creature* Container::getCreatureByTag(const string tag) {
 	return dynamic_cast<Creature*>(getTaggedByTag_(tag));
 }
 
+Object* Container::getNearestObjectTo(Location& location) {
+	return getNearestObjectByTag(location, "");
+}
+
+Object* Container::getNearestObjectByTag(Location& location, const string tag) {
+	Object* closest = NULL;
+	for(ChildrenIterator iter = getChildBegin(); iter != getChildEnd(); iter++) {
+		Object* object = dynamic_cast<Object*>(*iter);
+		if(!object) {
+			continue;
+		}
+
+		if(tag == "" || tag ==object->getTag()) {
+			if(closest == NULL) {
+				closest = object;
+			}
+
+			if(object->getDistanceTo(location) < closest->getDistanceTo(location)) {
+				closest = object;
+			}
+		}
+	}
+	return closest;
+}
 
 /**
  * Sets the parent/owner Container.

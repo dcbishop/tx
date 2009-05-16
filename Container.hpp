@@ -12,6 +12,7 @@ class Area;
 class Object;
 class RigidBody;
 class Creature;
+class Location;
 
 typedef vector<Contained*> ChildrenVector;
 typedef ChildrenVector::iterator ChildrenIterator;
@@ -35,6 +36,8 @@ class Container {
 		Object* getObjectByTag(const string tag);
 		Area* getAreaByTag(const string tag);
 		Creature* getCreatureByTag(const string tag);
+		Object* getNearestObjectTo(Location& location);
+		Object* getNearestObjectByTag(Location& location, const string tag);
 
 	protected:
 		ChildrenVector children_;

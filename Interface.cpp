@@ -214,6 +214,10 @@ void Interface::draw() {
 
 	glEnable(GL_LIGHTING) ;
 	glEnable(GL_LIGHT0);
+
+	float position[] = {0.5, 1.0, 0.5, 0.0};
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+
 	glColor3f(1.0f, 1.0f, 1.0f);
 	//glEnable(GL_COLOR_MATERIAL);
 
@@ -234,9 +238,9 @@ void Interface::draw() {
 
 			if(mode_ == MODE_EDIT_TILES) {
 				int gx, gy;
-				area->getGridCord(tx_, tz_, gx, gy);
+				area->getGridCoord(tx_, tz_, gx, gy);
 				float fx, fz;
-				area->getWorldCord(gx, gy, fx, fz);
+				area->getWorldCoord(gx, gy, fx, fz);
 
 				Tile& tilem = getEditTile_();
 				if(&tilem) {
@@ -412,11 +416,11 @@ void Interface::resizeEvent(const SDL_Event& event) {
 
 /**
  * Converts 2D Window x, y coordinates into 3D OpenGL world coordinates
- * @param mx Window X cord.
- * @param my Window Y cord.
- * @param x X cord to set.
- * @param y Y cord to set.
- * @param z Z cord to set.
+ * @param mx Window X Coord.
+ * @param my Window Y Coord.
+ * @param x X Coord to set.
+ * @param y Y Coord to set.
+ * @param z Z Coord to set.
  */
 void Interface::windowToWorld(const int mx, const int my, GLdouble& x, GLdouble& y, GLdouble& z) {
 	GLint viewport[4];
@@ -455,7 +459,7 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 		case(MODE_EDIT_TILES):
 			int gx, gy;
 			tile =  new Tile(*tm_);
-			area->getGridCord(tx_, tz_, gx, gy);
+			area->getGridCoord(tx_, tz_, gx, gy);
 			area->setTile(gx, gy, tile);
 			area->setSolid(gx, gy, ts_);
 			DEBUG_A("Clicked: %f, %f, %f, gx:%d, gy:%d", tx_, ty_, tz_, gx, gy);

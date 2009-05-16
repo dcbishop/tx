@@ -51,8 +51,8 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		void removeObject(Object& object);
 		void draw(Interface* interface);
 		void update(const int time);
-		void getGridCord(const float fx, const float fy, int &x, int &y);
-		void getWorldCord(const int gx, const int gy, float &fx, float &fy);
+		void getGridCoord(const float fx, const float fy, int &x, int &y);
+		void getWorldCoord(const int gx, const int gy, float &fx, float &fy);
 		RigidBody* getSolid(const int x, const int y);
 		void setRotation(const int x, const int y, float rotation);
 		float getRotation(const int x, const int y);

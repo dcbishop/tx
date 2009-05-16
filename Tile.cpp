@@ -94,7 +94,9 @@ void Tile::draw(Interface* interface) {
 
 	glPushMatrix();
 	glRotatef(rotation_, 0.0f, 1.0f, 0.0f);
+	preDraw(interface);
 	RCBC_Render(model);
+	postDraw(interface);
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glDisable(GL_COLOR_MATERIAL);
 	glPopMatrix();

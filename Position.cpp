@@ -1,5 +1,7 @@
 #include "Position.hpp"
 
+#include "console.h"
+
 #include <math.h>
 
 /**
@@ -132,20 +134,32 @@ void Position::setZ(const float z) {
  * @param position The other position
  * @return The distance to the other position.
  */
-float Position::getDistanceTo(Position* position) {
-	return sqrt(getX() * position->getX() + 
-				getY() * position->getY() + 
-				getZ() * position->getZ());
+const float Position::getDistanceTo(Position& position) {
+	float dx = getX() - position.getX();
+	float dy = getY() - position.getY();
+	float dz = getZ() - position.getZ();
+
+	return sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
 }
 
+/**
+ * Gets the distance from this Position to another, ignoring height.
+ * @param position The other position
+ * @return The distance to the other position.
+ */
+const float Position::getDistanceTo2D(Position& position) {
+	float diff_x = position.getX() - getX();
+	float diff_z = position.getZ() - getZ();
+	return sqrt(pow(diff_x, 2) + pow(diff_z, 2));
+}
 
 /**
  * Gets the angle around Y axis towards another Position.
  * @param position The other position.
  * @return The angle.
  */
-const float Position::getDirectionTo2D(Position* position) {
-	float diff_x = position->getX() - getX();
-	float diff_z = position->getZ() - getZ();
-	return atan2(diff_x, diff_x);
+const float Position::getDirectionTo2D(Position& position) {
+	float diff_x = position.getX() - getX();
+	float diff_z = position.getZ() - getZ();
+	return atan2(diff_z, diff_x);
 }

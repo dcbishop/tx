@@ -45,11 +45,52 @@ Area* Location::getArea() {
  * @param position The other position
  * @return The distance to the other position.
  */
-float Location::getDistanceTo(Location* location) {
+const float Location::getDistanceTo(Location& location) {
 	// If they are in 2 different area, return a really large distance...
-	if(location->getArea() != getArea()) {
+	if(location.getArea() != getArea()) {
 		return std::numeric_limits<float>::max();
-	} else {
-		return Position::getDistanceTo(location);
 	}
+
+	return Position::getDistanceTo(location);
+}
+
+/**
+ * Gets the distance from this Location to another, ignoring height.
+ * @param location The other Location
+ * @return The distance to the other Location.
+ */
+const float Location::getDistanceTo2D(Location& location) {
+	if(location.getArea() != getArea()) {
+		return std::numeric_limits<float>::max();
+	}
+
+	return Position::getDistanceTo2D(location);
+}
+
+/**
+ * Returns the X grid coordinate.
+ * @return the X grid coordinate
+ */
+const int Location::getGridX() {
+	if(!getArea()) {
+		return -1;
+	}
+
+	int x, y;
+	getArea()->getGridCoord(getX(), getZ(), x, y);
+	return x;
+}
+
+/**
+ * Returns the Y grid coordinate.
+ * @return the Y grid coordinate
+ */
+const int Location::getGridY() {
+	if(!getArea()) {
+		return -1;
+	}
+
+	int x, y;
+	getArea()->getGridCoord(getX(), getZ(), x, y);
+	return y;
 }

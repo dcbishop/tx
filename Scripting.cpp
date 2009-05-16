@@ -1,5 +1,7 @@
 #include "Scripting.hpp"
 
+#include <luabind/out_value_policy.hpp>
+
 #include "console.h"
 #include "Location.hpp"
 #include "Position.hpp"
@@ -7,6 +9,7 @@
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
 #include "VfxColour.hpp"
+#include "Tile.hpp"
 
 Scripting::Scripting() {
 	myLuaState_ = lua_open();
@@ -86,6 +89,7 @@ void Scripting::bindAll_() {
 		bindTagged_(),
 		bindVisual_(),
 		bindVModel_(),
+		bindTile_(),
 		bindVfx_(),
 		bindVfxColour_(),
 		bindObject_(),
@@ -108,6 +112,8 @@ luabind::scope Scripting::bindContainer_() {
 		.def("getAreaByTag", &Container::getAreaByTag)
 		.def("getObjectByTag", &Container::getObjectByTag)
 		.def("getCreatureByTag", &Container::getCreatureByTag)
+		.def("getNearestObjectTo", &Container::getNearestObjectTo)
+		.def("getNearestObjectByTag", &Container::getNearestObjectByTag)
 	;
 }
 
@@ -138,9 +144,14 @@ luabind::scope Scripting::bindRotation_() {
 
 luabind::scope Scripting::bindLocation_() {
 	return luabind::class_<Location, luabind::bases<Position, Rotation> >("Location")
-		/*.def(luabind::constructor<>())
+		.def(luabind::constructor<>())
 		.property("area", &Location::getArea, &Location::setArea)
-		.property("location", &Location::getLocation, &Location::setLocation)*/
+		.property("location", &Location::getLocation, &Location::setLocation)
+		.property("rotation", &Location::getRotation, &Location::setRotation)
+		.def("getDistanceTo", &Location::getDistanceTo)
+		.def("getDistanceTo2D", &Location::getDistanceTo2D)
+		.def("getGridX", &Location::getGridX)
+		.def("getGridY", &Location::getGridY)
 	;
 }
 
@@ -163,6 +174,12 @@ luabind::scope Scripting::bindVisual_() {
 
 luabind::scope Scripting::bindVModel_() {
 	return luabind::class_<VModel, Visual>("VModel")
+		.def(luabind::constructor<string>())
+	;
+}
+
+luabind::scope Scripting::bindTile_() {
+	return luabind::class_<Tile, VModel>("Tile")
 		.def(luabind::constructor<string>())
 	;
 }
@@ -190,7 +207,7 @@ luabind::scope Scripting::bindGameManager_() {
 luabind::scope Scripting::bindObject_() {
 	return
 		luabind::class_<Object, luabind::bases<Tagged, Location, Updateable, Visual> >("Object")
-			.def(luabind::constructor<>())
+			.def(luabind::constructor<string, Visual*>())
 			.def("setScript", &Object::setScript)
 			.def("getScript", &Object::getScript)
 			.def("setVisual", &Object::setVisual)
@@ -200,14 +217,14 @@ luabind::scope Scripting::bindObject_() {
 luabind::scope Scripting::bindRigidBody_() {
 	return
 		luabind::class_<RigidBody, luabind::bases<Object> >("RigidBody")
-			.def(luabind::constructor<>())
+			.def(luabind::constructor<string, Visual*>())
 	;
 }
 
 luabind::scope Scripting::bindCreature_() {
 	return
 		luabind::class_<Creature, luabind::bases<Object, RigidBody> >("Creature")
-			.def(luabind::constructor<>())
+			.def(luabind::constructor<string, Visual*>())
 	;
 }
 
@@ -225,7 +242,9 @@ luabind::scope Scripting::bindArea_() {
 			.def("removeObject", &Area::removeObject)
 			.def("setSolid", &Area::setSolid)
 			.def("isSolid", &Area::isSolid)
-			.def("getGridCord", &Area::getGridCord)
-			.def("getWorldCord", &Area::getWorldCord)
+			.def("getTile", &Area::getTile)
+			.def("setTile", &Area::setTile)
+			//.def_readonly("getGridCoord", &Area::getGridCoord, luabind::pure_out_value(_3) + luabind::pure_out_value(_4))
+			//.def("getWorldCoord", &Area::getWorldCoord)
 	;
 }

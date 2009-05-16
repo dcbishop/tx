@@ -1,0 +1,2 @@
+print("RotY:" .. self.angle)
+

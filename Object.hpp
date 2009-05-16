@@ -31,7 +31,6 @@ class Object : public Tagged, public Updateable, public Visual, public Location 
 		void update(const int time);
 		void addVfx(Vfx* vfx);
 
-
 	private:
 		string scripts_[NUM_SCRIPTS];
 		Visual* visual_;

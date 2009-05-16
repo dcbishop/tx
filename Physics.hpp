@@ -32,7 +32,6 @@ class Physics : public Updateable {
 		virtual btAxisSweep3* getBroadphase();
 		virtual btDiscreteDynamicsWorld* getWorld();
 
-
 	private:
 		btAxisSweep3* broadphase_;
 		btDefaultCollisionConfiguration* collisionConfiguration_;

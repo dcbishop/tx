@@ -7,6 +7,10 @@ using namespace std;
 
 class Interface;
 
+const string MODEL_DEFAULT = "pointer.dae";
+const string MODEL_CUBE = "cube.dae";
+const string MODEL_ROBOT = "monkey-robot.dae";
+
 /**
  * A class containing model information (but not the model itself).
  */

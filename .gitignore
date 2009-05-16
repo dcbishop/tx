@@ -5,7 +5,10 @@
 rcbcview
 tx
 *.exe
-data/*
+data/areas/*
+data/models/*
+data/textures/*
+data/resources/*
 .scons*
 *.os
 *.so

@@ -85,10 +85,10 @@ int main(int argc, char* argv[]) {
 	Object* playerSpawn = area.getObjectByTag("PlayerSpawn");
 	if(!playerSpawn) {
 		float fx, fz;
-		area.getWorldCord((area.getWidth()/2), area.getHeight()/2, fx, fz);
+		area.getWorldCoord((area.getWidth()/2), area.getHeight()/2, fx, fz);
 		playerSpawn = new Object("PlayerSpawn");
 		playerSpawn->setXYZ(fx, 0.5, fz);
-		playerSpawn->setVisual(new VModel("cube.dae"));
+		playerSpawn->setVisual(new VModel("pointer.dae"));
 		area.addObject(*playerSpawn);
 	}
 

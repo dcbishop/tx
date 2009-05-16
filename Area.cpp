@@ -1,7 +1,7 @@
 #include "Area.hpp"
 #include <stdlib.h>
 
-#warning: TODO: remove this
+#warning: ['TODO']: remove this
 #include <typeinfo>
 #include <GL/gl.h>
 
@@ -285,6 +285,7 @@ void Area::setTile(const int x, const int y, Tile* tile) {
 	Tile* current = getTile(x, y);
 	delete current;
 	//*(tiles_+(y*width_)+x) = tile;
+	tile->setParent(this);
 	tiles_[x][y] = tile;
 }
 
@@ -317,7 +318,7 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 
 	if(solid) {
 		float fx,fz;
-		getWorldCord(x, y, fx, fz);
+		getWorldCoord(x, y, fx, fz);
 		RigidBody* blocker = new RigidBody("BLOCKER", NULL);
 		blocker->setTempory(true);
 		blocker->setShape(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)));
@@ -484,10 +485,10 @@ void Area::update(const int time) {
  * Gets the x, y Area grid coordinates from OpenGL world coordinates.
  * @param fx The world X coordinate to be converted.
  * @param fz The world Z (depth) coordinate to be converted.
- * @param gx The value to store the X grid cord in.
- * @param gy The value to store the Y grid cord in.
+ * @param gx The value to store the X grid Coord in.
+ * @param gy The value to store the Y grid Coord in.
  */
-void Area::getGridCord(const float fx, const float fz, int &gx, int &gy) {
+void Area::getGridCoord(const float fx, const float fz, int &gx, int &gy) {
 	gx = -((fx-(TILEWIDTH/2))/TILEWIDTH)+(width_/2);
 	gy = -((fz-(TILEWIDTH/2))/TILEWIDTH)+(height_/2);
 }
@@ -496,10 +497,20 @@ void Area::getGridCord(const float fx, const float fz, int &gx, int &gy) {
  * Gets the x, y world coordinates from Area grid world coordinates.
  * @param gx The Area grid X coordinate to be converted.
  * @param gy The Area grid Y coordinate to be converted.
- * @param fx The value to store the X world cord in.
- * @param fz The value to store the Z (depth) world cord in.
+ * @param fx The value to store the X world Coord in.
+ * @param fz The value to store the Z (depth) world Coord in.
  */
-void Area::getWorldCord(const int gx, const int gy, float &fx, float &fz) {
+void Area::getWorldCoord(const int gx, const int gy, float &fx, float &fz) {
 	fx = -gx * TILEWIDTH+(width_*TILEWIDTH/2);
 	fz = -gy * TILEWIDTH+(height_*TILEWIDTH/2);;
 }
+
+/*
+Location* getLocationFromGridCoord(const int gx, const int gy) {
+	float fx, fz;
+	getWorldCoord
+
+	Location* location = new Location();
+	location->setArea(this);
+	location->setXYZ
+}*/

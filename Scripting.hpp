@@ -38,6 +38,7 @@ class Scripting {
 		luabind::scope bindLocation_();
 		luabind::scope bindVisual_();
 		luabind::scope bindVModel_();
+		luabind::scope bindTile_();
 		luabind::scope bindVfx_();
 		luabind::scope bindVfxColour_();
 		luabind::scope bindObject_();
