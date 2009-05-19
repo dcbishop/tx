@@ -1,52 +1,75 @@
--- An automatic door that open when the player approaches
+-- An automatic door that open when the player approaches.
 
-if not globals[addr] then
-	properties = {}
+if not isInitilized(self) then
+	local properties = {}
 
-	doorLocation = self.location
+	properties['vmodel'] = VModel("pointer.dae")
 
-	vmodel = VModel("pointer.dae")
-
-	closeTag = self.tag .. "_CLOSE"
-	closeObj = Object(closeTag, vmodel)
+	local closeTag = self.tag .. "_CLOSE"
+	local closeObj = Object(closeTag, properties['vmodel'])
 	closeObj.isTempory = true
-	closeObj.location = doorLocation
+	closeObj.isVisible = false
+	closeObj.location = self.location
 
-	openTag = self.tag .. "_OPEN"
-	openObj = Object(openTag, vmodel)
+	local openTag = self.tag .. "_OPEN"
+	local openObj = Object(openTag, properties['vmodel'])
 	openObj.isTempory = true
-	openObj.location = doorLocation
+	openObj.isVisible = false
+	openObj.location = self.location
 	openObj.y = openObj.y + 1.5
 
-	area = self.area
+	local area = self.area
 	area:addObject(closeObj)
 	area:addObject(openObj)
 
 	properties['closeObj'] = closeObj
 	properties['openObj'] = openObj
-
 	properties['currentObj'] = closeObj
 
-	globals[addr] = properties
-end
+	-- If there is 'LOCKED' in the tag, set the state to locked
+	properties['locked'] = false
+	if string.find(self.tag, "LOCKED") then
+		properties['locked'] = true
+	end
 
-properties = globals[addr]
+	-- If the door is opened by switches then set the flag
+	if string.find(self.tag, "SWITCHES") then
+		properties['switches'] = true
+	end
 
-if self:getDistanceTo(getPlayer()) < 1.5 then
-	properties['currentObj'] = properties['openObj']
+	setProperties(self, properties)
 else
-	properties['currentObj'] = properties['closeObj']
-end
+	local properties = getProperties(self)
 
-currentObj = properties['currentObj']
-speed = 0.001
-ds = speed * getTimeDiff()
+	if properties['switches'] then
+		pa = getAreaProperties(self.area)
+
+		if pa['active_switches'] >= pa['num_switches'] then
+			properties['locked'] = false
+		else
+			properties['locked'] = true
+		end
+	end
+
+	--print(self.tag .. " Dis: " ..self:getDistanceTo(getPlayer()))
+	if self:getDistanceTo(getPlayer()) < 1.5 then
+		if properties['locked'] == false then
+			properties['currentObj'] = properties['openObj']
+		end
+	else
+		properties['currentObj'] = properties['closeObj']
+	end
+
+	local currentObj = properties['currentObj']
+	local speed = 0.001
+	local ds = speed * getTimeDiff()
 
 
-if self:getDistanceTo(currentObj) > speed then
-	if self.y < currentObj.y then
-		self.y = self.y + speed
-	elseif self.y > currentObj.y then
-		self.y = self.y - speed
+	if self:getDistanceTo(currentObj) > speed then
+		if self.y < currentObj.y then
+			self.y = self.y + speed
+		elseif self.y > currentObj.y then
+			self.y = self.y - speed
+		end
 	end
 end

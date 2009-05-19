@@ -45,6 +45,8 @@ class Interface {
 		void setEditTileSolid(bool solid);
 		int getEditMode();
 		void setEditTile(const string filename);
+		int getComputerTime();
+
 
 	private:
 		void handleKeyDown_(const SDL_Event& event);

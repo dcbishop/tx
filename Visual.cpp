@@ -27,8 +27,14 @@ bool Visual::isVisible() {
 }
 
 void Visual::preDraw(Interface* interface) {
+	if(!interface) {
+		return;
+	}
 	for(vector<Vfx*>::iterator itr = effects_.begin(); itr != effects_.end(); itr++) {
-		(*itr)->preDraw(interface);
+		Vfx* vfx = (*itr);
+		if(vfx) {
+			vfx->preDraw(interface);
+		}
 	}
 }
 
@@ -39,11 +45,16 @@ void Visual::postDraw(Interface* interface) {
 }
 
 void Visual::addVfx(Vfx* vfx) {
+	DEBUG_A("Adding vfx %p", vfx);
+	//DEBUG_A(type(vfx))
 	effects_.push_back(vfx);
 }
 
 void Visual::removeVfx(Vfx* vfx) {
 	#warning ['TODO']: Remove effects...
+	vector<Vfx*>::iterator found = find(effects_.begin(), effects_.end(), vfx);
+	effects_.erase(found);
+	#warning ['TODO']: delete vfx here?
 }
 
 void Visual::clearVfx() {

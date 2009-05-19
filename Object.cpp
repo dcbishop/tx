@@ -51,7 +51,7 @@ Object::~Object() {
  */
 void Object::draw(Interface* interface) {
 	ResourceManager* rm = interface->getResourceManager();
-	if(!visual_ || !rm || !isVisible()) {
+	if(!visual_ || !rm) {
 		return;
 	}
 
@@ -59,9 +59,9 @@ void Object::draw(Interface* interface) {
 	glTranslatef(getX(), getY(), getZ());
 	glRotatef(getRotAngle(), getRotX(), getRotY(), getRotZ());
 
-	//visual_->preDraw(interface);
+	preDraw(interface);
 	visual_->draw(interface);
-	//visual_->postDraw(interface);
+	postDraw(interface);
 
 	glPopMatrix();
 }
@@ -74,6 +74,22 @@ void Object::draw(Interface* interface) {
 void Object::setVisual(Visual* visual) {
 	visual_ = visual;
 }
+
+void Object::setVisible(const bool visible) {
+	if(visual_) {
+		visual_->setVisible(visible);
+	}
+}
+
+bool Object::isVisible() {
+	if(!visual_) {
+		return false;
+	}
+
+	return visual_->isVisible();
+}
+
+
 
 /**
  * Returns the object's visual information.
@@ -133,5 +149,12 @@ void Object::addVfx(Vfx* vfx) {
 	Visual& visual = getVisual();
 	if(&visual) {
 		visual.addVfx(vfx);
+	}
+}
+
+void Object::removeVfx(Vfx* vfx) {
+	Visual& visual = getVisual();
+	if(&visual) {
+		visual.removeVfx(vfx);
 	}
 }

@@ -18,6 +18,37 @@ function getPlayer()
 	return gm:getCreatureByTag("Player")
 end
 
+function isInitilized(object)
+	if getProperties(object) then
+		return true
+	else
+		return false
+	end
+end
+
+function setProperties(object, properties)
+	globals[object:getMemoryAddress()] = properties
+end
+
+function getProperties(ob)
+	local properties = globals[ob:getMemoryAddress()]
+	if not properties then
+		--properties = {}
+		--setProperties(object, properties)
+	end
+	return properties
+end
+
+function getAreaProperties(area)
+	local properties = getProperties(area)
+	if not properties then
+		properties = {}
+		setProperties(area, properties)
+	end
+	return properties
+end
+
+
 -- TODO: These functions are no longer needed here
 
 -- Gets the distance to the object from self

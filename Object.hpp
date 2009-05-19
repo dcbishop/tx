@@ -21,7 +21,7 @@ const int SCRIPT_ONUPDATE = 1;
 class Object : public Tagged, public Updateable, public Visual, public Location {
 	public:
 		Object(string tag = DEFAULT_TAG, Visual* model = NULL);
-		~Object();
+		virtual ~Object();
 		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
 		virtual void draw(Interface* interface);
 		void setVisual(Visual* visual);
@@ -30,6 +30,10 @@ class Object : public Tagged, public Updateable, public Visual, public Location 
 		virtual string getScript(const int type);
 		void update(const int time);
 		void addVfx(Vfx* vfx);
+		void removeVfx(Vfx* vfx);
+		void setVisible(const bool visible);
+		bool isVisible();
+
 
 	private:
 		string scripts_[NUM_SCRIPTS];

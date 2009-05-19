@@ -95,11 +95,11 @@ int main(int argc, char* argv[]) {
 	Location spawnLocation = playerSpawn->getLocation();
 	spawnLocation.setY(spawnLocation.getY() + 1.0f);
 	player.setLocation(spawnLocation);
-	//player.addVfx(new VfxColour(0.0f, 1.0f, 0.0f, 1.0f));
-	VfxVisual* vfxTest = new VfxVisual(new VModel("cube.dae"));
-	vfxTest->setY(1.0f);
+	//player.addVfx(new VfxColour(0.0f, 1.0f, 0.0f, 0.5f));
+	//VfxVisual* vfxTest = new VfxVisual(new VModel("cube.dae"));
+	//vfxTest->setY(1.0f);
 
-	player.addVfx(vfxTest);
+	//player.addVfx(vfxTest);
 
 	interface.setCreature(player);
 	interface.mainLoop();

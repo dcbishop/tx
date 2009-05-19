@@ -29,6 +29,7 @@ Creature::Creature(const string tag, Visual* model) {
 
 Creature::~Creature() {
 	#warning ['TODO']: deregisterObject me from physics engine, area list, delete shapes...
+	setArea(NULL);
 }
 
 /**
@@ -57,10 +58,10 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 		shape_ = new btCapsuleShape(characterWidth,characterHeight);
 		//shape_ = new btBoxShape(btVector3(0.45f, 0.5f, 0.2f));
 	}
-	
+
 	btTransform transform;
 	transform.setIdentity();
-	
+
 	//btTransform transform = getBody()->getWorldTransform();
 	delete(body_);
 	body_ = new btPairCachingGhostObject();
@@ -83,20 +84,10 @@ btVector3& Creature::getPos() {
 	return body_->getWorldTransform().getOrigin();
 }
 
-void Creature::setArea(Area& area) {
-	Area* old_area = getArea();
-	if(old_area) { /* If its already in an area */
-		if(old_area->getPhysics() == area.getPhysics()) {
-			return;
-		}
-			#warning ['TODO']: If not remove shape from old area physics...
-	}
-	
-	Object::setArea(area);
-	Area* newarea = getArea();
-	newarea->getPhysics()->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
-	btDynamicsWorld* world = newarea->getPhysics()->getWorld();
-	
+void Creature::addBody(Physics* physics) {
+	physics->getBroadphase()->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+	btDynamicsWorld* world = physics->getWorld();
+
 	if(body_) {
 		world->addCollisionObject(body_,btBroadphaseProxy::CharacterFilter, btBroadphaseProxy::StaticFilter|btBroadphaseProxy::DefaultFilter);
 	}
@@ -104,6 +95,12 @@ void Creature::setArea(Area& area) {
 		world->addCharacter(controller_);            
 	}
 }
+
+void Creature::removeBody(Physics* physics) {
+	#warning ['TODO']: Remove characters from engine...
+	ERROR("This function not yet done...");
+}
+
 
 /**
  * Sets the creature as moving backwards.

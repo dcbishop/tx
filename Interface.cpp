@@ -36,7 +36,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	limit_fps_ = true;
 	cam_move_ = false;
 	//gm_ = NULL;
-	mode_ = MODE_NONE;
+	mode_ = MODE_EDIT_OBJECTS;
 	tm_ = NULL;
 	to_ = NULL;
 	selectedObject_ = NULL;
@@ -107,9 +107,9 @@ void Interface::mainLoop() {
 	DEBUG_M("Entering function...");
 
 	while(!finished_) {
-		int now = SDL_GetTicks();
-		camera_.update(now);
+		camera_.update(getComputerTime());
 
+		checkEvents_();
 		checkEvents_();
 		draw();
 
@@ -117,7 +117,7 @@ void Interface::mainLoop() {
 		if(creature_) {
 			GameManager* gm = creature_->getGameManager();
 			if(gm) {
-				gm->update(now);
+				gm->update(gm->getGameTime());
 			}
 		}
 
@@ -188,7 +188,7 @@ void Interface::draw() {
 	static int frame = 0;
 	static int last_render_time = 0;
 	static int last_fps_time = 0;
-	int current_time = SDL_GetTicks();
+	int current_time = getComputerTime();
 
 	// Limit framerate
 	if(limit_fps_ && !( (current_time - last_render_time) >= 1000/60) ) {
@@ -214,6 +214,8 @@ void Interface::draw() {
 
 	glEnable(GL_LIGHTING) ;
 	glEnable(GL_LIGHT0);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	float position[] = {0.5, 1.0, 0.5, 0.0};
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
@@ -268,10 +270,24 @@ void Interface::draw() {
 		}
 	}
 
+	// Draw physics debug stuff
+	if(getEditMode() != MODE_NONE) {
+		glDisable(GL_DEPTH_TEST);
+		GameManager* gm = getGameManager();
+		if(gm) {
+			Physics& physics = gm->getPhysics();
+			if(&physics) {
+				glColor3f(1.0, 0.0, 0.0);
+				physics.getWorld()->debugDrawWorld();
+			}
+		}
+		glEnable(GL_DEPTH_TEST);
+	}
+
 	glFlush();
 	SDL_GL_SwapBuffers();
 
-	mpf_ = SDL_GetTicks() - current_time;
+	mpf_ = getComputerTime() - current_time;
 }
 
 void Interface::handleKeyDown_(const SDL_Event& event) {
@@ -465,9 +481,10 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			DEBUG_A("Clicked: %f, %f, %f, gx:%d, gy:%d", tx_, ty_, tz_, gx, gy);
 			break;
 		case(MODE_EDIT_OBJECTS):
-			getSelectedObject()->setXYZ(tx_, ty_+0.125f, tz_);
-			//getGameManager()->registerObject(*getSelectedObject());
-			area->addObject(*getSelectedObject());
+			if(getSelectedObject()) {
+				getSelectedObject()->setXYZ(tx_, ty_+0.125f, tz_);
+				area->addObject(*getSelectedObject());
+			}
 			mode_ = MODE_NONE;
 			editor_->updateWindow();
 			break;
@@ -624,4 +641,12 @@ void Interface::setEditTileSolid(bool solid) {
  */
 int Interface::getEditMode() {
 	return mode_;
+}
+
+/**
+ * Returns the current time that the interface has been running.
+ * @return The time.
+ */
+int Interface::getComputerTime() {
+	return SDL_GetTicks();
 }

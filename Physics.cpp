@@ -19,6 +19,8 @@ Physics::Physics() {
 	/*BulletDebugdraw *debugdraw = new BulletDebugdraw;
 	debugdraw->setDebugMode(1);
 	dynamicsWorld_->setDebugdrawer(new BulletDebugdraw);*/
+	gDebugDrawer_.setDebugMode(1);
+	dynamicsWorld_->setDebugDrawer(&gDebugDrawer_);
 	body_count_ = 0;
 }
 

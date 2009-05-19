@@ -6,6 +6,7 @@
 #include "console.h"
 
 #include "Updateable.hpp"
+#include "GLDebugDrawer.h"
 
 const float GRAVITY_MERCURY	=	3.7f;
 const float GRAVITY_VENUS	=	8.8f;
@@ -40,6 +41,7 @@ class Physics : public Updateable {
 		btDiscreteDynamicsWorld* dynamicsWorld_;
 		int body_count_;
 		int body_max_;
+		GLDebugDrawer gDebugDrawer_;
 };
 
 #warning ['TODO']: Remove nonworking bullet debugdraw...

@@ -4,11 +4,17 @@
 
 #include <math.h>
 
+Position::Position() {
+	setX(0.0f);
+	setY(0.0f);
+	setZ(0.0f);
+}
+
 /**
  * Returns the Position.
  * @return Refrence to the Position.
  */
-Position& Position::getPosition() {
+Position Position::getPosition() {
 	return *this;
 }
 
@@ -16,8 +22,8 @@ Position& Position::getPosition() {
  * Sets the Position.
  * @param
  */
-void Position::setPosition(Position& Position) {
-	setXYZ(Position.getX(), Position.getY(), Position.getZ());
+void Position::setPosition(Position& position) {
+	setXYZ(position.getX(), position.getY(), position.getZ());
 }
 
 /**

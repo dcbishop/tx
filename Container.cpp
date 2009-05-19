@@ -125,6 +125,11 @@ Object* Container::getObjectByTag(const string tag) {
 	return dynamic_cast<Object*>(getTaggedByTag_(tag));
 }
 
+RigidBody* Container::getRigidBodyByTag(const string tag) {
+	DEBUG_V("Entering function getObjectByTag...");
+	return dynamic_cast<RigidBody*>(getTaggedByTag_(tag));
+}
+
 /**
  * Get creature by tag
  * @param tag The Creature's tag.

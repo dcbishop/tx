@@ -21,7 +21,7 @@ class Tagged {
 		void setGameManager(GameManager* gm);
 		void setTempory(const bool tempory);
 		bool isTempory();
-		
+
 	private:
 		string tag_;
 		GameManager* gm_;

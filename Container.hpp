@@ -6,6 +6,7 @@
 using namespace std;
 
 #include "Tagged.hpp"
+#include "MemoryLocation.hpp"
 
 class Contained;
 class Area;
@@ -34,6 +35,7 @@ class Container {
 		virtual ChildrenIterator getChildEnd();
 
 		Object* getObjectByTag(const string tag);
+		RigidBody* getRigidBodyByTag(const string tag);
 		Area* getAreaByTag(const string tag);
 		Creature* getCreatureByTag(const string tag);
 		Object* getNearestObjectTo(Location& location);
@@ -52,10 +54,10 @@ class Container {
  * An abstract class for things that can be contained or owned by other
  * things. Useabble for objects in maps, items in inventories, etc...
  */
-class Contained {
+class Contained : public MemoryLocation {
 	private:
 		Container* parent_;
-		
+		#warning ['TODO']: Execute Lua code to remove globals[memorylocation] to allow for future objects that share the same address to work
 	public:
 		Contained(): parent_(NULL){}
 		virtual void setParent(Container* parent);

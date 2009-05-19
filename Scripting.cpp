@@ -9,7 +9,9 @@
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
 #include "VfxColour.hpp"
+#include "VfxScripted.hpp"
 #include "Tile.hpp"
+#include "Container.hpp"
 
 Scripting::Scripting() {
 	myLuaState_ = lua_open();
@@ -22,8 +24,8 @@ Scripting::Scripting() {
 
 	luabind::open(myLuaState_);
 	luabind::module(myLuaState_) [
-		luabind::def("ScriptLog", Scripting::ScriptLog_),
-		luabind::def("address", Scripting::ScriptAddress_)
+		luabind::def("ScriptLog", Scripting::ScriptLog_)
+		//luabind::def("getMemoryAddress", Scripting::getMemoryAddress_)
 	];
 
 	bindAll_();
@@ -74,14 +76,16 @@ void Scripting::ScriptLog_(string message) {
 	LOG("%s", message.c_str());
 }
 
-long Scripting::ScriptAddress_(void *ptr) {
+/*long Scripting::getMemoryAddress_(void* ptr) {
 	return (long)ptr;
-}
+}*/
 
 void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
+		bindBullet_(),
 		bindUpdateable_(),
 		bindContainer_(),
+		bindContained_(),
 		bindPosition_(),
 		bindRotation_(),
 		bindLocation_(),
@@ -92,11 +96,18 @@ void Scripting::bindAll_() {
 		bindTile_(),
 		bindVfx_(),
 		bindVfxColour_(),
+		bindVfxScripted_(),
 		bindObject_(),
 		bindRigidBody_(),
 		bindCreature_(),
 		bindArea_()
 	];
+	luabind::bind_class_info(myLuaState_); 
+}
+
+luabind::scope Scripting::bindBullet_() {
+	return luabind::class_<btCollisionShape>("btCollisionShape")
+	;
 }
 
 luabind::scope Scripting::bindUpdateable_() {
@@ -111,9 +122,16 @@ luabind::scope Scripting::bindContainer_() {
 	return luabind::class_<Container>("Container")
 		.def("getAreaByTag", &Container::getAreaByTag)
 		.def("getObjectByTag", &Container::getObjectByTag)
+		.def("getRigidBodyByTag", &Container::getRigidBodyByTag)
 		.def("getCreatureByTag", &Container::getCreatureByTag)
 		.def("getNearestObjectTo", &Container::getNearestObjectTo)
 		.def("getNearestObjectByTag", &Container::getNearestObjectByTag)
+	;
+}
+
+luabind::scope Scripting::bindContained_() {
+	return luabind::class_<Contained>("Contained")
+		.def("getMemoryAddress", &Contained::getMemoryAddress)
 	;
 }
 
@@ -143,7 +161,7 @@ luabind::scope Scripting::bindRotation_() {
 }
 
 luabind::scope Scripting::bindLocation_() {
-	return luabind::class_<Location, luabind::bases<Position, Rotation> >("Location")
+	return luabind::class_<Location, luabind::bases<Position, Rotation, Contained> >("Location")
 		.def(luabind::constructor<>())
 		.property("area", &Location::getArea, &Location::setArea)
 		.property("location", &Location::getLocation, &Location::setLocation)
@@ -179,13 +197,13 @@ luabind::scope Scripting::bindVModel_() {
 }
 
 luabind::scope Scripting::bindTile_() {
-	return luabind::class_<Tile, VModel>("Tile")
+	return luabind::class_<Tile, VModel, Contained>("Tile")
 		.def(luabind::constructor<string>())
 	;
 }
 
 luabind::scope Scripting::bindVfx_() {
-	return luabind::class_<Vfx>("Vfx")
+	return luabind::class_<Vfx, Contained>("Vfx")
 		//.def(luabind::constructor<>())
 	;
 }
@@ -194,6 +212,14 @@ luabind::scope Scripting::bindVfxColour_() {
 	return luabind::class_<VfxColour, Vfx>("VfxColour")
 		.def(luabind::constructor<float, float, float, float>())
 		.def("setColour", &VfxColour::setColour)
+	;
+}
+
+luabind::scope Scripting::bindVfxScripted_() {
+	return luabind::class_<VfxScripted, luabind::bases<Vfx, Updateable> >("VfxScripted")
+		.def(luabind::constructor<string>())
+		.def("getVfx", &VfxScripted::getVfx)
+		.def("setVfx", &VfxScripted::setVfx)
 	;
 }
 
@@ -211,6 +237,9 @@ luabind::scope Scripting::bindObject_() {
 			.def("setScript", &Object::setScript)
 			.def("getScript", &Object::getScript)
 			.def("setVisual", &Object::setVisual)
+			.def("getVisual", &Object::getVisual)
+			//.def("addVfx", &Object::addVfx)
+			//.def("removeVfx", &Object::addVfx)
 		;
 }
 
@@ -218,6 +247,13 @@ luabind::scope Scripting::bindRigidBody_() {
 	return
 		luabind::class_<RigidBody, luabind::bases<Object> >("RigidBody")
 			.def(luabind::constructor<string, Visual*>())
+			.def("setShape", &RigidBody::setShape)
+			.def("setMass", &RigidBody::setMass)
+			.def("setFriction", &RigidBody::setFriction)
+			.def("loadShapeBox", &RigidBody::loadShapeBox)
+			.def("loadShapeFromModel", &RigidBody::loadShapeFromModel)
+			.def("disableRotation", &RigidBody::disableRotation)
+			.def("setKinematic", &RigidBody::setKinematic)
 	;
 }
 
@@ -230,7 +266,7 @@ luabind::scope Scripting::bindCreature_() {
 
 luabind::scope Scripting::bindArea_() {
 	return
-		luabind::class_<Area, luabind::bases<Tagged, Updateable, Container> >("Area")
+		luabind::class_<Area, luabind::bases<Tagged, Contained, Updateable, Container> >("Area")
 			.def(luabind::constructor<>())
 			.property("width", &Area::getWidth, &Area::setWidth)
 			.property("height", &Area::getHeight, &Area::setHeight)

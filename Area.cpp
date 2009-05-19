@@ -1,8 +1,5 @@
 #include "Area.hpp"
 #include <stdlib.h>
-
-#warning: ['TODO']: remove this
-#include <typeinfo>
 #include <GL/gl.h>
 
 #include "Tile.hpp"
@@ -302,15 +299,17 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 	}
 
 	// Already solid...
-	if(isSolid(x, y) && solid) {
+	/*if(isSolid(x, y) && solid) {
 		return;
-	}
+	}*/
 
 	if(!solid) {
 		//RigidBody* blocker = *(walkblockers_+(y*width_)+x);
 		RigidBody* blocker = walkblockers_[x][y];
 		if(blocker) {
-			blocker->removeRigidBody_();
+			//blocker->removeRigidBody_();
+			blocker->removeBody(getPhysics());
+			#warning ['TODO']: This should delete the old blocker...
 		}
 		//*(walkblockers_+(y*width_)+x) = NULL;
 		walkblockers_[x][y] = NULL;
@@ -454,11 +453,15 @@ void Area::setPhysics(Physics& physics) {
  * @see removeObject()
  */
 void Area::addObject(Object& object) {
-	object.setArea(*this);
+	//object.setArea(this);
 	object.setGameManager(getGameManager());
 	GameManager* gm = getGameManager();
 	if(gm) {
 		gm->registerObject(object);
+	}
+	RigidBody* rb = dynamic_cast<RigidBody*>(&object);
+	if(rb) {
+		rb->addBody(getPhysics());
 	}
 	addChild(&object);
 }
@@ -470,6 +473,10 @@ void Area::addObject(Object& object) {
  */
 void Area::removeObject(Object& object) {
 	removeChild(&object);
+	RigidBody* rb = dynamic_cast<RigidBody*>(&object);
+	if(rb) {
+		rb->removeBody(getPhysics());
+	}
 }
 
 /**
@@ -489,8 +496,8 @@ void Area::update(const int time) {
  * @param gy The value to store the Y grid Coord in.
  */
 void Area::getGridCoord(const float fx, const float fz, int &gx, int &gy) {
-	gx = -((fx-(TILEWIDTH/2))/TILEWIDTH)+(width_/2);
-	gy = -((fz-(TILEWIDTH/2))/TILEWIDTH)+(height_/2);
+	gx = -((fx)/TILEWIDTH)+(width_/2)+1;
+	gy = -((fz)/TILEWIDTH)+(height_/2)+1;
 }
 
 /**
@@ -505,12 +512,18 @@ void Area::getWorldCoord(const int gx, const int gy, float &fx, float &fz) {
 	fz = -gy * TILEWIDTH+(height_*TILEWIDTH/2);;
 }
 
-/*
-Location* getLocationFromGridCoord(const int gx, const int gy) {
+/**
+ * Returns a location from the Area grid coords.
+ * @param x The x grid coord.
+ * @param y The y grid coord.
+ * @return a Location
+ */
+Location Area::getLocationFromGridCoord(const int x, const int y) {
 	float fx, fz;
-	getWorldCoord
+	getWorldCoord(x, y, fx, fz);
 
-	Location* location = new Location();
-	location->setArea(this);
-	location->setXYZ
-}*/
+	Location location;
+	location.setArea(this);
+	location.setXYZ(fx, 0.0, fz);
+	return location;
+}

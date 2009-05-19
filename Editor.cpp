@@ -318,7 +318,7 @@ void EditorWin::newRigidBody_() {
 	RigidBody* object = new RigidBody(tag, model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 	ResourceManager* rm = interface_->getResourceManager();
-	object->setShape(rm->loadShapeFromModel(object));
+	//object->setShape(rm->loadShapeFromModel(object));
 	interface_->setSelectedObject(object);
 	interface_->setEditModeObject();
 	updateWindow();

@@ -28,6 +28,9 @@ class GameManager : public Updateable, public Container {
 		
 		Physics& getPhysics();
 		Scripting& getScripting();
+		
+		int getGameTime();
+
 
 		/*Area* getAreaByTag(const string tag);
 		Object* getObjectByTag(const string tag);

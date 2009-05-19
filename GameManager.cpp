@@ -1,5 +1,7 @@
 #include "GameManager.hpp"
 
+#include "SDL.h" // For SDL_GetTicks...
+
 GameManager::GameManager() {
 	luabind::globals(scripting_.getLuaState())["gm"] = this;
 }
@@ -69,3 +71,6 @@ Scripting& GameManager::getScripting() {
 	return scripting_;
 }
 
+int GameManager::getGameTime() {
+	return SDL_GetTicks();
+}

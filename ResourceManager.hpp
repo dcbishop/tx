@@ -28,9 +28,10 @@ class ResourceManager {
 		virtual Model* loadModel(const string filename);
 		//void unloadModel(Model* model);
 		void unloadModel(const string model);
-		btCollisionShape* loadShapeFromModel(RigidBody* body);
+		/*btCollisionShape* loadShapeFromModel(RigidBody* body);
 		btCollisionShape* loadShapeFromModel_ProcessNodes(SceneNode* node, btCompoundShape* shape);
 		void loadShapeFromModel_ProcessNode(SceneNode* node, btCompoundShape* combined);
+		btCollisionShape* loadShapeBox(const float x, const float y, const float z);*/
 
 
 	private:

@@ -23,9 +23,9 @@ class Visual {
 		virtual void setVisible(const bool visible);
 		virtual bool isVisible();
 
-		void addVfx(Vfx* vfx);
-		void removeVfx(Vfx* vfx);
-		void clearVfx();
+		virtual void addVfx(Vfx* vfx);
+		virtual void removeVfx(Vfx* vfx);
+		virtual void clearVfx();
 
 
 	private:

@@ -1,12 +1,14 @@
 #include "Location.hpp"
 
+#include "Object.hpp"
+
 #include <limits>
 
 /**
  * Gets the current location.
  * @return The Location.
  */
-Location& Location::Location::getLocation() {
+Location Location::Location::getLocation() {
 	return *this;
 }
 
@@ -15,9 +17,19 @@ Location& Location::Location::getLocation() {
  * @param location The location.
  */
 void Location::setLocation(Location& location) {
-	setPosition(location.getPosition());
-	setArea(*location.getArea());
+	Area* newArea = location.getArea();
+	/*Area* oldArea = getArea();
+
+	Object* object = dynamic_cast<Object*>(this);
+	if(oldArea && object) {
+		oldArea->removeObject(*object);
+	}*/
+
+	setArea(NULL);
+	Position position = location.getPosition();
+	setPosition(position);
 	setRotation(location.getRotation());
+	setArea(newArea);
 }
 
 
@@ -25,9 +37,19 @@ void Location::setLocation(Location& location) {
  * Puts the object in an area.
  * @see getArea()
  */
-void Location::setArea(Area& area) {
+void Location::setArea(Area* area) {
 	DEBUG_M("Entering function...");
-	setParent(&area);
+	Object* object = dynamic_cast<Object*>(this);
+
+	if(getArea() && object) {
+		getArea()->removeObject(*object);
+	}
+
+	if(area && object) {
+			area->addObject(*object);
+	}
+
+	setParent(area);
 }
 
 /**

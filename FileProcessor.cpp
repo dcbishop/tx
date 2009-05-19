@@ -135,6 +135,11 @@ void FileProcessor::saveArea_Tag(mxml_node_t* node, Tagged* tagged) {
  */
 void FileProcessor::saveArea_Object(mxml_node_t* obj_node, Object* object) {
 	saveArea_Tag(obj_node, object);
+	if(object->isVisible()) {
+		mxmlElementSetAttr(obj_node, "visible", "true");
+	} else {
+		mxmlElementSetAttr(obj_node, "visible", "false");
+	}
 	#warning ['TODO']: Fix me!
 	saveArea_Position(obj_node, object);
 	saveArea_Rotation(obj_node, object);
@@ -293,6 +298,13 @@ void FileProcessor::loadArea_Tag(mxml_node_t* node, Tagged* tagged) {
 void FileProcessor::loadArea_Object(mxml_node_t* obj_node, Object* object) {
 	loadArea_Tag(obj_node, object);
 
+	const char* visibility_s = mxmlElementGetAttr(obj_node, "visible");
+	if(visibility_s != NULL && strncasecmp(visibility_s, "false", strlen(visibility_s)) == 0) {
+		object->setVisible(false);
+	} else {
+		object->setVisible(true);
+	}
+
 	mxml_node_t* node;
 	for(node = obj_node->child; node; node = node->next) {
 		if(node->type == MXML_ELEMENT) {
@@ -304,6 +316,7 @@ void FileProcessor::loadArea_Object(mxml_node_t* obj_node, Object* object) {
 				loadArea_Script(node, object);
 			} else if(strcasecmp(node->value.element.name, "model") == 0) {
 				VModel* model = new VModel();
+				model->setVisible(object->isVisible());
 				loadArea_Model(node, model);
 				object->setVisual(model);
 			}
@@ -420,13 +433,15 @@ void FileProcessor::loadArea_Script(mxml_node_t* node, Object* object) {
  * @param model The VModel
  */
 void FileProcessor::loadArea_Model(mxml_node_t* model_node, VModel* model) {
-	/*mxml_node_t* node;
-	for(node = model_node->child; node; node = node->next) {
-		if(node->type == MXML_ELEMENT) {*/
-			const char* filename = mxmlElementGetAttr(model_node, "filename");
-			model->setFilename(filename);
-		/*}
-	}*/
+	const char* filename = mxmlElementGetAttr(model_node, "filename");
+	model->setFilename(filename);
+
+	const char* vstr = mxmlElementGetAttr(model_node, "visible");
+	if(strcasecmp(vstr, "false") == 0) {
+		model->setVisible(false);
+	} else {
+		model->setVisible(true);
+	}
 }
 
 /**

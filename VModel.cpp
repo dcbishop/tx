@@ -21,7 +21,11 @@ VModel::VModel(const string filename) {
  * @param rm The ResourceManager to use to load the model
  */
 void VModel::draw(Interface* interface) {
-	if(!isVisible()) {
+	if(!interface) {
+		return;
+	}
+	
+	if(!isVisible() && interface->getEditMode() == MODE_NONE) {
 		return;
 	}
 
@@ -45,8 +49,15 @@ void VModel::draw(Interface* interface) {
 	if(!selected) {
 		//DEBUG_H("Drawing selected. %s", object->getTag().c_str());
 		glColor3f(1.0f, 1.0f, 1.0f);
+
+		// If we are editing, draw visible objects
+		if(!isVisible() && interface->getEditMode() != MODE_NONE) {
+			glColor4f(0.5f, 0.5f, 1.0f, 0.5f);
+		} else 
+
 		glDisable(GL_COLOR_MATERIAL);
 	}
+
 	preDraw(interface);
 
 	RCBC_Render(model);

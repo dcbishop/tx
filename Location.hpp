@@ -10,9 +10,9 @@
  */
 class Location : public Position, public Rotation, public Contained {
 	public:
-		Location& getLocation();
+		Location getLocation();
 		void setLocation(Location& location);
-		virtual void setArea(Area& area);
+		virtual void setArea(Area* area);
 		virtual Area* getArea();
 		virtual const float getDistanceTo(Location& location);
 		virtual const float getDistanceTo2D(Location& location);

@@ -18,7 +18,7 @@
 class Creature : public RigidBody, public Container {
 	public:
 		Creature(const string tag = DEFAULT_TAG, Visual* model = NULL);
-		~Creature();
+		virtual ~Creature();
 		virtual void update(const int time);
 		virtual Object* clone();
 		virtual void Forward(const bool state=true);
@@ -32,8 +32,10 @@ class Creature : public RigidBody, public Container {
 
 		virtual void setTurnRate(const float turn_rate);
 		virtual void setShape(btCollisionShape* shape);
-		virtual void setArea(Area& area);
 		virtual btVector3& getPos();
+
+		virtual void addBody(Physics* physics);
+		virtual void removeBody(Physics* physics);
 
 	private:
 		btKinematicCharacterController* controller_;

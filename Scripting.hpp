@@ -12,6 +12,7 @@ extern "C"
 }
 
 #include <luabind/luabind.hpp>
+#include <luabind/class_info.hpp> 
 
 /**
  * A class controlling the LUA script virtual machine.
@@ -26,12 +27,15 @@ class Scripting {
 
 	private:
 		static void ScriptLog_(string msg);
-		static long ScriptAddress_(void *ptr);
+		//static long getMemoryAddress_(void* ptr);
+
 		
 		void bindAll_();
+		luabind::scope bindBullet_();
 		luabind::scope bindGameManager_();
 		luabind::scope bindTagged_();
 		luabind::scope bindContainer_();
+		luabind::scope bindContained_();
 		luabind::scope bindUpdateable_();
 		luabind::scope bindPosition_();
 		luabind::scope bindRotation_();
@@ -41,6 +45,7 @@ class Scripting {
 		luabind::scope bindTile_();
 		luabind::scope bindVfx_();
 		luabind::scope bindVfxColour_();
+		luabind::scope bindVfxScripted_();
 		luabind::scope bindObject_();
 		luabind::scope bindRigidBody_();
 		luabind::scope bindCreature_();
