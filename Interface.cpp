@@ -273,12 +273,12 @@ void Interface::draw() {
 	// Draw physics debug stuff
 	if(getEditMode() != MODE_NONE) {
 		glDisable(GL_DEPTH_TEST);
-		GameManager* gm = getGameManager();
-		if(gm) {
-			Physics& physics = gm->getPhysics();
-			if(&physics) {
+		Area* area = getArea();
+		if(area) {
+			Physics* physics = area->getPhysics();
+			if(physics) {
 				glColor3f(1.0, 0.0, 0.0);
-				physics.getWorld()->debugDrawWorld();
+				physics->getWorld()->debugDrawWorld();
 			}
 		}
 		glEnable(GL_DEPTH_TEST);
@@ -483,7 +483,7 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 		case(MODE_EDIT_OBJECTS):
 			if(getSelectedObject()) {
 				getSelectedObject()->setXYZ(tx_, ty_+0.125f, tz_);
-				area->addObject(*getSelectedObject());
+				area->addObject(getSelectedObject());
 			}
 			mode_ = MODE_NONE;
 			editor_->updateWindow();
@@ -512,7 +512,7 @@ void Interface::handleMouse3_(const SDL_Event& event) {
 	newobj->setShape(new btSphereShape(1));
 	newobj->setXYZ(-tx_, ty_+1.0f, -tz_);
 	
-	area->addObject(*newobj);
+	area->addObject(newobj);
 }
 
 /**

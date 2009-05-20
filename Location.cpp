@@ -42,11 +42,11 @@ void Location::setArea(Area* area) {
 	Object* object = dynamic_cast<Object*>(this);
 
 	if(getArea() && object) {
-		getArea()->removeObject(*object);
+		getArea()->removeObject(object);
 	}
 
 	if(area && object) {
-			area->addObject(*object);
+			area->addObject(object);
 	}
 
 	setParent(area);

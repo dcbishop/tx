@@ -1,3 +1,6 @@
+#warning ['TODO'] Remove this file
+
+#if 0
 #include "RigidBody.hpp"
 
 static int DOOR_HEIGHT = 1.0f;
@@ -31,3 +34,4 @@ bool Door::getOpen() {
 void Door::update(const int time) {
 	Object::update(time);
 }
+#endif

@@ -45,10 +45,10 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		void setSolid(const int x, const int y, const bool isSolid=true);
 		bool isSolid(const int x, const int y);
 
-		void setPhysics(Physics& phy);
+		void setPhysics(Physics* phy);
 		Physics* getPhysics();
-		void addObject(Object& object);
-		void removeObject(Object& object);
+		void addObject(Object* object);
+		void removeObject(Object* object);
 		void draw(Interface* interface);
 		void update(const int time);
 		void getGridCoord(const float fx, const float fy, int &x, int &y);

@@ -30,15 +30,14 @@ int main(int argc, char* argv[]) {
 	GameManager gm;
 	DEBUG_A("GameManager created...");
 
-	Area area("TestArea");
-	gm.registerObject(area);
+	Area area("StartArea");
+	gm.registerObject(&area);
 	DEBUG_A("Area created...");
 
 	Interface interface(800, 600);
 	DEBUG_A("Interface created 1...");
 	interface.setResourceManager(&rm);
 	DEBUG_A("Interface created 2...");
-
 
 	RCBC_Init();
 
@@ -62,24 +61,11 @@ int main(int argc, char* argv[]) {
 	//gm.registerObject(*testobj);
 	//area.addObject(*testobj);
 
-	RigidBody ground("TestGround");
-	ground.setTempory(true);
-	ground.setMass(0);
-	//ground.setFriction(0.0f);
-	ground.setShape(new btStaticPlaneShape(btVector3(0,1,0), 0));
-	//ground.setVisual(new VModel("mayagrass.dae"));
-	ground.setVisible(false);
-	ground.setXYZ(1.0f, 0.0f, 1.0f);
-
-
-#warning ['TODO']: Either set this when added to GameManager or pull it from there when needed in Area
-	area.setPhysics(gm.getPhysics());
-
 	area.setDefaultArea();
 	FileProcessor::loadArea("data/areas/test-area.xml", &area);
-	area.addObject(player);
-	area.addObject(*testobj);
-	area.addObject(ground);
+	//area.addObject(player);
+	//area.addObject(*testobj);
+	//area.addObject(ground);
 
 	// If the area doesn't have a player spawn, make one in the middle
 	Object* playerSpawn = area.getObjectByTag("PlayerSpawn");
@@ -89,7 +75,8 @@ int main(int argc, char* argv[]) {
 		playerSpawn = new Object("PlayerSpawn");
 		playerSpawn->setXYZ(fx, 0.5, fz);
 		playerSpawn->setVisual(new VModel("pointer.dae"));
-		area.addObject(*playerSpawn);
+		playerSpawn->setVisible(false);
+		area.addObject(playerSpawn);
 	}
 
 	Location spawnLocation = playerSpawn->getLocation();

@@ -9,7 +9,12 @@ if not isInitilized(self) then
 	local object = p['object']
 
 	p['object'].isTempory = true
-	self.area:addObject(p['object'])
+	--self.area:addObject(p['object'])
+	--p['shape'] = p['object']:loadShapeBox(size, size, size)
+
+	--p['object']:setShape(p['shape'])
+	--p['object']:disableRotation()
+
 	local location = self.location
 	location.y = location.y + size
 	p['object'].location = location

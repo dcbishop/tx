@@ -12,6 +12,7 @@
 #include "VfxScripted.hpp"
 #include "Tile.hpp"
 #include "Container.hpp"
+#include "FileProcessor.hpp"
 
 Scripting::Scripting() {
 	myLuaState_ = lua_open();
@@ -24,8 +25,9 @@ Scripting::Scripting() {
 
 	luabind::open(myLuaState_);
 	luabind::module(myLuaState_) [
-		luabind::def("ScriptLog", Scripting::ScriptLog_)
-		//luabind::def("getMemoryAddress", Scripting::getMemoryAddress_)
+		luabind::def("ScriptLog", Scripting::ScriptLog_),
+		//luabind::def("getMemoryAddress", Scripting::getMemoryAddress_),
+		luabind::def("loadArea", FileProcessor::loadArea)
 	];
 
 	bindAll_();
@@ -226,6 +228,7 @@ luabind::scope Scripting::bindVfxScripted_() {
 luabind::scope Scripting::bindGameManager_() {
 	return
 		luabind::class_<GameManager, luabind::bases<Updateable, Container> >("GameManager")
+			.def("registerObject", &GameManager::registerObject)
 			//.def(luabind::constructor<>())
 		;
 }

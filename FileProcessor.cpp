@@ -375,9 +375,9 @@ void FileProcessor::loadArea_Area(mxml_node_t* area_node, Area* area) {
 			}
 
 			if(object) {
-				area->addObject(*object);
-				GameManager* gm = area->getGameManager();
-				gm->registerObject(*object);
+				area->addObject(object);
+				//GameManager* gm = area->getGameManager();
+				//gm->registerObject(object);
 			}
 		}
 	}

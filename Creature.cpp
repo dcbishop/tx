@@ -30,6 +30,13 @@ Creature::Creature(const string tag, Visual* model) {
 Creature::~Creature() {
 	#warning ['TODO']: deregisterObject me from physics engine, area list, delete shapes...
 	setArea(NULL);
+	/*delete(controller_);
+	delete(controller_ghost_);
+	delete(body_);*/
+
+	controller_ = NULL;
+	controller_ghost_ = NULL;
+	body_ = NULL;
 }
 
 /**
@@ -99,6 +106,14 @@ void Creature::addBody(Physics* physics) {
 void Creature::removeBody(Physics* physics) {
 	#warning ['TODO']: Remove characters from engine...
 	ERROR("This function not yet done...");
+	if(body_) {
+		//physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), physics->getWorld()->getDispatcher());
+		physics->getWorld()->removeCollisionObject(body_);
+	}
+
+	if(controller_) {
+		//physics->getWorld()->removeCharacter(controller_);
+	}
 }
 
 

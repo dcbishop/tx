@@ -106,10 +106,10 @@ void RigidBody::processBody_() {
 		//((btPairCachingGhostObject*)body_)->setWorldTransform (xform);
 		//motionState_->setWorldTransform (xform);
 		
-		/*btTransform xform;
+		btTransform xform;
 		motionState_->getWorldTransform(xform);
 		xform.setOrigin(btVector3(getX(), getY(), getZ()));
-		motionState_->setWorldTransform(xform);*/
+		motionState_->setWorldTransform(xform);
 	//}
 
 	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
@@ -129,6 +129,7 @@ void RigidBody::processBody_() {
 	if(rb) {
 		rb->clearForces();
 	}*/
+	stopMovement();
 }
 
 /**
@@ -381,6 +382,7 @@ void RigidBody::loadShapeFromModel_ProcessNode_(SceneNode* node, btCompoundShape
 		triangleMesh->addTriangle(vertex, true);
 	}*/
 	DEBUG_H("\tFlag...");
+	#warning ['TODO']: Change from malloc to triBase = new int[count]
 	// We need to make a fake index since the vertex data isn't indexed but its required by bullet
 	int* triangleIndexBase = (int*)malloc(vertices->count * sizeof(int));
 	for(int i = 0; i < vertices->count; i++) {
@@ -510,13 +512,17 @@ void RigidBody::disableRotation() {
 }
 
 void RigidBody::setKinematic() {
-	setMass(0.0);
-	body_->setCollisionFlags( body_->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-	body_->setActivationState(DISABLE_DEACTIVATION);
+	//setMass(1.0);
+	//body_->setCollisionFlags( body_->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	//body_->setActivationState(DISABLE_DEACTIVATION);
 }
 
 void RigidBody::stopMovement() {
-	
+	btRigidBody* rb = dynamic_cast<btRigidBody*>(body_);
+	if(rb) {
+		rb->clearForces();
+	}
+	//body_->clearForces();
 }
 
 #warning ['TODO']: Provide rotation accessors...

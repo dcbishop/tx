@@ -308,8 +308,9 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 		RigidBody* blocker = walkblockers_[x][y];
 		if(blocker) {
 			//blocker->removeRigidBody_();
-			blocker->removeBody(getPhysics());
+			//blocker->removeBody(getPhysics());
 			#warning ['TODO']: This should delete the old blocker...
+			delete(blocker);
 		}
 		//*(walkblockers_+(y*width_)+x) = NULL;
 		walkblockers_[x][y] = NULL;
@@ -325,7 +326,7 @@ void Area::setSolid(const int x, const int y, const bool solid) {
 		blocker->setXYZ(fx, 0.5f, fz);
 		//*(walkblockers_+(y*width_)+x) = blocker;
 		walkblockers_[x][y] = blocker;
-		addObject(*blocker);
+		addObject(blocker);
 	}
 }
 
@@ -434,8 +435,8 @@ Physics* Area::getPhysics() {
  * Sets the physics engine for the are to use.
  * @param physics The Physics engine pointer.
  */
-void Area::setPhysics(Physics& physics) {
-	physics_ = &physics;
+void Area::setPhysics(Physics* physics) {
+	physics_ = physics;
 	//processWalkmap_();
 }
 
@@ -452,18 +453,18 @@ void Area::setPhysics(Physics& physics) {
  * @param object The Object's pointer.
  * @see removeObject()
  */
-void Area::addObject(Object& object) {
+void Area::addObject(Object* object) {
 	//object.setArea(this);
-	object.setGameManager(getGameManager());
+	object->setGameManager(getGameManager());
 	GameManager* gm = getGameManager();
 	if(gm) {
 		gm->registerObject(object);
 	}
-	RigidBody* rb = dynamic_cast<RigidBody*>(&object);
+	RigidBody* rb = dynamic_cast<RigidBody*>(object);
 	if(rb) {
 		rb->addBody(getPhysics());
 	}
-	addChild(&object);
+	addChild(object);
 }
 
 /**
@@ -471,9 +472,9 @@ void Area::addObject(Object& object) {
  * @param object The Object's pointer.
  * @see addObject()
  */
-void Area::removeObject(Object& object) {
-	removeChild(&object);
-	RigidBody* rb = dynamic_cast<RigidBody*>(&object);
+void Area::removeObject(Object* object) {
+	removeChild(object);
+	RigidBody* rb = dynamic_cast<RigidBody*>(object);
 	if(rb) {
 		rb->removeBody(getPhysics());
 	}
@@ -484,7 +485,7 @@ void Area::removeObject(Object& object) {
  * @param time The current game time in milliseconds.
  */
 void Area::update(const int time) {
-	//physics_->update(time);
+	physics_->update(time);
 	Updateable::update(time);
 }
 

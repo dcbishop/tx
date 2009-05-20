@@ -3,22 +3,18 @@
 Physics::Physics() {
 	body_max_ = 16384; /* Maximum number of rigid bodies */
 
-#warning ['TODO']: This should be the size of the world (doesn't seem to effect anything).
 	btVector3 worldAabbMin(-10000,-10000,-10000);
 	btVector3 worldAabbMax(10000,10000,10000);
-	
+
 	broadphase_ = new btAxisSweep3(worldAabbMin,worldAabbMax,body_max_);
 	collisionConfiguration_ = new btDefaultCollisionConfiguration();
-    dispatcher_ = new btCollisionDispatcher(collisionConfiguration_);
+	dispatcher_ = new btCollisionDispatcher(collisionConfiguration_);
 	solver_ = new btSequentialImpulseConstraintSolver;
-	
+
 	dynamicsWorld_ = new btDiscreteDynamicsWorld(dispatcher_,
 					broadphase_, solver_, collisionConfiguration_);
 	setGravity(GRAVITY_EARTH);
-	
-	/*BulletDebugdraw *debugdraw = new BulletDebugdraw;
-	debugdraw->setDebugMode(1);
-	dynamicsWorld_->setDebugdrawer(new BulletDebugdraw);*/
+
 	gDebugDrawer_.setDebugMode(1);
 	dynamicsWorld_->setDebugDrawer(&gDebugDrawer_);
 	body_count_ = 0;
@@ -26,10 +22,10 @@ Physics::Physics() {
 
 Physics::~Physics() {
 	delete dynamicsWorld_;
-    delete solver_;
-    delete dispatcher_;
-    delete collisionConfiguration_;
-    delete broadphase_;
+	delete solver_;
+	delete dispatcher_;
+	delete collisionConfiguration_;
+	delete broadphase_;
 }
 
 /**
@@ -83,15 +79,11 @@ void Physics::removeRigidBody(btRigidBody* body) {
  * @param time The current game time in milliseconds.
  */
 void Physics::update(const int time) {
-	#warning ['TODO']: This should be calculated...
 	int time_diff = time - getLastupdate();
 	if(time_diff <= 0) {
 		return;
 	}
 	btScalar timeStep = ((float)time_diff) / 1000.0f;
-	//btScalar timeStep = 1.0f/60.0f;
-	//int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,10,1/60.0f);
 	int numsimsteps = dynamicsWorld_->stepSimulation(timeStep,0,1.0/60.0);
-	//DEBUG_A("dt: %d, Sim steps: %d", time_diff, numsimsteps);
 	Updateable::update(time);
 }

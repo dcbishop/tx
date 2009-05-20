@@ -23,10 +23,10 @@ class GameManager : public Updateable, public Container {
 	public:
 		GameManager();
 		void update(const int time);
-		void registerObject(Tagged& thing);
-		void deregisterObject(Tagged& thing);
+		void registerObject(Tagged* thing);
+		void deregisterObject(Tagged* thing);
 		
-		Physics& getPhysics();
+		//Physics& getPhysics();
 		Scripting& getScripting();
 		
 		int getGameTime();
