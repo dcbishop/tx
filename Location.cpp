@@ -17,19 +17,27 @@ Location Location::Location::getLocation() {
  * @param location The location.
  */
 void Location::setLocation(Location& location) {
+	DEBUG_A("SET LOCATION");
 	Area* newArea = location.getArea();
-	/*Area* oldArea = getArea();
+	Area* oldArea = getArea();
 
-	Object* object = dynamic_cast<Object*>(this);
+	/*Object* object = dynamic_cast<Object*>(this);
 	if(oldArea && object) {
 		oldArea->removeObject(*object);
 	}*/
 
-	setArea(NULL);
+	if(newArea != oldArea) {
+		DEBUG_A("AREA CHANCE");
+		setArea(NULL);
+	}
+
 	Position position = location.getPosition();
 	setPosition(position);
 	setRotation(location.getRotation());
-	setArea(newArea);
+
+	if(newArea != oldArea) {
+		setArea(newArea);
+	}
 }
 
 

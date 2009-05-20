@@ -39,7 +39,7 @@ else
 	local properties = getProperties(self)
 
 	-- If the nearest Crate is on the switch
-	if object:getGridX() == self:getGridX() and object:getGridY() == self:getGridY() then
+	if object and object:getGridX() == self:getGridX() and object:getGridY() == self:getGridY() then
 
 		-- If its not actived, active is
 		if not properties['active'] then

@@ -489,6 +489,14 @@ void Area::update(const int time) {
 	Updateable::update(time);
 }
 
+float Area::getAreaWorldWidth() {
+	return getWidth() * TILEWIDTH;
+}
+
+float Area::getAreaWorldHeight() {
+	return getHeight() * TILEWIDTH;
+}
+
 /**
  * Gets the x, y Area grid coordinates from OpenGL world coordinates.
  * @param fx The world X coordinate to be converted.
@@ -497,8 +505,12 @@ void Area::update(const int time) {
  * @param gy The value to store the Y grid Coord in.
  */
 void Area::getGridCoord(const float fx, const float fz, int &gx, int &gy) {
-	gx = -((fx)/TILEWIDTH)+(width_/2)+1;
-	gy = -((fz)/TILEWIDTH)+(height_/2)+1;
+	//fx = fx + getAreaWorldWidth()/2;
+	//fz = fz + getAreaWorldWidth()/2;
+	gx = (-fx+(getAreaWorldWidth()/2)-(TILEWIDTH/2)) / TILEWIDTH+1;
+	gy = (-fz+(getAreaWorldHeight()/2)-(TILEWIDTH/2)) / TILEWIDTH+1;
+	//gx = -((fx)+(TILEWIDTH/2)/TILEWIDTH)+(width_/2)+1;
+	//gy = -((fz)+(TILEWIDTH/2)/TILEWIDTH)+(height_/2)+1;
 }
 
 /**

@@ -38,9 +38,13 @@ class RigidBody : public Object {
 
 		virtual void addBody(Physics* physics);
 		virtual void removeBody(Physics* physics);
+		Physics* getPhysics();
+
 
 
 	protected:
+		void selfRemoveBody_();
+		void selfAddBody_();
 		btCollisionShape* shape_; /**< The collision shape. */
 		btCollisionObject* body_; /**< The collision body. */
 		virtual void processBody_();

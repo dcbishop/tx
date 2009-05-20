@@ -36,6 +36,8 @@ class Creature : public RigidBody, public Container {
 
 		virtual void addBody(Physics* physics);
 		virtual void removeBody(Physics* physics);
+		virtual void setXYZ(const float x, const float y, const float z);
+
 
 	private:
 		btKinematicCharacterController* controller_;

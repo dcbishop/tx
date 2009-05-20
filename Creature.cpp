@@ -116,6 +116,14 @@ void Creature::removeBody(Physics* physics) {
 	}
 }
 
+void Creature::setXYZ(const float x, const float y, const float z) {
+	if(controller_) {
+		controller_->warp(btVector3(x, y, z));
+	} else {
+		RigidBody::setXYZ(x, y, z);
+	}
+	//Object::setXYZ(x, y, z);
+}
 
 /**
  * Sets the creature as moving backwards.

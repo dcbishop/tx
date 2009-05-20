@@ -56,6 +56,9 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		RigidBody* getSolid(const int x, const int y);
 		void setRotation(const int x, const int y, float rotation);
 		float getRotation(const int x, const int y);
+		float getAreaWorldWidth();
+		float getAreaWorldHeight();
+
 
 		void fill(const int x1, const int y1, const int x2, const int y2, const string filename, const bool solidity=false, const float rotation = 0.0f);
 		void boxRoom(const int x1, const int y1, const int x2, const int y2);

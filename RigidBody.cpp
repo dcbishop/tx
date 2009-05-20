@@ -57,12 +57,7 @@ void RigidBody::setShape(btCollisionShape* shape) {
 		#warning ['TODO']: Otherwise make a new body...
 	}
 
-	Area* area = getArea();
-	Physics* physics = NULL;
-	if(area) {
-		physics = getArea()->getPhysics();
-	}
-	removeBody(physics);
+	selfRemoveBody_();
 
 	if(shape_ && shape != shape_) {
 		//delete shape_;
@@ -73,17 +68,32 @@ void RigidBody::setShape(btCollisionShape* shape) {
 }
 
 /**
- * Processes the properties of the body, shape, mass friction, etc...
+ * Get the current Physics engine instance.
  */
-void RigidBody::processBody_() {
-
-	// Remove the current body from the physics engine
+Physics* RigidBody::getPhysics() {
 	Area* area = getArea();
 	Physics* physics = NULL;
 	if(area) {
 		physics = getArea()->getPhysics();
 	}
-	removeBody(physics);
+	return physics;
+}
+
+void RigidBody::selfRemoveBody_() {
+	removeBody(getPhysics());
+}
+
+void RigidBody::selfAddBody_() {
+	addBody(getPhysics());
+}
+
+/**
+ * Processes the properties of the body, shape, mass friction, etc...
+ */
+void RigidBody::processBody_() {
+
+	// Remove the current body from the physics engine
+	selfRemoveBody_();
 
 	if(!shape_) {
 		return;
@@ -123,7 +133,7 @@ void RigidBody::processBody_() {
 
 	body_ = new btRigidBody(rigidBodyCI);
 	setXYZ(x, y, z);
-	addBody(physics);
+	selfAddBody_();
 
 	/*btRigidBody* rb = dynamic_cast<btRigidBody*>(body_);
 	if(rb) {
