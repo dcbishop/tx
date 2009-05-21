@@ -3,15 +3,12 @@
 #include "Interface.hpp"
 
 VfxColour::VfxColour(float red, float green, float blue, float alpha) {
-	red_ = red;
-	green_ = green;
-	blue_ = blue;
-	alpha_ = alpha;
+	setColour(red, green, blue, alpha);
 }
 
 void VfxColour::preDraw(Interface* interface) {
 	glEnable(GL_COLOR_MATERIAL);
-	glColor4f(red_, green_, blue_, alpha_);
+	glColor4f(getRed(), getGreen(), getBlue(), getAlpha());
 }
 
 void VfxColour::postDraw(Interface* interface) {
@@ -23,9 +20,9 @@ void VfxColour::postDraw(Interface* interface) {
 /**
  * Sets the colour to apply to the object.
  */
-void VfxColour::setColour(float red, float green, float blue, float alpha) {
+/*void VfxColour::setColour(float red, float green, float blue, float alpha) {
 	red_ = red;
 	green_ = green;
 	blue_ = blue;
 	alpha_ = alpha;
-}
+}*/

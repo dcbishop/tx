@@ -284,6 +284,7 @@ luabind::scope Scripting::bindArea_() {
 			.def("isSolid", &Area::isSolid)
 			.def("getTile", &Area::getTile)
 			.def("setTile", &Area::setTile)
+			.def("getLocationFromGridCoord", &Area::getLocationFromGridCoord)
 			//.def_readonly("getGridCoord", &Area::getGridCoord, luabind::pure_out_value(_3) + luabind::pure_out_value(_4))
 			//.def("getWorldCoord", &Area::getWorldCoord)
 	;

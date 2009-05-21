@@ -15,7 +15,6 @@ function modifyAreaCounter(area, change, name)
 		p[name] = 0
 	end
 	p[name] = p[name] + change
-	print(name .. ": " .. areaprop[name])
 end
 
 if not isInitilized(self) then
@@ -24,16 +23,34 @@ if not isInitilized(self) then
 	local area = self.area
 	local gx = self:getGridX()
 	local gy = self:getGridY()
-	local tile = area:getTile(gx, gy)
-	properties['vfxscript'] = VfxScripted("vfx-pulsate.lua")
-	tile:addVfx(properties['vfxscript'])
+	--local tile = area:getTile(gx, gy)
 
-	setProperties(self, properties)
-	areaprop = getAreaProperties(self.area)
+	local location = area:getLocationFromGridCoord(gx, gy)
 	
 	--areaprop['num_switches'] = 999
 	modifyAreaCounter(self.area, 1, 'num_switches')
 	modifyAreaCounter(self.area, 0, 'active_switches')
+
+	properties['plate_vmodel'] = VModel("plate.dae")	
+	local plateObj = Object(self.tag .. "_PLATE", properties['plate_vmodel'])
+	plateObj.isTempory = true
+	plateObj.location = location
+	plateObj.y = plateObj.y + 0.01
+	properties['plate_object'] = plateObj
+
+	properties['frame_vmodel'] = VModel("frame.dae")
+	local frameObj = Object(self.tag .. "_FRAME", properties['frame_vmodel'])
+	frameObj.isTempory = true
+	frameObj.location = location
+	frameObj.y = frameObj.y + 0.02
+	properties['frame_object'] = frameObj
+
+	properties['vfxscript'] = VfxScripted("vfx-pulsate.lua")
+	plateObj:addVfx(properties['vfxscript'])
+	areaprop = getAreaProperties(self.area)
+
+
+	setProperties(self, properties)
 else
 	-- Find the nearest Crate in the area
 	local area = self.area
@@ -50,8 +67,6 @@ else
 
 		-- If its not actived, active is
 		if not properties['active'] then
-			print(self.tag .. " ACTIVEATED " .. object:getGridX() .. "x" .. object:getGridY() .. " = " .. self:getGridX() .. "x" .. self:getGridY())
-
 			-- Make the crate pulse
 			properties['cratevfx'] = VfxScripted("vfx-pulsate.lua")
 			object:addVfx(properties['cratevfx'])
@@ -59,18 +74,7 @@ else
 			-- Increase the pulse rate of the tile
 			modifyPulse(properties['vfxscript'], 4)
 
-			-- Increate the tile active count for the area
-			--[[if not isInitilized(area) then
-				ap = {}
-				ap['init'] = true
-				setProperties(area, ap)
-			end]]--
-
-			--areaprop = getProperties(self.area)
-			--modifyShared(self.area, 1)
-
-			--print(self.area:getMemoryAddress())
-
+			-- Set activation state
 			properties['active'] = object
 			modifyAreaCounter(self.area, 1, 'active_switches')
 		end

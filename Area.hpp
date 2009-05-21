@@ -24,6 +24,7 @@ class GameManager;
 class Tile;
 class Object;
 class RigidBody;
+class PointLight;
 
 using namespace std;
 
@@ -72,6 +73,7 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		RigidBody ***walkblockers_;
 		Physics* physics_;
 		btCollisionShape* clipbox_;
+		vector<PointLight*> lights_;
 };
 
 #endif /* TX_AREA_HPP */

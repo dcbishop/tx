@@ -131,7 +131,7 @@ void Creature::removeBody(Physics* physics) {
 	}
 
 	if(controller_) {
-		physics->getWorld()->removeCharacter(controller_);
+		//physics->getWorld()->removeCharacter(controller_);
 	}
 }
 

@@ -7,6 +7,7 @@ using std::string;
 #include <iostream>
 
 #include <rcbc.h>
+#include "console.h"
 
 #include "Area.hpp"
 #include "Interface.hpp"
@@ -17,7 +18,7 @@ using std::string;
 #include "FileProcessor.hpp"
 #include "VfxColour.hpp"
 #include "VfxVisual.hpp"
-#include "console.h"
+#include "PointLight.hpp"
 
 
 /**
@@ -32,7 +33,7 @@ int main(int argc, char* argv[]) {
 
 	Area sokoban1("Sokoban1");
 	gm.registerObject(&sokoban1);
-	FileProcessor::loadArea("data/areas/sokoban1.xml", &sokoban1);
+	FileProcessor::loadArea("data/areas/sokoban1.xml", &sokoban1);	
 
 	Area sokoban2("Sokoban2");
 	gm.registerObject(&sokoban2);
@@ -41,6 +42,12 @@ int main(int argc, char* argv[]) {
 	Area area("StartArea");
 	gm.registerObject(&area);
 	DEBUG_A("Area created...");
+
+	PointLight test("TestLight");
+	test.ambient.setColour(1.0, 0.0, 0.0);
+	test.setTempory(true);
+	test.setXYZ(0.0, 1.0, 0.0);
+	area.addObject(&test);
 
 	Interface interface(800, 600);
 	DEBUG_A("Interface created 1...");

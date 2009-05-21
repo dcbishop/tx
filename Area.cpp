@@ -7,6 +7,7 @@
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
 #include "Interface.hpp"
+#include "PointLight.hpp"
 
 #include "console.h"
 
@@ -398,6 +399,39 @@ void Area::draw(Interface* interface) {
 		return;
 	}
 
+	// Process lights
+	int light = 0; // We want to skip the first light as its a global one...
+	for(vector<PointLight*>::iterator iter = lights_.begin(); iter != lights_.end(); iter++) {
+		PointLight* pl = *iter;
+		glEnable(GL_LIGHT0 + light);
+
+		// Set light position
+		float position[] = {pl->getX(), pl->getY(), pl->getX(), pl->getDirectional()};
+		glLightfv(GL_LIGHT0 + light, GL_POSITION, position);
+
+		float argba[] = {pl->ambient.red, pl->ambient.green, pl->ambient.blue, pl->ambient.alpha};
+		glLightfv(GL_LIGHT0+light, GL_AMBIENT, argba);
+
+		float drgba[] = {pl->diffuse.red, pl->diffuse.green, pl->diffuse.blue, pl->diffuse.alpha};
+		glLightfv(GL_LIGHT0+light, GL_DIFFUSE, drgba);
+
+		float srgba[] = {pl->specular.red, pl->specular.green, pl->specular.blue, pl->specular.alpha};
+		glLightfv(GL_LIGHT0+light, GL_SPECULAR, srgba);
+
+		float ergba[] = {pl->emission.red, pl->emission.green, pl->emission.blue, pl->emission.alpha};
+		glLightfv(GL_LIGHT0+light, GL_EMISSION, ergba);
+
+		glLightf(GL_LIGHT0+light, GL_CONSTANT_ATTENUATION, pl->getConstantAttenuation());
+		glLightf(GL_LIGHT0+light, GL_LINEAR_ATTENUATION, pl->getLinearAttenuation());
+		glLightf(GL_LIGHT0+light, GL_QUADRATIC_ATTENUATION, pl->getQuadraticAttenuation());
+
+		light++;
+	}
+	// Disable unused lights
+	for(int i = light; i < 8; i++) {
+		glDisable(GL_LIGHT0 + i);
+	}
+
 	glPushMatrix();
 	glTranslatef( TILEWIDTH * width_ / 2, 0.0f, TILEWIDTH * height_ / 2 );
 	for(int y = 0; y < height_; y++) {
@@ -470,6 +504,12 @@ void Area::addObject(Object* object) {
 	if(rb) {
 		rb->addBody(getPhysics());
 	}
+
+	PointLight* pl = dynamic_cast<PointLight*>(object);
+	if(pl) {
+		lights_.push_back(pl);
+	}
+
 	addChild(object);
 }
 
@@ -488,6 +528,7 @@ void Area::removeObject(Object* object) {
 	if(gm) {
 		gm->deregisterObject(object);
 	}
+	#warning ['TODO']: Remove lights...
 }
 
 /**
