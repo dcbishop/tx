@@ -9,7 +9,7 @@ GameManager::GameManager() {
 /**
  * update physics, everything with a tag (Areas, Objects).
  */
-void GameManager::update(const int time) {	
+void GameManager::update(const int time) {
 	for(multimap<string, Tagged*>::iterator iter = tags_.begin(); iter != tags_.end(); ++iter) {
 		Updateable *u = dynamic_cast<Updateable*>(iter->second);
 		if(u) {

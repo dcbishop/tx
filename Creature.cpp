@@ -87,8 +87,27 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 						stepHeight);
 }
 
-btVector3& Creature::getPos() {
+btVector3 Creature::getPos() {
 	return body_->getWorldTransform().getOrigin();
+	
+	/*if(controller_ghost_) {
+		return controller_ghost_->getWorldTransform().getOrigin();
+	} else {
+		throw "No controller.";
+	}*/
+	if(!body_) {
+		//DEBUG_A("RigidBody: '%s' has no body", getTag().c_str());
+		//throw "No body...";
+	}
+
+	//btRigidBody* rb = dynamic_cast<btRigidBody*>(body_);
+	/*if(controller_) {
+		btTransform newTrans;
+		controller_ghost_->getMotionState()->getWorldTransform(newTrans);
+		return newTrans.getOrigin();
+	} else {
+		throw "No rigid body...";
+	}*/
 }
 
 void Creature::addBody(Physics* physics) {
@@ -107,12 +126,12 @@ void Creature::removeBody(Physics* physics) {
 	#warning ['TODO']: Remove characters from engine...
 	ERROR("This function not yet done...");
 	if(body_) {
-		//physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), physics->getWorld()->getDispatcher());
+		physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), physics->getWorld()->getDispatcher());
 		physics->getWorld()->removeCollisionObject(body_);
 	}
 
 	if(controller_) {
-		//physics->getWorld()->removeCharacter(controller_);
+		physics->getWorld()->removeCharacter(controller_);
 	}
 }
 

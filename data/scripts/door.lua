@@ -1,5 +1,5 @@
 -- An automatic door that open when the player approaches.
-
+height = 1.0
 if not isInitilized(self) then
 	local properties = {}
 
@@ -15,13 +15,14 @@ if not isInitilized(self) then
 	closeObj.isTempory = true
 	closeObj.isVisible = false
 	closeObj.location = self.location
+	closeObj.y = closeObj.y + (height/2.0)
 
 	local openTag = self.tag .. "_OPEN"
 	local openObj = Object(openTag, properties['ptrvmodel'])
 	openObj.isTempory = true
 	openObj.isVisible = false
 	openObj.location = self.location
-	openObj.y = openObj.y + 1.5
+	openObj.y = closeObj.y + height * (3/2)
 
 	--local area = self.area
 	--area:addObject(closeObj)
@@ -55,13 +56,15 @@ else
 			self.isVisible = false
 			local size = 0.45
 			local location = self.location
-			location.y = location.y + size
-			--p['object'].location = location
+			location.y = location.y + size * 2
+
 			properties['shape'] = properties['doorObj']:loadShapeBox(size, size, size)
-			--properties['doorObj']:setShape(properties['shape'])
-			--properties['doorObj']:disableRotation()
-			--properties['doorObj']:setKinematic()
+			properties['doorObj']:setShape(properties['shape'])
+			properties['doorObj']:disableRotation()
+			properties['doorObj']:setKinematic()
+			properties['doorObj'].location = location
 			properties['spawned'] = true
+
 		end
 	end
 
@@ -77,8 +80,9 @@ else
 		end
 	end
 
+	local closeObj = properties['closeObj']
 	local player = getPlayer()
-	if player and door:getDistanceTo(player) < 1.5 then
+	if player and closeObj:getDistanceTo(player) < 1.0 then
 		if properties['locked'] == false then
 			properties['currentObj'] = properties['openObj']
 		end
@@ -87,7 +91,7 @@ else
 	end
 
 	local currentObj = properties['currentObj']
-	local speed = 0.001
+	local speed = 0.01
 	local ds = speed * getTimeDiff()
 
 	if door:getDistanceTo(currentObj) > speed then

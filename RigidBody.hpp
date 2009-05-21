@@ -14,7 +14,7 @@ class RigidBody : public Object {
 		virtual ~RigidBody();
 		virtual Object* clone();
 		virtual void setShape(btCollisionShape* shape);
-		virtual btVector3& getPos();
+		virtual btVector3 getPos();
 		virtual const float getX();
 		virtual const float getY();
 		virtual const float getZ();

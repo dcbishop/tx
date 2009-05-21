@@ -2,8 +2,10 @@
 
 function modifyPulse(pulse, change)
 	local p = getProperties(pulse)
-	p['rate'] = p['rate'] * change
-	p['current_rate'] = p['current_rate'] * change
+	if p then
+		p['rate'] = p['rate'] * change
+		p['current_rate'] = p['current_rate'] * change
+	end
 end
 
 function modifyAreaCounter(area, change, name)
@@ -40,6 +42,11 @@ else
 
 	-- If the nearest Crate is on the switch
 	if object and object:getGridX() == self:getGridX() and object:getGridY() == self:getGridY() then
+		-- Speed up crate pulse effect
+		if properties['active'] and properties['cratevfx'] and not properties['pulsefix'] then
+			modifyPulse(properties['cratevfx'], 4)
+			properties['pulsefix'] = true
+		end
 
 		-- If its not actived, active is
 		if not properties['active'] then
@@ -48,7 +55,6 @@ else
 			-- Make the crate pulse
 			properties['cratevfx'] = VfxScripted("vfx-pulsate.lua")
 			object:addVfx(properties['cratevfx'])
-			--modifyPulse(vfxscripted, 4)
 
 			-- Increase the pulse rate of the tile
 			modifyPulse(properties['vfxscript'], 4)
@@ -84,6 +90,7 @@ else
 
 			properties['cratevfx'] = nil
 			properties['active'] = nil
+			properties['pulsefix'] = false
 		end
 	end
 end

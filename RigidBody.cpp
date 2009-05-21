@@ -175,7 +175,7 @@ void RigidBody::removeBody(Physics* physics) {
 /**
  * @return a vector containing the -x, y, z coordinates.
  */
-btVector3& RigidBody::getPos() {
+btVector3 RigidBody::getPos() {
 	if(!body_) {
 		//DEBUG_A("RigidBody: '%s' has no body", getTag().c_str());
 		throw "No body...";
@@ -237,9 +237,18 @@ void RigidBody::setFriction(const btScalar friction) {
 }
 
 void RigidBody::setXYZ(const float x, const float y, const float z) {
-	if(body_) {
+	btRigidBody* rb = dynamic_cast<btRigidBody*>(body_);
+	if(rb) {
+	//if(body_) {
 		//removeBody(getPhysics());
-		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
+		if(mass_ == 0.0) {
+			body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
+		} else {
+			btTransform newTrans;
+			rb->getMotionState()->getWorldTransform(newTrans);
+			newTrans.setOrigin(btVector3(x, y, z));
+			rb->getMotionState()->setWorldTransform(newTrans);
+		}
 		//addBody(getPhysics());
 	}
 	Object::setXYZ(x, y, z);
@@ -525,8 +534,8 @@ void RigidBody::disableRotation() {
 
 void RigidBody::setKinematic() {
 	//setMass(1.0);
-	//body_->setCollisionFlags( body_->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-	//body_->setActivationState(DISABLE_DEACTIVATION);
+	body_->setCollisionFlags( body_->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	body_->setActivationState(DISABLE_DEACTIVATION);
 }
 
 void RigidBody::stopMovement() {

@@ -32,7 +32,7 @@ class Creature : public RigidBody, public Container {
 
 		virtual void setTurnRate(const float turn_rate);
 		virtual void setShape(btCollisionShape* shape);
-		virtual btVector3& getPos();
+		virtual btVector3 getPos();
 
 		virtual void addBody(Physics* physics);
 		virtual void removeBody(Physics* physics);

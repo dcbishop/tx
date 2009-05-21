@@ -11,9 +11,8 @@ if not isInitilized(self) then
 	properties['max'] = 1.0
 	properties['pulse'] = properties['min']
 	setProperties(self, properties)
-	print("Pulse initilized...")
 else
-	properties = getProperties(self)
+	local properties = getProperties(self)
 
 	if properties['pulse'] > properties['max'] then
 		properties['current_rate'] = -properties['rate']
