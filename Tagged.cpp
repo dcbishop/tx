@@ -53,6 +53,7 @@ GameManager* Tagged::getGameManager() {
  * @param gm The GameManager.
  */
 void Tagged::setGameManager(GameManager* gm) {
+	//gm->deregisterObject(this);
 	gm_ = gm;
 }
 

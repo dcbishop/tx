@@ -118,6 +118,7 @@ void Creature::removeBody(Physics* physics) {
 
 void Creature::setXYZ(const float x, const float y, const float z) {
 	if(controller_) {
+		controller_->reset();
 		controller_->warp(btVector3(x, y, z));
 	} else {
 		RigidBody::setXYZ(x, y, z);

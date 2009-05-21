@@ -455,11 +455,17 @@ void Area::setPhysics(Physics* physics) {
  */
 void Area::addObject(Object* object) {
 	//object.setArea(this);
-	object->setGameManager(getGameManager());
+	DEBUG_M("Entering function...");
 	GameManager* gm = getGameManager();
-	if(gm) {
-		gm->registerObject(object);
+	if(object->getGameManager() != gm) {
+		DEBUG_A("Different GameMangers...");
+		object->setGameManager(gm);
+		if(gm) {
+			DEBUG_A("Registering  object with gamemanager...");
+			gm->registerObject(object);
+		}
 	}
+
 	RigidBody* rb = dynamic_cast<RigidBody*>(object);
 	if(rb) {
 		rb->addBody(getPhysics());
@@ -477,6 +483,10 @@ void Area::removeObject(Object* object) {
 	RigidBody* rb = dynamic_cast<RigidBody*>(object);
 	if(rb) {
 		rb->removeBody(getPhysics());
+	}
+	GameManager* gm = getGameManager();
+	if(gm) {
+		gm->deregisterObject(object);
 	}
 }
 

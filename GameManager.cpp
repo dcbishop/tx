@@ -67,7 +67,8 @@ void GameManager::deregisterObject(Tagged* thing) {
 	if(contained) {
 		removeChild(contained);
 	}
-	#warning ['TODO']: deregister objects, remove areas from list...
+	thing->setGameManager(NULL);
+	#warning ['TODO']: deregister remove areas from list...
 }
 
 /** 

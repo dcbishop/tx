@@ -55,6 +55,7 @@ void Scripting::loadLua(const string filename) {
 	if(result) {
 		//ERROR("LUA error loading '%s'", filename);
 		luaL_dostring(myLuaState_, "ScriptLog(\"Error loading script.\")\n");
+		DEBUG_A("%s", filename.c_str());
 	}
 }
 

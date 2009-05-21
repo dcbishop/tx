@@ -23,7 +23,7 @@ if not isInitilized(self) then
 	openObj.location = self.location
 	openObj.y = openObj.y + 1.5
 
-	local area = self.area
+	--local area = self.area
 	--area:addObject(closeObj)
 	--area:addObject(openObj)
 	--area:addObject(doorObj)
@@ -51,7 +51,7 @@ else
 
 	if not properties['spawned'] then
 		-- We spawn the crate on a delay due to the physics engine shooting it randomly around if done at start
-		if time > properties['spawntime'] + 500 then
+		if time > properties['spawntime'] + 1500 then
 			self.isVisible = false
 			local size = 0.45
 			local location = self.location
@@ -68,7 +68,7 @@ else
 
 	local door = properties['doorObj']
 	if properties['switches'] then
-		pa = getAreaProperties(door.area)
+		local pa = getAreaProperties(door.area)
 
 		if pa['active_switches'] >= pa['num_switches'] then
 			properties['locked'] = false
@@ -77,7 +77,8 @@ else
 		end
 	end
 
-	if door:getDistanceTo(getPlayer()) < 1.5 then
+	local player = getPlayer()
+	if player and door:getDistanceTo(player) < 1.5 then
 		if properties['locked'] == false then
 			properties['currentObj'] = properties['openObj']
 		end

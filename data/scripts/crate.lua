@@ -28,9 +28,6 @@ else
 		if time > p['spawntime'] + 500 then
 			self.isVisible = false
 			local size = 0.45
-			local location = self.location
-			location.y = location.y + size
-			--p['object'].location = location
 			p['shape'] = p['object']:loadShapeBox(size, size, size)
 			p['object']:setShape(p['shape'])
 			p['object']:disableRotation()

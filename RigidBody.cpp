@@ -238,7 +238,9 @@ void RigidBody::setFriction(const btScalar friction) {
 
 void RigidBody::setXYZ(const float x, const float y, const float z) {
 	if(body_) {
+		//removeBody(getPhysics());
 		body_->getWorldTransform().setOrigin( btVector3(x, y, z) );
+		//addBody(getPhysics());
 	}
 	Object::setXYZ(x, y, z);
 }

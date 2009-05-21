@@ -30,13 +30,17 @@ int main(int argc, char* argv[]) {
 	GameManager gm;
 	DEBUG_A("GameManager created...");
 
+	Area sokoban1("Sokoban1");
+	gm.registerObject(&sokoban1);
+	FileProcessor::loadArea("data/areas/sokoban1.xml", &sokoban1);
+
+	Area sokoban2("Sokoban2");
+	gm.registerObject(&sokoban2);
+	FileProcessor::loadArea("data/areas/sokoban2.xml", &sokoban2);
+
 	Area area("StartArea");
 	gm.registerObject(&area);
 	DEBUG_A("Area created...");
-
-	//Area sokoban1("Sokoban1");
-	//gm.registerObject(sokoban1);
-	//gm.registerObject(FileProcessor::loadArea("data/areas/sokoban1"));
 
 	Interface interface(800, 600);
 	DEBUG_A("Interface created 1...");
