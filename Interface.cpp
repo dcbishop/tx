@@ -468,6 +468,10 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 
 	Tile* tile;
 	Area* area = creature_->getArea();
+	if(!area) {
+		return;
+	}
+
 	switch(mode_) {
 		case(MODE_NONE):
 			return;
@@ -482,8 +486,10 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 			break;
 		case(MODE_EDIT_OBJECTS):
 			if(getSelectedObject()) {
-				getSelectedObject()->setXYZ(tx_, ty_+0.125f, tz_);
-				area->addObject(getSelectedObject());
+				//getSelectedObject()->setXYZ(tx_, ty_+0.125f, tz_);
+				//area->addObject(getSelectedObject());
+				Location location = area->getLocation(tx_, ty_+0.125f, tz_);
+				getSelectedObject()->setLocation(location);
 			}
 			mode_ = MODE_NONE;
 			editor_->updateWindow();

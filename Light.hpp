@@ -1,12 +1,12 @@
-#ifndef TX_POINTLIGHT_HPP
-#define TX_POINTLIGHT_HPP
+#ifndef TX_Light_HPP
+#define TX_Light_HPP
 
 #include "Object.hpp"
 #include "Colour.hpp"
 
-class PointLight : public Object {
+class Light : public Object {
 	public:
-		PointLight(string tag = DEFAULT_TAG, Visual* model = NULL);
+		Light(string tag = DEFAULT_TAG, Visual* model = NULL);
 
 		float getDirectional();
 		float getConstantAttenuation();
@@ -29,4 +29,4 @@ class PointLight : public Object {
 		float quadraticAttenuation_;
 };
 
-#endif // TX_POINTLIGHT_HPP
+#endif // TX_Light_HPP

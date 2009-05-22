@@ -7,7 +7,7 @@
 #include "RigidBody.hpp"
 #include "GameManager.hpp"
 #include "Interface.hpp"
-#include "PointLight.hpp"
+#include "Light.hpp"
 
 #include "console.h"
 
@@ -401,8 +401,8 @@ void Area::draw(Interface* interface) {
 
 	// Process lights
 	int light = 0; // We want to skip the first light as its a global one...
-	for(vector<PointLight*>::iterator iter = lights_.begin(); iter != lights_.end(); iter++) {
-		PointLight* pl = *iter;
+	for(vector<Light*>::iterator iter = lights_.begin(); iter != lights_.end(); iter++) {
+		Light* pl = *iter;
 		glEnable(GL_LIGHT0 + light);
 
 		// Set light position
@@ -431,6 +431,9 @@ void Area::draw(Interface* interface) {
 	for(int i = light; i < 8; i++) {
 		glDisable(GL_LIGHT0 + i);
 	}
+
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 
 	glPushMatrix();
 	glTranslatef( TILEWIDTH * width_ / 2, 0.0f, TILEWIDTH * height_ / 2 );
@@ -488,7 +491,7 @@ void Area::setPhysics(Physics* physics) {
  * @see removeObject()
  */
 void Area::addObject(Object* object) {
-	//object.setArea(this);
+	//object->setArea(this);
 	DEBUG_M("Entering function...");
 	GameManager* gm = getGameManager();
 	if(object->getGameManager() != gm) {
@@ -505,7 +508,7 @@ void Area::addObject(Object* object) {
 		rb->addBody(getPhysics());
 	}
 
-	PointLight* pl = dynamic_cast<PointLight*>(object);
+	Light* pl = dynamic_cast<Light*>(object);
 	if(pl) {
 		lights_.push_back(pl);
 	}
@@ -589,5 +592,19 @@ Location Area::getLocationFromGridCoord(const int x, const int y) {
 	Location location;
 	location.setArea(this);
 	location.setXYZ(fx, 0.0, fz);
+	return location;
+}
+
+/**
+ * Returns a location from the cordinates.
+ * @param x
+ * @param y
+ * @param z
+ * @return The location.
+ */
+Location Area::getLocation(const float x, const float y, const float z) {
+	Location location;
+	location.setArea(this);
+	location.setXYZ(x, y, z);
 	return location;
 }

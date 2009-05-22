@@ -11,13 +11,13 @@
 class Location : public Position, public Rotation, public Contained {
 	public:
 		Location getLocation();
-		void setLocation(Location& location);
+		virtual void setLocation(Location& location);
 		virtual void setArea(Area* area);
 		virtual Area* getArea();
 		virtual const float getDistanceTo(Location& location);
 		virtual const float getDistanceTo2D(Location& location);
-		const int getGridX();
-		const int getGridY();
+		virtual const int getGridX();
+		virtual const int getGridY();
 
 	private:
 		Area* area_;

@@ -22,7 +22,7 @@ else
 		properties['current_rate'] = properties['rate']
 	end
 	
-	dt = (time - self.last_update) / 1000
-	properties['pulse'] = properties['pulse'] + properties['current_rate'] * dt
+	local timediff = (time - self.last_update) / 1000
+	properties['pulse'] = properties['pulse'] + properties['current_rate'] * timediff
 	properties['vfx']:setColour(properties['pulse'], properties['pulse'], 0.0, 1.0)
 end

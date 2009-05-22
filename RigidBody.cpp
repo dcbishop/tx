@@ -266,36 +266,52 @@ void RigidBody::setZ(const float z) {
 	setXYZ(getX(), getY(), z);
 }
 
-void RigidBody::setRot_() {
+void RigidBody::processBodyRot_() {
+	DEBUG_A("Entering function");
 	if(!body_) {
+		DEBUG_A("No body");
 		return;
+	}
+	
+	DEBUG_A("\tGetting rots");
+	DEBUG_A("\tx:%f y:%f z:%f a:%f", getRotX(), getRotY(), getRotZ(), getRotAngle());
+
+	float rx = getRotX();
+	float ry = getRotY();
+	float rz = getRotZ();
+	float ra = getRotAngle();
+
+	// Stop setting invalid rotations that crash bullet...
+	if(rx == 0.0 && ry == 0.0 && rz == 0.0) {
+		rx = 1.0;
 	}
 
 	btTransform xform;
 	xform = getBody().getWorldTransform();
-	xform.setRotation(btQuaternion (btVector3(getRotX(), getRotY(), getRotZ()), getRotAngle()*(PI/180)));
+	xform.setRotation(btQuaternion (btVector3(rx, ry, rz), ra*(PI/180)));
 	//((btPairCachingGhostObject*)body_)->setWorldTransform (xform);
 	body_->setWorldTransform (xform);
+	DEBUG_A("\texiting function");
 }
 
 void RigidBody::setRotX(const float x) {
 	Object::setRotX(x);
-	setRot_();
+	processBodyRot_();
 }
 
 void RigidBody::setRotY(const float y) {
 	Object::setRotY(y);
-	setRot_();
+	processBodyRot_();
 }
 
 void RigidBody::setRotZ(const float z) {
 	Object::setRotZ(z);
-	setRot_();
+	processBodyRot_();
 }
 
 void RigidBody::setRotAngle(const float angle) {
 	Object::setRotAngle(angle);
-	setRot_();
+	processBodyRot_();
 }
 
 void drawCube() {

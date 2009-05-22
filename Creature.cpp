@@ -95,10 +95,10 @@ btVector3 Creature::getPos() {
 	} else {
 		throw "No controller.";
 	}*/
-	if(!body_) {
+	//if(!body_) {
 		//DEBUG_A("RigidBody: '%s' has no body", getTag().c_str());
 		//throw "No body...";
-	}
+	//}
 
 	//btRigidBody* rb = dynamic_cast<btRigidBody*>(body_);
 	/*if(controller_) {
@@ -124,22 +124,48 @@ void Creature::addBody(Physics* physics) {
 
 void Creature::removeBody(Physics* physics) {
 	#warning ['TODO']: Remove characters from engine...
+	DEBUG_A("Entering function...");
+	if(!physics) {
+		return;
+	}
+
 	ERROR("This function not yet done...");
+	btDynamicsWorld* world = physics->getWorld();
 	if(body_) {
-		physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), physics->getWorld()->getDispatcher());
-		physics->getWorld()->removeCollisionObject(body_);
+		physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), world->getDispatcher());
+		world->removeCollisionObject(body_);
 	}
 
 	if(controller_) {
-		//physics->getWorld()->removeCharacter(controller_);
+		physics->getWorld()->removeCharacter(controller_);
 	}
 }
 
 void Creature::setXYZ(const float x, const float y, const float z) {
+	DEBUG_A("Entering function...");
+	Physics* physics = getPhysics();
+	if(!physics) {
+		DEBUG_A("No phsyics...");
+		return;
+	}
+
+	btDynamicsWorld* world = physics->getWorld();
+	if(!world) {
+		DEBUG_A("No world");
+		return;
+	}
+
 	if(controller_) {
+		if(!body_) {
+			DEBUG_A("NOBODY");
+			BREAK();
+		}
+		//physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), world->getDispatcher());
 		controller_->reset();
+		DEBUG_A("Warping controller");
 		controller_->warp(btVector3(x, y, z));
 	} else {
+		DEBUG_A("No controller");
 		RigidBody::setXYZ(x, y, z);
 	}
 	//Object::setXYZ(x, y, z);

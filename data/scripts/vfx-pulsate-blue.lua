@@ -13,7 +13,7 @@ if not isInitilized(self) then
 	setProperties(self, properties)
 else
 	local properties = getProperties(self)
-
+	
 	if properties['pulse'] > properties['max'] then
 		properties['current_rate'] = -properties['rate']
 	end
@@ -21,8 +21,8 @@ else
 	if properties['pulse'] < properties['min'] then
 		properties['current_rate'] = properties['rate']
 	end
-	
-	dt = (time - self.last_update) / 1000
-	properties['pulse'] = properties['pulse'] + properties['current_rate'] * dt
+
+	local timediff = (time - self.last_update) / 1000
+	properties['pulse'] = properties['pulse'] + properties['current_rate'] * timediff
 	properties['vfx']:setColour(properties['pulse']*0.3, properties['pulse']*0.3, properties['pulse'], 1.0)
 end

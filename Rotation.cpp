@@ -3,15 +3,38 @@
 //#include <stdlib.h>
 #include <math.h> // For fmodf
 
-Rotation& Rotation::getRotation() {
+#include "console.h"
+
+Rotation::Rotation() {
+	setRotX(0.0);
+	setRotY(1.0);
+	setRotZ(0.0);
+	setRotAngle(0.0f);
+}
+
+/**
+ * Gets the Rotation.
+ * @return The Rotation.
+ */
+Rotation Rotation::getRotation() {
 	return *this;
 }
 
+/**
+ * Sets the Rotation from another Rotation.
+ * @param rotation The rotation to use.
+ */
 void Rotation::setRotation(Rotation& rotation) {
+	DEBUG_A("SetRotation x:%f, y:%f, z: %f, a: %f", rotation.getRotX(), rotation.getRotY(), rotation.getRotZ(), rotation.getRotAngle());
+	DEBUG_A("\tSetRX...");
 	setRotX(rotation.getRotX());
+	DEBUG_A("\tSetRY...");
 	setRotY(rotation.getRotY());
+	DEBUG_A("\tSetRZ...");
 	setRotZ(rotation.getRotZ());
+	DEBUG_A("\tSetRA...");
 	setRotAngle(rotation.getRotAngle());
+	DEBUG_A("\tExiting function...");
 }
 
 /**
@@ -27,7 +50,7 @@ void Rotation::setRotation(Rotation& rotation) {
  */
 void Rotation::setRotX(const float rx) {
 	rx_ = rx;
-	setRot_();
+	Rotation::wrapRot_();
 }
 
 /**
@@ -43,7 +66,7 @@ void Rotation::setRotX(const float rx) {
  */
 void Rotation::setRotY(const float ry) {
 	ry_ = ry;
-	setRot_();
+	Rotation::wrapRot_();
 }
 
 /**
@@ -59,7 +82,7 @@ void Rotation::setRotY(const float ry) {
  */
 void Rotation::setRotZ(const float rz) {
 	rz_ = rz;
-	setRot_();
+	Rotation::wrapRot_();
 }
 
 /**
@@ -75,13 +98,13 @@ void Rotation::setRotZ(const float rz) {
  */
 void Rotation::setRotAngle(const float angle) {
 	angle_ = angle;
-	setRot_();
+	Rotation::wrapRot_();
 }
 
 /**
  * For fixing any changes to the rotation data.
  */
-void Rotation::setRot_() {
+void Rotation::wrapRot_() {
 	if(angle_ > 360.0f || angle_ < -360.0f) {
 		angle_ = fmodf(angle_, 360.0f);
 	}

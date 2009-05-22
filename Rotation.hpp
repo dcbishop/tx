@@ -6,8 +6,9 @@
  */
 class Rotation {
 	public:
-		Rotation& getRotation();
-		void setRotation(Rotation& rotation);
+		Rotation();
+		virtual Rotation getRotation();
+		virtual void setRotation(Rotation& rotation);
 		virtual void setRotX(const float rx);
 		virtual void setRotY(const float ry);
 		virtual void setRotZ(const float rz);
@@ -18,7 +19,7 @@ class Rotation {
 		virtual const float getRotAngle();
 
 	private:
-		virtual void setRot_();
+		virtual void wrapRot_();
 		float rx_;
 		float ry_;
 		float rz_;

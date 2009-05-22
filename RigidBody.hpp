@@ -28,17 +28,17 @@ class RigidBody : public Object {
 		virtual void setRotY(const float y);
 		virtual void setRotZ(const float z);
 		virtual void setRotAngle(const float angle);
-		btCollisionShape* loadShapeFromModel(RigidBody* body);
-		btCollisionShape* loadShapeBox(const float x, const float y, const float z);
-		void disableRotation();
-		void setKinematic();
-		void stopMovement();
+		virtual btCollisionShape* loadShapeFromModel(RigidBody* body);
+		virtual btCollisionShape* loadShapeBox(const float x, const float y, const float z);
+		virtual void disableRotation();
+		virtual void setKinematic();
+		virtual void stopMovement();
 		virtual void draw(Interface* interface);
 		virtual btRigidBody& getBody();
 
 		virtual void addBody(Physics* physics);
 		virtual void removeBody(Physics* physics);
-		Physics* getPhysics();
+		virtual Physics* getPhysics();
 
 
 
@@ -48,7 +48,7 @@ class RigidBody : public Object {
 		btCollisionShape* shape_; /**< The collision shape. */
 		btCollisionObject* body_; /**< The collision body. */
 		virtual void processBody_();
-		virtual void setRot_();
+		virtual void processBodyRot_();
 
 
 	private:

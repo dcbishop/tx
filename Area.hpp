@@ -24,7 +24,7 @@ class GameManager;
 class Tile;
 class Object;
 class RigidBody;
-class PointLight;
+class Light;
 
 using namespace std;
 
@@ -64,6 +64,7 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		void fill(const int x1, const int y1, const int x2, const int y2, const string filename, const bool solidity=false, const float rotation = 0.0f);
 		void boxRoom(const int x1, const int y1, const int x2, const int y2);
 		Location getLocationFromGridCoord(const int x, const int y);
+		Location getLocation(const float x, const float y, const float z);
 
 	private:
 		void*** regrowArray_(void*** array, int old_width, int old_height, int width, int height);
@@ -73,7 +74,7 @@ class Area : public Tagged, public Updateable, public Contained, public Visual, 
 		RigidBody ***walkblockers_;
 		Physics* physics_;
 		btCollisionShape* clipbox_;
-		vector<PointLight*> lights_;
+		vector<Light*> lights_;
 };
 
 #endif /* TX_AREA_HPP */

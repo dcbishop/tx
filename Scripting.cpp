@@ -13,6 +13,7 @@
 #include "Tile.hpp"
 #include "Container.hpp"
 #include "FileProcessor.hpp"
+#include "Light.hpp"
 
 Scripting::Scripting() {
 	myLuaState_ = lua_open();
@@ -86,6 +87,7 @@ void Scripting::ScriptLog_(string message) {
 void Scripting::bindAll_() {
 	luabind::module(myLuaState_) [
 		bindBullet_(),
+		bindColour_(),
 		bindUpdateable_(),
 		bindContainer_(),
 		bindContained_(),
@@ -135,6 +137,15 @@ luabind::scope Scripting::bindContainer_() {
 luabind::scope Scripting::bindContained_() {
 	return luabind::class_<Contained>("Contained")
 		.def("getMemoryAddress", &Contained::getMemoryAddress)
+	;
+}
+
+luabind::scope Scripting::bindColour_() {
+	return luabind::class_<Colour>("Colour")
+		.def("getRed", &Colour::getRed)
+		.def("getGreen", &Colour::getRed)
+		.def("getBlue", &Colour::getRed)
+		.def("setColour", &Colour::setColour)
 	;
 }
 
@@ -212,9 +223,8 @@ luabind::scope Scripting::bindVfx_() {
 }
 
 luabind::scope Scripting::bindVfxColour_() {
-	return luabind::class_<VfxColour, Vfx>("VfxColour")
+	return luabind::class_<VfxColour, luabind::bases<Vfx, Colour> >("VfxColour")
 		.def(luabind::constructor<float, float, float, float>())
-		.def("setColour", &VfxColour::setColour)
 	;
 }
 
@@ -245,6 +255,13 @@ luabind::scope Scripting::bindObject_() {
 			//.def("addVfx", &Object::addVfx)
 			//.def("removeVfx", &Object::addVfx)
 		;
+}
+
+luabind::scope Scripting::bindLight_() {
+	return
+		luabind::class_<Light, luabind::bases<Object> >("Light")
+			.def(luabind::constructor<string, Visual*>())
+	;
 }
 
 luabind::scope Scripting::bindRigidBody_() {
@@ -285,6 +302,7 @@ luabind::scope Scripting::bindArea_() {
 			.def("getTile", &Area::getTile)
 			.def("setTile", &Area::setTile)
 			.def("getLocationFromGridCoord", &Area::getLocationFromGridCoord)
+			.def("getLocation", &Area::getLocation)
 			//.def_readonly("getGridCoord", &Area::getGridCoord, luabind::pure_out_value(_3) + luabind::pure_out_value(_4))
 			//.def("getWorldCoord", &Area::getWorldCoord)
 	;

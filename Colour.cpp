@@ -1,13 +1,13 @@
 #include "Colour.hpp"
 
 Colour::Colour() {
-	setColour();
+	setColour(1.0, 1.0, 1.0, 1.0);
 }
 
 void Colour::setColour(float nred, float ngreen, float nblue, float nalpha) {
-	red = red;
-	green = green;
-	blue = blue;
+	red = nred;
+	green = ngreen;
+	blue = nblue;
 	alpha = nalpha;
 }
 

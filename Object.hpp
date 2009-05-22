@@ -24,15 +24,15 @@ class Object : public Tagged, public Updateable, public Visual, public Location 
 		virtual ~Object();
 		virtual Object* clone() {return new Object(*this);} /**< Copy constructor */
 		virtual void draw(Interface* interface);
-		void setVisual(Visual* visual);
-		Visual& getVisual();
+		virtual void setVisual(Visual* visual);
+		virtual Visual& getVisual();
 		virtual void setScript(const int type, const string filename);
 		virtual string getScript(const int type);
-		void update(const int time);
-		void addVfx(Vfx* vfx);
-		void removeVfx(Vfx* vfx);
-		void setVisible(const bool visible);
-		bool isVisible();
+		virtual void update(const int time);
+		virtual void addVfx(Vfx* vfx);
+		virtual void removeVfx(Vfx* vfx);
+		virtual void setVisible(const bool visible);
+		virtual bool isVisible();
 
 
 	private:

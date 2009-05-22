@@ -8,7 +8,7 @@ class Position {
 	public:
 		Position();
 		virtual Position getPosition();
-		void setPosition(Position& position);
+		virtual void setPosition(Position& position);
 		virtual void setXYZ(const float x, const float y, const float z);
 		virtual const float getX();
 		virtual const float getY();

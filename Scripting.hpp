@@ -47,10 +47,11 @@ class Scripting {
 		luabind::scope bindVfxColour_();
 		luabind::scope bindVfxScripted_();
 		luabind::scope bindObject_();
+		luabind::scope bindLight_();
 		luabind::scope bindRigidBody_();
 		luabind::scope bindCreature_();
 		luabind::scope bindArea_();
-
+		luabind::scope bindColour_();
 
 		lua_State *myLuaState_;
 };

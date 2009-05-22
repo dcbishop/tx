@@ -27,17 +27,22 @@ void Location::setLocation(Location& location) {
 	}*/
 
 	if(newArea != oldArea) {
-		DEBUG_A("AREA CHANCE");
+		DEBUG_A("\tAREA CHANGE");
 		setArea(NULL);
 	}
 
-	Position position = location.getPosition();
-	setPosition(position);
-	setRotation(location.getRotation());
 
 	if(newArea != oldArea) {
+		DEBUG_A("\tSetting new area");
 		setArea(newArea);
 	}
+
+	Position position = location.getPosition();
+	Rotation rotation = location.getRotation();
+	setRotation(rotation);
+	setPosition(position);
+
+	DEBUG_A("\texiting function");
 }
 
 
