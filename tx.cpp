@@ -18,6 +18,7 @@ using std::string;
 #include "FileProcessor.hpp"
 #include "VfxColour.hpp"
 #include "VfxVisual.hpp"
+#include "VfxOffset.hpp"
 #include "Light.hpp"
 
 
@@ -66,6 +67,8 @@ int main(int argc, char* argv[]) {
 	player.setVisual(new VModel(MODEL_ROBOT));
 	//player.setXYZ(0.0f, 2.5f, 0.0f);
 	//gm.registerObject(player);
+	VfxOffset playerOffset(0.0, -0.2, 0.0);
+	player.addVfx(&playerOffset);
 	DEBUG_A("Player created...");
 
 	//Object* testobj = new Object("TestRigid");

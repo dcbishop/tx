@@ -174,7 +174,7 @@ EditorWin::EditorWin() {
 	objectsLayout->addWidget(newLabel, 2,1);
 	objectsLayout->addWidget(newObjectButton, 3,1);
 	objectsLayout->addWidget(newRigidBodyButton, 4,1);
-	objectsLayout->addWidget(newCreatureButton, 5,1);
+	//objectsLayout->addWidget(newCreatureButton, 5,1);
 	objectsLayout->addWidget(newTiles, 6,1);
 	objectsLayout->addWidget(solidCheckBox_, 7,1);
 
@@ -317,7 +317,7 @@ void EditorWin::newRigidBody_() {
 	VModel* model = new VModel("cube.dae");
 	RigidBody* object = new RigidBody(tag, model);
 	object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
-	ResourceManager* rm = interface_->getResourceManager();
+	//ResourceManager* rm = interface_->getResourceManager();
 	//object->setShape(rm->loadShapeFromModel(object));
 	interface_->setSelectedObject(object);
 	interface_->setEditMode(MODE_EDIT_OBJECTS);
