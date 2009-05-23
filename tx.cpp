@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 
 	Area sokoban2("Sokoban2");
 	gm.registerObject(&sokoban2);
-	
+	FileProcessor::loadArea("data/areas/sokoban2.xml", &sokoban2);
 
 	Area area("start-area.xml");
 	gm.registerObject(&area);
