@@ -97,7 +97,7 @@ void Tile::draw(Interface* interface) {
 	preDraw(interface);
 	RCBC_Render(model);
 	postDraw(interface);
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glDisable(GL_COLOR_MATERIAL);
+	//glColor3f(1.0f, 1.0f, 1.0f);
+	//glDisable(GL_COLOR_MATERIAL);
 	glPopMatrix();
 }

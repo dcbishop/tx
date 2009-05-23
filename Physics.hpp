@@ -41,43 +41,7 @@ class Physics : public Updateable {
 		btDiscreteDynamicsWorld* dynamicsWorld_;
 		int body_count_;
 		int body_max_;
-		GLDebugDrawer gDebugDrawer_;
+		//GLDebugDrawer gDebugDrawer_;
 };
-
-#warning ['TODO']: Remove nonworking bullet debugdraw...
-/*class BulletDebugdraw : public btIDebugdraw {
-	public:
-		void drawLine(const btVector3& from,const btVector3& to,const btVector3& colour) {
-			glBegin(GL_LINES);
-				glColor3f(colour.getX(), colour.getY(), colour.getZ());
-				glVertex3d(from.getX(), from.getY(), from.getZ());
-				glVertex3d(to.getX(), to.getY(), to.getZ());
-			glEnd();
-		}
-		
-		void drawContactPoint(const btVector3& pob, const btVector3& nob, btScalar distance, int life, const btVector3& colour) {
-		}
-		
-		void draw3dText(const btVector3& pos, const char* text) {
-			DEBUG_A("%s", text);
-		}
-		
-		void setDebugMode(int debug)
-		{
-			debug_ = debug;
-		}
-		
-		void reportErrorWarning(const char * warningString)
-		{
-			ERROR("%s", warningString);
-		}
-
-		int getDebugMode() const {
-			return debug_;
-		}
-	private:
-		int debug_;
-
-};*/
 
 #endif /* TX_PHYSICS_HPP */

@@ -2,6 +2,8 @@
 
 #include "GLDebugDrawer.h"
 
+#ifndef WIN32
+
 #ifdef WIN32 //needed for glut.h
 #include <windows.h>
 #endif
@@ -124,6 +126,7 @@ void	GLDebugDrawer::drawContactPoint(const btVector3& pointOnB,const btVector3& 
 	}
 }
 
+#endif
 
 
 

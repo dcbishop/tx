@@ -60,10 +60,10 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 	} else { // A default shape
 #warning ['TODO']: Don't hardcode these numbers? (although it can be overridden...)
 		
-		btScalar characterWidth = 0.35;
-		btScalar characterHeight = 0.8f-characterWidth;
-		shape_ = new btCapsuleShape(characterWidth,characterHeight);
-		//shape_ = new btBoxShape(btVector3(0.45f, 0.5f, 0.2f));
+		btScalar characterWidth = 0.3;
+		btScalar characterHeight = 0.0f;
+		//shape_ = new btCapsuleShape(characterWidth,characterHeight);
+		shape_ = new btBoxShape(btVector3(0.2f, 0.25f, 0.52f));
 	}
 
 	btTransform transform;
@@ -75,7 +75,7 @@ void Creature::setShape(btCollisionShape* shape = NULL) {
 	body_->setWorldTransform(transform);
 	body_->setCollisionShape(shape_);
 	body_->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-	
+
 	/*getBody().setSleepingThresholds (0.0, 0.0);
 	getBody().setAngularFactor (0.0);*/
 	
@@ -123,13 +123,11 @@ void Creature::addBody(Physics* physics) {
 }
 
 void Creature::removeBody(Physics* physics) {
-	#warning ['TODO']: Remove characters from engine...
 	DEBUG_A("Entering function...");
 	if(!physics) {
 		return;
 	}
 
-	ERROR("This function not yet done...");
 	btDynamicsWorld* world = physics->getWorld();
 	if(body_) {
 		physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), world->getDispatcher());
@@ -155,11 +153,7 @@ void Creature::setXYZ(const float x, const float y, const float z) {
 		return;
 	}
 
-	if(controller_) {
-		if(!body_) {
-			DEBUG_A("NOBODY");
-			BREAK();
-		}
+	if(controller_ && body_) {
 		//physics->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs(body_->getBroadphaseHandle(), world->getDispatcher());
 		controller_->reset();
 		DEBUG_A("Warping controller");
@@ -184,6 +178,7 @@ void Creature::setTurnRate(const float turn_rate) {
  */
 void Creature::Jump() {
 	LOG("Robots carn't jump %s...", SYMBOL_SADLEY);
+	controller_->jump();
 }
 
 /**
@@ -302,17 +297,17 @@ void Creature::update(const int time) {
 		walkSpeed *= running_multiplier_;
 	}
 	if(forward_) {
-		walkDirection -= forwardDir;
-	}
-	if(backward_) {
 		walkDirection += forwardDir;
 	}
-	if(strafe_left_) {
+	if(backward_) {
+		walkDirection -= forwardDir;
+	}
+	/*if(strafe_left_) {
 		walkDirection += strafeDir;
 	}
 	if(strafe_right_) {
 		walkDirection -= strafeDir;
-	}
+	}*/
 	if(turn_left_) {
 		//turn_angle_ -= turn_rate_ * dt;
 		setRotAngle(getRotAngle() - turn_rate_ * dt * (180/PI));
@@ -324,7 +319,7 @@ void Creature::update(const int time) {
 
 	// update the position
 	//xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), turn_angle_));
-	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), getRotAngle()*(PI/180)));
+	xform.setRotation(btQuaternion (btVector3(0.0, 1.0, 0.0), (getRotAngle()+180)*(PI/180)));
 	((btPairCachingGhostObject*)body_)->setWorldTransform (xform);
 	controller_->setWalkDirection(walkDirection * walkSpeed);
 

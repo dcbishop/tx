@@ -16,8 +16,9 @@ using namespace std;
 #include "Editor.hpp"
 
 const int MODE_NONE = 0;
-const int MODE_EDIT_TILES = 1;
-const int MODE_EDIT_OBJECTS = 2;
+const int MODE_SELECT = 1;
+const int MODE_EDIT_TILES = 2;
+const int MODE_EDIT_OBJECTS = 3;
 
 /**
  * A interface used for playing the game (SDL OpenGL Window and Input).
@@ -40,9 +41,8 @@ class Interface {
 
 		Object* getSelectedObject();
 		void setSelectedObject(Object* object);
-		void setEditModeObject();
-		void setEditModeTiles();
 		void setEditTileSolid(bool solid);
+		void setEditMode(int editMode);
 		int getEditMode();
 		void setEditTile(const string filename);
 		int getComputerTime();
@@ -57,8 +57,8 @@ class Interface {
 		Object& getEditObject_();
 		void setEditObject_(Object& object);
 
-		void resizeEvent(const SDL_Event& event);
-		void checkEvents_();
+		void resizeEvent_(const SDL_Event& event);
+		void checkEvenisEditTileSolid_();
 		void perspectiveSet__();
 
 		bool finished_;
@@ -85,8 +85,8 @@ class Interface {
 		Tile* tm_;
 		Object* to_;
 		Object* selectedObject_;
-		bool ts_;
-		vector<string> edit_tiles_;
+		bool isEditTileSolid_;
+		//vector<string> edit_tiles_;
 };
 
 #endif /* TX_INTERFACE_HPP */

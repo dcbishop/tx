@@ -1,7 +1,6 @@
--- Teleporter script
+-- Destination Pad - Spawns destination graphics
 if not isInitilized(self) then
 	local properties = {}
-
 
 	local gx = self:getGridX()
 	local gy = self:getGridY()
@@ -9,7 +8,7 @@ if not isInitilized(self) then
 
 	local location = area:getLocationFromGridCoord(gx, gy)
 
-	-- Spawn the teleporter panel
+	-- Spawn the teleporter pad
 	properties['plate_vmodel'] = VModel("plate.dae")	
 	local plateObj = Object(self.tag .. "_PLATE", properties['plate_vmodel'])
 	plateObj.isTempory = true
@@ -17,7 +16,7 @@ if not isInitilized(self) then
 	plateObj.y = plateObj.y + 0.01
 	properties['plate_object'] = plateObj
 
-	-- Spawn the metal frame around the teleporter
+	-- Spawn the metal frame around the pad
 	properties['frame_vmodel'] = VModel("frame.dae")
 	local frameObj = Object(self.tag .. "_FRAME", properties['frame_vmodel'])
 	frameObj.isTempory = true
@@ -25,24 +24,5 @@ if not isInitilized(self) then
 	frameObj.y = frameObj.y + 0.01
 	properties['frame_object'] = frameObj
 
-	-- Apply a pulsating blue VFX to the teleporter is on
-	properties['vfxscript'] = VfxScripted("vfx-pulsate-blue.lua")
-	plateObj:addVfx(properties['vfxscript'])
-
-
 	setProperties(self, properties)
-else
-	-- If the player is within teleport range
-	local player = getPlayer()
-	if player and self:getDistanceTo(player) < 1.0 then
-		local p = getProperties(self)
-
-		-- Find the destination object, to teleport player there		
-		local destination = getObjectByTag(self.tag .. "_DST")
-		if destination then
-			player.location = destination
-		else
-			--print("Could not find '" .. self.tag .. "_DST" .. "'")
-		end
-	end
 end

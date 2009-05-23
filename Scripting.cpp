@@ -105,7 +105,9 @@ void Scripting::bindAll_() {
 		bindObject_(),
 		bindRigidBody_(),
 		bindCreature_(),
+		bindLight_(),
 		bindArea_()
+		
 	];
 	luabind::bind_class_info(myLuaState_); 
 }
@@ -171,6 +173,9 @@ luabind::scope Scripting::bindRotation_() {
 		.property("ry", &Rotation::getRotY, &Rotation::setRotY)
 		.property("rz", &Rotation::getRotZ, &Rotation::setRotZ)
 		.property("angle", &Rotation::getRotAngle, &Rotation::setRotAngle)
+		.property("rotation", &Rotation::getRotation, &Rotation::setRotation)
+		.def("setRotation", &Rotation::setRotation)
+		.def("getRotation", &Rotation::getRotation)
 	;
 }
 
@@ -261,6 +266,14 @@ luabind::scope Scripting::bindLight_() {
 	return
 		luabind::class_<Light, luabind::bases<Object> >("Light")
 			.def(luabind::constructor<string, Visual*>())
+			.property("ambient", &Light::ambient)
+			.property("diffuse", &Light::diffuse)
+			.property("specular", &Light::specular)
+			.property("emission", &Light::emission)
+			.property("la", &Light::getLinearAttenuation, &Light::setLinearAttenuation)
+			.property("qa", &Light::getQuadraticAttenuation, &Light::setQuadraticAttenuation)
+			.property("ca", &Light::getConstantAttenuation, &Light::setConstantAttenuation)
+			.def("setDirectional", &Light::setDirectional)
 	;
 }
 
@@ -272,6 +285,7 @@ luabind::scope Scripting::bindRigidBody_() {
 			.def("setMass", &RigidBody::setMass)
 			.def("setFriction", &RigidBody::setFriction)
 			.def("loadShapeBox", &RigidBody::loadShapeBox)
+			.def("loadShapeSphere", &RigidBody::loadShapeSphere)
 			.def("loadShapeFromModel", &RigidBody::loadShapeFromModel)
 			.def("disableRotation", &RigidBody::disableRotation)
 			.def("setKinematic", &RigidBody::setKinematic)

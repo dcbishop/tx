@@ -42,7 +42,7 @@ void Editor::show() {
  * Makes the QT eidting windows disapear.
  */
 void Editor::hide() {
-	DEBUG_M("Entering function...");
+	//DEBUG_M("Entering function...");
 	isHidden_ = true;
 	window_->hide();
 }
@@ -115,9 +115,9 @@ EditorWin::EditorWin() {
 	luaComboBox_->setMinimumWidth(200);
 	luaComboBox_->addItem(tr("print('Hello World!')"));
 	luaComboBox_->addItem(tr("player = getPlayer()"));
-	luaComboBox_->addItem(tr("print('Clear area'); area = gm:getAreaByTag('TestArea'); area:fill(0, 0, area.width-1, area.height-1, 'floor.dae', false, 0.0)"));
-	luaComboBox_->addItem(tr("print('Resize area test'); area = gm:getAreaByTag('TestArea'); area.width = area.width + 1"));
-	luaComboBox_->addItem(tr("print('Big room'); area = gm:getAreaByTag('TestArea'); area:boxRoom(area.width*(1/4), area.height*(1/4), area.width*(3/4), area.height*(3/4))"));	
+	luaComboBox_->addItem(tr("print('Clear area'); area = getPlayer().area; area:fill(0, 0, area.width-1, area.height-1, 'floor.dae', false, 0.0)"));
+	luaComboBox_->addItem(tr("print('Resize area test'); area = getPlayer().area; area.width = area.width + 1"));
+	luaComboBox_->addItem(tr("print('Big room'); area = getPlayer().area; area:boxRoom(area.width*(1/4), area.height*(1/4), area.width*(3/4), area.height*(3/4))"));	
 	luaLayout->addWidget(luaComboBox_);
 
 	luaButton_ = new QPushButton(QObject::tr("Execute!"));
@@ -300,7 +300,7 @@ void EditorWin::newObject_() {
 	VModel* model = new VModel("cube.dae");
 	Object* object = new Object(tag, model);
 	interface_->setSelectedObject(object);
-	interface_->setEditModeObject();
+	interface_->setEditMode(MODE_EDIT_OBJECTS);
 	updateWindow();
 	updateObjectList_();
 }
@@ -320,7 +320,7 @@ void EditorWin::newRigidBody_() {
 	ResourceManager* rm = interface_->getResourceManager();
 	//object->setShape(rm->loadShapeFromModel(object));
 	interface_->setSelectedObject(object);
-	interface_->setEditModeObject();
+	interface_->setEditMode(MODE_EDIT_OBJECTS);
 	updateWindow();
 	updateObjectList_();
 }
@@ -335,11 +335,11 @@ void EditorWin::newCreature_() {
 	snprintf(num, 6, "%0d", objects++);
 	tag.append(num);
 
-	VModel* model = new VModel("monkey-robot.dae");
+	VModel* model = new VModel(MODEL_ROBOT);
 	Creature* object = new Creature(tag, model);
 	//object->setShape(new btBoxShape(btVector3(.125,.125,.125)));
 	interface_->setSelectedObject(object);
-	interface_->setEditModeObject();
+	interface_->setEditMode(MODE_EDIT_OBJECTS);
 	updateWindow();
 	updateObjectList_();
 }
@@ -348,7 +348,7 @@ void EditorWin::newCreature_() {
 void EditorWin::newTiles_() {
 	setTileSolid_();
 	interface_->setEditTile(TILE_FLOOR);
-	interface_->setEditModeTiles();
+	interface_->setEditMode(MODE_EDIT_TILES);
 }
 
 void EditorWin::deleteObject_() {

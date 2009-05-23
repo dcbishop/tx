@@ -37,11 +37,15 @@ int main(int argc, char* argv[]) {
 
 	Area sokoban2("Sokoban2");
 	gm.registerObject(&sokoban2);
-	FileProcessor::loadArea("data/areas/sokoban2.xml", &sokoban2);
+	
 
 	Area area("StartArea");
 	gm.registerObject(&area);
 	DEBUG_A("Area created...");
+	
+	Area debugArea("DebugArea");
+	gm.registerObject(&debugArea);
+	FileProcessor::loadArea("data/areas/debug-area.xml", &debugArea);
 
 	/*Light test("TestLight");
 	test.diffuse.setColour(1.0, 0.0, 0.0);
@@ -59,7 +63,7 @@ int main(int argc, char* argv[]) {
 	Creature player("Player");
 	player.setTempory(true);
 
-	player.setVisual(new VModel("monkey-robot.dae"));
+	player.setVisual(new VModel(MODEL_ROBOT));
 	//player.setXYZ(0.0f, 2.5f, 0.0f);
 	//gm.registerObject(player);
 	DEBUG_A("Player created...");
@@ -110,5 +114,6 @@ int main(int argc, char* argv[]) {
 
 	LOG("TX finished...");
 
+	exit(EXIT_SUCCESS);
 	return 0;
 }

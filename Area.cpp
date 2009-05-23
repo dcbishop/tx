@@ -11,6 +11,8 @@
 
 #include "console.h"
 
+static const int MAX_LIGHTS = 8;
+
 Area::Area(const string tag) {
 	setTag(tag);
 	height_ = 0;
@@ -399,10 +401,27 @@ void Area::draw(Interface* interface) {
 		return;
 	}
 
+	glEnable(GL_LIGHTING);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	//glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+
+	/* This was cut, attenuation never worked right for some reason...
+	// Disable unused lights
+	for(int i = 0; i < MAX_LIGHTS; i++) {
+		glDisable(GL_LIGHT0 + i);
+	}
+
 	// Process lights
 	int light = 0; // We want to skip the first light as its a global one...
 	for(vector<Light*>::iterator iter = lights_.begin(); iter != lights_.end(); iter++) {
+		if(light > MAX_LIGHTS) {
+			break;
+		}
 		Light* pl = *iter;
+		if(!pl) {
+			ERROR("A Light that is Not a light...");
+			continue;
+		}
 		glEnable(GL_LIGHT0 + light);
 
 		// Set light position
@@ -426,14 +445,7 @@ void Area::draw(Interface* interface) {
 		glLightf(GL_LIGHT0+light, GL_QUADRATIC_ATTENUATION, pl->getQuadraticAttenuation());
 
 		light++;
-	}
-	// Disable unused lights
-	for(int i = light; i < 8; i++) {
-		glDisable(GL_LIGHT0 + i);
-	}
-
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+	}*/
 
 	glPushMatrix();
 	glTranslatef( TILEWIDTH * width_ / 2, 0.0f, TILEWIDTH * height_ / 2 );
@@ -442,7 +454,17 @@ void Area::draw(Interface* interface) {
 		for(int x = 0; x < width_; x++) {
 			Tile* tile = getTile(x, y);
 			if(tile) {
-				tile->draw(interface);
+				if(interface->getEditMode() != MODE_NONE) {
+					glEnable(GL_COLOR_MATERIAL);
+					if(getSolid(x, y)) {
+						glColor3f(1.0, 0.0, 0.0);
+					} else {
+						glColor3f(1.0, 1.0, 1.0);
+					}
+					tile->draw(interface);
+				} else {
+					tile->draw(interface);
+				}
 			}
 			glTranslatef(-TILEWIDTH, 0.0f, 0.0f);
 		}

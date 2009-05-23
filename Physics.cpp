@@ -15,8 +15,8 @@ Physics::Physics() {
 					broadphase_, solver_, collisionConfiguration_);
 	setGravity(GRAVITY_EARTH);
 
-	gDebugDrawer_.setDebugMode(1);
-	dynamicsWorld_->setDebugDrawer(&gDebugDrawer_);
+	//gDebugDrawer_.setDebugMode(1);
+	//dynamicsWorld_->setDebugDrawer(&gDebugDrawer_);
 	body_count_ = 0;
 }
 

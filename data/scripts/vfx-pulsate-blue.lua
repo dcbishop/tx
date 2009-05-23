@@ -1,4 +1,4 @@
--- Pulsates yellow
+-- Pulsates blue
 
 if not isInitilized(self) then
 	local properties = {}

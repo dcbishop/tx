@@ -30,6 +30,8 @@ class RigidBody : public Object {
 		virtual void setRotAngle(const float angle);
 		virtual btCollisionShape* loadShapeFromModel(RigidBody* body);
 		virtual btCollisionShape* loadShapeBox(const float x, const float y, const float z);
+		virtual btCollisionShape* loadShapeSphere(const float radius);
+
 		virtual void disableRotation();
 		virtual void setKinematic();
 		virtual void stopMovement();

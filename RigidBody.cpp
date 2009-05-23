@@ -267,14 +267,9 @@ void RigidBody::setZ(const float z) {
 }
 
 void RigidBody::processBodyRot_() {
-	DEBUG_A("Entering function");
 	if(!body_) {
-		DEBUG_A("No body");
 		return;
 	}
-	
-	DEBUG_A("\tGetting rots");
-	DEBUG_A("\tx:%f y:%f z:%f a:%f", getRotX(), getRotY(), getRotZ(), getRotAngle());
 
 	float rx = getRotX();
 	float ry = getRotY();
@@ -291,7 +286,6 @@ void RigidBody::processBodyRot_() {
 	xform.setRotation(btQuaternion (btVector3(rx, ry, rz), ra*(PI/180)));
 	//((btPairCachingGhostObject*)body_)->setWorldTransform (xform);
 	body_->setWorldTransform (xform);
-	DEBUG_A("\texiting function");
 }
 
 void RigidBody::setRotX(const float x) {
@@ -536,6 +530,14 @@ btCollisionShape* RigidBody::loadShapeFromModel(RigidBody* body) {//Visual* visu
  */
 btCollisionShape* RigidBody::loadShapeBox(const float x, const float y, const float z) {
 	return new btBoxShape(btVector3(x , y, z));
+}
+
+/**
+ * Loads a bullet sphere collision shape.
+ * @param radius The sphere's radius.
+ */
+btCollisionShape* RigidBody::loadShapeSphere(const float radius) {
+	return new btSphereShape(radius);
 }
 
 /**

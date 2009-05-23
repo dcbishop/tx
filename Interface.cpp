@@ -36,7 +36,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	limit_fps_ = true;
 	cam_move_ = false;
 	//gm_ = NULL;
-	mode_ = MODE_EDIT_OBJECTS;
+	setEditMode(MODE_NONE);
 	tm_ = NULL;
 	to_ = NULL;
 	selectedObject_ = NULL;
@@ -51,9 +51,9 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	object->setMass(1.0f);
 	//Object* object = new Object("Object_00", model);
 	to_ = object;
-	ts_ = true;
+	isEditTileSolid_ = true;
 
-	edit_tiles_.push_back(TILE_VOID);
+	/*edit_tiles_.push_back(TILE_VOID);
 	edit_tiles_.push_back(TILE_FLOOR);
 	edit_tiles_.push_back(TILE_WALL);
 	edit_tiles_.push_back("outer corner.dae");
@@ -64,7 +64,7 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	edit_tiles_.push_back("combined wall + inner corner A.dae");
 	edit_tiles_.push_back("combined wall + inner corner B.dae");
 	edit_tiles_.push_back("two inner corners.dae");
-	edit_tiles_.push_back("opposite inner corners.dae");
+	edit_tiles_.push_back("opposite inner corners.dae");*/
 
 	setTitle("Tilxor...");
 
@@ -75,6 +75,14 @@ Interface::Interface(const int width = 640, const int height = 480) {
 	editor_->show();
 	//editor_->processQtEvents();
 	//editor_->hide();
+
+	glEnable(GL_LIGHTING) ;
+	glEnable(GL_LIGHT0);
+	float position[] = {0.5, 1.0, 0.5, 0.0};
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 Interface::~Interface() {
@@ -96,6 +104,7 @@ void Interface::setTitle(const string title) {
  * Starts the Qt editor interface.
  */
 void Interface::startEditor() {
+	setEditMode(MODE_SELECT);
 	editor_->show();
 	editor_->updateWindow();
 }
@@ -109,8 +118,8 @@ void Interface::mainLoop() {
 	while(!finished_) {
 		camera_.update(getComputerTime());
 
-		checkEvents_();
-		checkEvents_();
+		checkEvenisEditTileSolid_();
+		checkEvenisEditTileSolid_();
 		draw();
 
 #warning ['TODO']: Keep track of game time when paused
@@ -124,7 +133,12 @@ void Interface::mainLoop() {
 		if(editor_) {
 			editor_->processQtEvents();
 		}
+
+	if(getEditMode() == MODE_NONE) {
+		editor_->hide();
+		}
 	}
+
 }
 
 /**
@@ -171,16 +185,6 @@ void Interface::setEditObject_(Object& object) {
 	to_ = &object;
 }
 
-
-void Interface::setEditModeObject() {
-	mode_ = MODE_EDIT_OBJECTS;
-}
-
-void Interface::setEditModeTiles() {
-	mode_ = MODE_EDIT_TILES;
-}
-
-
 /**
  * Renders the scene using OpenGL.
  */
@@ -212,13 +216,6 @@ void Interface::draw() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glEnable(GL_LIGHTING) ;
-	glEnable(GL_LIGHT0);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	float position[] = {0.5, 1.0, 0.5, 0.0};
-	glLightfv(GL_LIGHT0, GL_POSITION, position);
 
 	glColor3f(1.0f, 1.0f, 1.0f);
 	//glEnable(GL_COLOR_MATERIAL);
@@ -234,11 +231,11 @@ void Interface::draw() {
 		if(area) {
 			area->draw(this);
 
-			if(mode_ != MODE_NONE) {
+			//if(getEditMode() != MODE_NONE) {
 				windowToWorld(mx_, my_, tx_, ty_, tz_);
-			}
+			//}
 
-			if(mode_ == MODE_EDIT_TILES) {
+			if(getEditMode() == MODE_EDIT_TILES) {
 				int gx, gy;
 				area->getGridCoord(tx_, tz_, gx, gy);
 				float fx, fz;
@@ -255,7 +252,7 @@ void Interface::draw() {
 				}
 			}
 
-			if(mode_ == MODE_EDIT_OBJECTS) {
+			if(getEditMode() == MODE_EDIT_OBJECTS) {
 				//Object& object = getEditObject_();
 				Object* object = getSelectedObject();
 				if(object) {
@@ -358,7 +355,7 @@ void Interface::handleKeyDown_(const SDL_Event& event) {
 }
 
 void Interface::handleKeyUp_(const SDL_Event& event) {
-	static vector<string>::iterator iter = edit_tiles_.begin();
+	//static vector<string>::iterator iter = edit_tiles_.begin();
 	switch(event.key.keysym.sym) {
 		case SDLK_UP:
 			creature_->Forward(false);
@@ -381,41 +378,41 @@ void Interface::handleKeyUp_(const SDL_Event& event) {
 			creature_->StrafeRight(false);
 			break;
 		case SDLK_p:
-			ts_ = !ts_;
-			LOG("Tile solid: %d", ts_);
+			isEditTileSolid_ = !isEditTileSolid_;
+			LOG("Tile solid: %d", isEditTileSolid_);
 			break;
 		case SDLK_r:
 			tm_->setRotation(tm_->getRotation() + 90.0f);
 			break;
 		case SDLK_F1:
 			LOG("Setting game mode.");
-			mode_ = MODE_NONE;
+			setEditMode(MODE_NONE);
 			if(editor_) {
 				editor_->hide();
 			}
 			break;
 		case SDLK_F2:
-			LOG("Setting tiles edit mode.");
+			LOG("Starting editor.");
 			startEditor();
-			setEditTile(*iter);
-			iter++;
-			if(iter == edit_tiles_.end()) {
+			//setEditTile(*iter);
+			//iter++;
+			/*if(iter == edit_tiles_.end()) {
 				iter = edit_tiles_.begin();
-			}
-			mode_ = MODE_EDIT_TILES;
+			}*/
+			setEditMode(MODE_SELECT);
 			break;
-		case SDLK_F3:
+		/*case SDLK_F3:
 			LOG("Setting objects edit mode.");
 			mode_ = MODE_EDIT_OBJECTS;
 			startEditor();
-			break;
+			break;*/
 		default:
 			break;
 	}
 }
 
 #warning ['TODO']: Fix bug when height > width
-void Interface::resizeEvent(const SDL_Event& event) {
+void Interface::resizeEvent_(const SDL_Event& event) {
 	DEBUG_M("Screen resize %dx%d...", event.resize.w, event.resize.h);
 	width_ = event.resize.w;
 	height_ = event.resize.h;
@@ -472,26 +469,37 @@ void Interface::handleMouse1_(const SDL_Event& event) {
 		return;
 	}
 
-	switch(mode_) {
+	Location location = area->getLocation(tx_, ty_, tz_);
+	switch(getEditMode()) {
 		case(MODE_NONE):
 			return;
+			break;
+		case(MODE_SELECT):
+			if(area) {
+				Object* object = area->getNearestObjectTo(location);
+				if(object) {
+					//LOG("Selected '%s'.", object->getTag().c_str());
+					setSelectedObject(object);
+					editor_->setEditObject(object);
+				}
+			}
 			break;
 		case(MODE_EDIT_TILES):
 			int gx, gy;
 			tile =  new Tile(*tm_);
 			area->getGridCoord(tx_, tz_, gx, gy);
 			area->setTile(gx, gy, tile);
-			area->setSolid(gx, gy, ts_);
+			area->setSolid(gx, gy, isEditTileSolid_);
 			DEBUG_A("Clicked: %f, %f, %f, gx:%d, gy:%d", tx_, ty_, tz_, gx, gy);
 			break;
 		case(MODE_EDIT_OBJECTS):
 			if(getSelectedObject()) {
 				//getSelectedObject()->setXYZ(tx_, ty_+0.125f, tz_);
 				//area->addObject(getSelectedObject());
-				Location location = area->getLocation(tx_, ty_+0.125f, tz_);
+				//location = area->getLocation(tx_, ty_+0.125f, tz_);
 				getSelectedObject()->setLocation(location);
 			}
-			mode_ = MODE_NONE;
+			setEditMode(MODE_SELECT);
 			editor_->updateWindow();
 			break;
 	}
@@ -509,22 +517,23 @@ void Interface::handleMouse3_(const SDL_Event& event) {
 	//GLdouble x, y, z;
 	//windowToWorld(event.button.x, event.button.y, x, y, z);
 
+	windowToWorld(mx_, my_, tx_, ty_, tz_);
 	Area* area = creature_->getArea();
 
 	//Model* model = area->getResourceManager()->loadModel("unmaptest.dae");
 
 	RigidBody* newobj = new RigidBody;
-	newobj->setVisual(new VModel("unmaptest.dae"));
-	newobj->setShape(new btSphereShape(1));
-	newobj->setXYZ(-tx_, ty_+1.0f, -tz_);
-	
-	area->addObject(newobj);
+	newobj->setVisual(new VModel("ball.dae"));
+	newobj->setShape(new btSphereShape(0.5));
+	newobj->setTempory(true);
+	Location location = area->getLocation(tx_, ty_+1.0f, tz_);
+	newobj->setLocation(location);
 }
 
 /**
  * Checks for any SDL events that have occured.
  */
-void Interface::checkEvents_() {
+void Interface::checkEvenisEditTileSolid_() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		switch(event.type) {
@@ -570,7 +579,7 @@ void Interface::checkEvents_() {
 				}
 				break;
 			case SDL_VIDEORESIZE:
-				resizeEvent(event);
+				resizeEvent_(event);
 				break;
 			default:
 				DEBUG_M("Unknown event occured...");
@@ -636,9 +645,10 @@ void Interface::setSelectedObject(Object* object) {
 
 /**
  * Sets if new places tiles will be solid or not.
+ * @param solid True for solid.
  */
 void Interface::setEditTileSolid(bool solid) {
-	ts_ = solid;
+	isEditTileSolid_ = solid;
 }
 
 /**
@@ -655,4 +665,12 @@ int Interface::getEditMode() {
  */
 int Interface::getComputerTime() {
 	return SDL_GetTicks();
+}
+
+/**
+ * Sets the edit mode of the interface.
+ * @param editMode either MODE_NONE, MODE_SELECT, MODE_EDIT_OBJECTS or MODE_EDIT_TILES.
+ */
+void Interface::setEditMode(int editMode) {
+	mode_ = editMode;
 }

@@ -3,7 +3,7 @@ height = 1.0
 if not isInitilized(self) then
 	local properties = {}
 
-	properties['doormodel'] = VModel("Pillar.dae")	
+	properties['doormodel'] = VModel("door.dae")	
 	local doorTag = self.tag .. "_DOOR"
 	doorObj = RigidBody(doorTag, properties['doormodel'])
 	doorObj.location = self.location
@@ -54,19 +54,31 @@ else
 		-- We spawn the crate on a delay due to the physics engine shooting it randomly around if done at start
 		if time > properties['spawntime'] + 1500 then
 			self.isVisible = false
-			local size = 0.45
+			local size = 0.5
 			local location = self.location
 			location.y = location.y + size * 2
 
-			properties['shape'] = properties['doorObj']:loadShapeBox(size, size, size)
+			properties['shape'] = properties['doorObj']:loadShapeBox(0.5, 0.5, 0.05)
 			properties['doorObj']:setShape(properties['shape'])
-			properties['doorObj']:disableRotation()
 			properties['doorObj']:setKinematic()
 			properties['doorObj'].location = location
+			properties['doorObj']:setRotation(self.rotation)
 			properties['spawned'] = true
-
 		end
+	else
+		
+		--properties['doorObj'].ry = 1.0
+		--properties['doorObj'].ry = 1.0
+		--properties['doorObj'].angle = properties['doorObj'].angle + 1
+		--properties['doorObj'].location = self.location
+		
+		--properties['doorObj'].rotation = self.rotation
+		--properties['doorObj'].angle = 90
+		--print(properties['doorObj'].angle)
+		
+		--properties['doorObj'].rotation = self.rotation
 	end
+
 
 
 	local door = properties['doorObj']
@@ -95,10 +107,12 @@ else
 	local ds = speed * getTimeDiff()
 
 	if door:getDistanceTo(currentObj) > speed then
+
 		if door.y < currentObj.y then
 			door.y = door.y + speed
 		elseif door.y > currentObj.y then
 			door.y = door.y - speed
 		end
+		
 	end
 end
