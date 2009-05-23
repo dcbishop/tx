@@ -24,5 +24,7 @@ if not isInitilized(self) then
 	frameObj.y = frameObj.y + 0.01
 	properties['frame_object'] = frameObj
 
+	self.isVisible = false
+
 	setProperties(self, properties)
 end

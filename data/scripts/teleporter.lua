@@ -29,6 +29,8 @@ if not isInitilized(self) then
 	properties['vfxscript'] = VfxScripted("vfx-pulsate-blue.lua")
 	plateObj:addVfx(properties['vfxscript'])
 
+	self.isVisible = false
+
 
 	setProperties(self, properties)
 else

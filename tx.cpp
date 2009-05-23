@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 	gm.registerObject(&sokoban2);
 	
 
-	Area area("StartArea");
+	Area area("start-area.xml");
 	gm.registerObject(&area);
 	DEBUG_A("Area created...");
 	
@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 	//area.addObject(*testobj);
 
 	area.setDefaultArea();
-	FileProcessor::loadArea("data/areas/test-area.xml", &area);
+	FileProcessor::loadArea("data/areas/start-area.xml", &area);
 	//area.addObject(player);
 	//area.addObject(*testobj);
 	//area.addObject(ground);
@@ -113,7 +113,9 @@ int main(int argc, char* argv[]) {
 	interface.setCreature(player);
 	interface.mainLoop();
 
-	FileProcessor::saveArea(area, "data/areas/test-area.xml");
+	// Save the last area
+	Area* last_area = player.getArea();
+	FileProcessor::saveArea(*last_area, "data/areas/last-edited.xml");
 
 	LOG("TX finished...");
 
