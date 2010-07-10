@@ -3,13 +3,13 @@ import os.path
 from glob import glob
 
 prog_target = 'tx'
-sources = glob('*.cpp')
+sources = glob('src/*.cpp')
 
 env = Environment()
 win32 = ARGUMENTS.get('win32', 0)
 debug_flag = ARGUMENTS.get('debug', 0)
 
-env.Tool('colourful', toolpath=['scons-tools'])
+#env.Tool('colourful', toolpath=['scons-tools'])
 env.AppendUnique(LIBS=['m', 'IL', 'mxml', 'rcbc', 'luabind'])
 env.Tool('qt')
 
