@@ -6,7 +6,7 @@
 #include "console.h"
 
 #include "Updateable.hpp"
-#include "GLDebugDrawer.h"
+//#include "GLDebugDrawer.h"
 
 const float GRAVITY_MERCURY	=	3.7f;
 const float GRAVITY_VENUS	=	8.8f;

@@ -1,0 +1,8 @@
+tx is a simple game engine written for a uni project.
+
+Following libraries are required
+================================
+rcbc
+glut (freeglut3-dev)
+libluabind-dev
+liblua5.1-0-dev

@@ -49,11 +49,11 @@ void	GLDebugDrawer::drawLine(const btVector3& from,const btVector3& to,const btV
 
 void GLDebugDrawer::drawSphere (const btVector3& p, btScalar radius, const btVector3& color)
 {
-	glColor4f (color.getX(), color.getY(), color.getZ(), btScalar(1.0f));
+	/*glColor4f (color.getX(), color.getY(), color.getZ(), btScalar(1.0f));
 	glPushMatrix ();
 	glTranslatef (p.getX(), p.getY(), p.getZ());
 	glutSolidSphere (radius, 10, 10);
-	glPopMatrix();
+	glPopMatrix();*/
 }
 
 void GLDebugDrawer::drawBox (const btVector3& boxMin, const btVector3& boxMax, const btVector3& color, btScalar alpha)
@@ -62,12 +62,12 @@ void GLDebugDrawer::drawBox (const btVector3& boxMin, const btVector3& boxMax, c
 	btVector3 center = (boxMax + boxMin) * btScalar(0.5f);
 	//glEnable(GL_BLEND);     // Turn blending On
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	glColor4f (color.getX(), color.getY(), color.getZ(), alpha);
+	/*glColor4f (color.getX(), color.getY(), color.getZ(), alpha);
 	glPushMatrix ();
 	glTranslatef (center.getX(), center.getY(), center.getZ());
 	glScaled(2*halfExtent[0], 2*halfExtent[1], 2*halfExtent[2]);
 	glutSolidCube(1.0);
-	glPopMatrix ();
+	glPopMatrix ();*/
 	//glDisable(GL_BLEND);
 }
 
@@ -75,14 +75,14 @@ void	GLDebugDrawer::drawTriangle(const btVector3& a,const btVector3& b,const btV
 {
 //	if (m_debugMode > 0)
 	{
-		const btVector3	n=cross(b-a,c-a).normalized();
+		/*const btVector3	n=cross(b-a,c-a).normalized();
 		glBegin(GL_TRIANGLES);		
 		glColor4f(color.getX(), color.getY(), color.getZ(),alpha);
 		glNormal3d(n.getX(),n.getY(),n.getZ());
 		glVertex3d(a.getX(),a.getY(),a.getZ());
 		glVertex3d(b.getX(),b.getY(),b.getZ());
 		glVertex3d(c.getX(),c.getY(),c.getZ());
-		glEnd();
+		glEnd();*/
 	}
 }
 
