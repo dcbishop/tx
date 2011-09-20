@@ -1,9 +1,15 @@
 TX is a simple game engine I wrote for a uni project.
-It is written in C++, OpenGL. Uses MiniXML, QT, Lua, LuaBind, DevIL and rcbc for COLLADA model parsing/rendering.
+It is written in C++, OpenGL. Uses MiniXML, QT, Lua, LuaBind, DevIL and rcbc for COLLADA model parsing/rendering. It is fairly old 'learning' code, with bugs and oddities and is not being maintained.
 
 To build:
 =========
 scons
+
+You can also compile with debug information:
+scons debug=1
+
+It is also possible to build for a win32 target under Linux but it requires mingw correctly setup with the libraries:
+scons win32=1
 
 Usage:
 ======
