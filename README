@@ -1,8 +1,19 @@
-tx is a simple game engine written for a uni project.
+TX is a simple game engine I wrote for a uni project.
+It is written in C++, OpenGL. Uses MiniXML, QT, Lua, LuaBind, DevIL and rcbc for COLLADA model parsing/rendering.
 
-Following libraries are required
-================================
-rcbc
+To build:
+=========
+scons
+
+Usage:
+======
+./tx
+
+The following libraries are required:
+=====================================
+rcbc (see https://github.com/dcbishop/)
 glut (freeglut3-dev)
 libluabind-dev
 liblua5.1-0-dev
+libmxml-dev
+libdevil-dev
